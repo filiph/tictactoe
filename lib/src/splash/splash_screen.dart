@@ -1,6 +1,5 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +74,8 @@ class SplashScreen extends StatelessWidget {
                 IconButton(
                   onPressed: () => showSnackDebug('No sound yet.'),
                   icon: Icon(
-                    (Platform.isIOS || Platform.isMacOS)
+                    (defaultTargetPlatform == TargetPlatform.iOS ||
+                            defaultTargetPlatform == TargetPlatform.macOS)
                         ? CupertinoIcons.volume_off
                         : Icons.volume_off,
                   ),
