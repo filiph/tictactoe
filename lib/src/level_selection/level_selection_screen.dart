@@ -38,23 +38,6 @@ class LevelSelectionScreen extends StatelessWidget {
                             : null,
                         child: Center(child: Text('#${i + 1}')),
                       ),
-                      // child: InkWell(
-                      //   onTap: i == 0
-                      //       ? () {
-                      //           GoRouter.of(context).go('/play/3/3/3/');
-                      //         }
-                      //       : null,
-                      //   child: Center(
-                      //     child: Text(
-                      //       '#${i + 1}',
-                      //       style: TextStyle(
-                      //         color: i == 0 ? Colors.black : Colors.grey,
-                      //         fontFamily: 'Permanent Marker',
-                      //         fontSize: 30,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ),
                   )
               ],

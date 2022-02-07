@@ -3,6 +3,7 @@ import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
 import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
+import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
@@ -29,6 +30,10 @@ class MyApp extends StatelessWidget {
                         int.parse(state.params['k']!),
                       ),
                     ),
+                  ),
+                  GoRoute(
+                    path: 'won',
+                    builder: (context, state) => WinGameScreen(),
                   )
                 ]),
           ]),
