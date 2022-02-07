@@ -7,14 +7,6 @@ class LevelSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void showSnackDebug(String message) {
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.clearSnackBars();
-      messenger.showSnackBar(
-        SnackBar(content: Text('NOT IMPLEMENTED. $message')),
-      );
-    }
-
     return Scaffold(
       body: Center(
         child: Column(

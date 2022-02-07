@@ -47,6 +47,89 @@ class BoardState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns `null` if nobody has yet won this board. Otherwise, returns
+  /// the winner.
+  ///
+  /// If somehow both parties are winning, then the behavior of this method
+  /// is undefined.
+  ///
+  /// This is a function and not a getter merely because it might take some
+  /// time on bigger boards to evaluate.
+  Owner? getWinner() {
+    for (final tile in allTakenTiles) {
+      // TODO: instead of checking each tile, check each valid line just once
+      for (final validLine in getValidLinesThrough(tile)) {
+        final owner = whoIsAt(validLine.first);
+        if (owner == Owner.none) continue;
+        if (validLine.every((tile) => whoIsAt(tile) == owner)) {
+          return owner;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  Iterable<Tile> get allTiles sync* {
+    for (var x = 0; x < setting.m; x++) {
+      for (var y = 0; y < setting.n; y++) {
+        yield Tile(x, y);
+      }
+    }
+  }
+
+  Iterable<Tile> get allTakenTiles =>
+      allTiles.where((tile) => whoIsAt(tile) != Owner.none);
+
+  /// Returns all valid lines going through [tile].
+  Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
+    // Horizontal lines.
+    for (var startX = tile.x - setting.m + 1; startX <= tile.x; startX++) {
+      final startTile = Tile(startX, tile.y);
+      if (!startTile.isValid(setting)) continue;
+      final endTile = Tile(startTile.x + setting.k - 1, tile.y);
+      if (!endTile.isValid(setting)) continue;
+      yield {for (var i = startTile.x; i <= endTile.x; i++) Tile(i, tile.y)};
+    }
+
+    // Vertical lines.
+    for (var startY = tile.y - setting.n + 1; startY <= tile.y; startY++) {
+      final startTile = Tile(tile.x, startY);
+      if (!startTile.isValid(setting)) continue;
+      final endTile = Tile(tile.x, startTile.y + setting.k - 1);
+      if (!endTile.isValid(setting)) continue;
+      yield {for (var i = startTile.y; i <= endTile.y; i++) Tile(tile.x, i)};
+    }
+
+    // Downward diagonal lines.
+    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
+      var yOffset = xOffset;
+      final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
+      if (!startTile.isValid(setting)) continue;
+      final endTile =
+          Tile(startTile.x + setting.k - 1, startTile.y + setting.k - 1);
+      if (!endTile.isValid(setting)) continue;
+      yield {
+        for (var i = 0; i < setting.k; i++)
+          Tile(startTile.x + i, startTile.y + i)
+      };
+    }
+
+    // Upward diagonal lines.
+    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
+      var yOffset = -xOffset;
+      final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
+      if (!startTile.isValid(setting)) continue;
+      final endTile =
+          Tile(startTile.x + setting.k - 1, startTile.y - setting.k + 1);
+      if (!endTile.isValid(setting)) continue;
+      yield {
+        for (var i = 0; i < setting.k; i++)
+          Tile(startTile.x + i, startTile.y - i)
+      };
+    }
+  }
+
   Owner whoIsAt(Tile tile) {
     final pointer = tile.toPointer(setting);
     bool takenByX = _xTaken.contains(pointer);

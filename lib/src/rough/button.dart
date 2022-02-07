@@ -17,6 +17,7 @@ class RoughButton extends StatelessWidget {
     return RepaintBoundary(
       child: CustomPaint(
         painter: _RoughButtonPainter(
+          seed: child.hashCode,
           borderColor: onTap != null ? Colors.red : Colors.grey,
         ),
         child: InkWell(
@@ -46,6 +47,9 @@ class _RoughButtonPainter extends CustomPainter {
 
   final Color borderColor;
 
+  /// A seed helps with making each item in a list distinct.
+  final int seed;
+
   late final Paint pathPaint = Paint()
     ..color = borderColor
     ..style = PaintingStyle.stroke
@@ -59,13 +63,13 @@ class _RoughButtonPainter extends CustomPainter {
     ..isAntiAlias = true
     ..strokeWidth = 3;
 
-  _RoughButtonPainter({this.borderColor = Colors.yellow});
+  _RoughButtonPainter({this.seed = 42, this.borderColor = Colors.yellow});
 
   @override
   paint(Canvas canvas, Size size) {
     final DrawConfig drawConfig = DrawConfig.build(
       roughness: 3,
-      seed: size.hashCode,
+      seed: Object.hash(size.hashCode, seed),
     );
 
     final FillerConfig myFillerConfig = FillerConfig.build(

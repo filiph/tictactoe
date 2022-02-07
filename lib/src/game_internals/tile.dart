@@ -8,11 +8,18 @@ class Tile {
   const Tile(this.x, this.y);
 
   int toPointer(BoardSetting setting) {
-    if (x < 0) throw ArgumentError.value(x, 'x');
-    if (y < 0) throw ArgumentError.value(y, 'y');
-    if (x >= setting.m) throw ArgumentError.value(x, 'x');
-    if (y >= setting.n) throw ArgumentError.value(y, 'y');
+    if (!isValid(setting)) {
+      throw ArgumentError.value(this, 'out of bounds of $setting');
+    }
     return y * setting.m + x;
+  }
+
+  bool isValid(BoardSetting setting) {
+    if (x < 0) return false;
+    if (y < 0) return false;
+    if (x >= setting.m) return false;
+    if (y >= setting.n) return false;
+    return true;
   }
 
   @override

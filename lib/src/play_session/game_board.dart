@@ -5,10 +5,14 @@ import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
+import 'package:flutter_game_sample/src/rough/grid.dart';
 import 'package:provider/provider.dart';
 
 class Board extends StatefulWidget {
-  const Board({Key? key, required this.setting}) : super(key: key);
+  final VoidCallback? onPlayerWon;
+
+  const Board({Key? key, required this.setting, this.onPlayerWon})
+      : super(key: key);
 
   final BoardSetting setting;
 
@@ -21,19 +25,25 @@ class _BoardState extends State<Board> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: widget.setting.m / widget.setting.n,
-      child: Column(
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          for (var y = 0; y < widget.setting.n; y++)
-            Expanded(
-              child: Row(
-                children: [
-                  for (var x = 0; x < widget.setting.m; x++)
-                    Expanded(
-                      child: _BoardTile(Tile(x, y)),
-                    ),
-                ],
-              ),
-            )
+          RoughGrid(widget.setting.m, widget.setting.n),
+          Column(
+            children: [
+              for (var y = 0; y < widget.setting.n; y++)
+                Expanded(
+                  child: Row(
+                    children: [
+                      for (var x = 0; x < widget.setting.m; x++)
+                        Expanded(
+                          child: _BoardTile(Tile(x, y), widget.onPlayerWon),
+                        ),
+                    ],
+                  ),
+                )
+            ],
+          )
         ],
       ),
     );
@@ -41,7 +51,7 @@ class _BoardState extends State<Board> {
 }
 
 class _BoardTile extends StatelessWidget {
-  _BoardTile(this.tile, {Key? key})
+  _BoardTile(this.tile, this.onPlayerWon, {Key? key})
       : angle =
             (Random(Object.hash(tile.x, tile.y) + 1000).nextDouble() * 2 - 1) *
                 0.2,
@@ -52,6 +62,9 @@ class _BoardTile extends StatelessWidget {
 
   /// A slight angle with which to draw the tile, so it's not that uniform.
   final double angle;
+
+  /// Callback to call when the game is won.
+  final VoidCallback? onPlayerWon;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +94,13 @@ class _BoardTile extends StatelessWidget {
           // But keep the InkWell active, for the same reason as above.
         } else {
           state.playerTakeTile(tile, Owner.x);
+          if (state.getWinner() == Owner.x) {
+            // Player won with this move.
+            onPlayerWon?.call();
+            return;
+          }
 
+          // Time for AI to move.
           await Future.delayed(const Duration(milliseconds: 300));
           if (state.hasOpenTiles) {
             final ai = context.read<RandomOpponent>();

@@ -14,14 +14,6 @@ class PlaySessionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void showSnackDebug(String message) {
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.clearSnackBars();
-      messenger.showSnackBar(
-        SnackBar(content: Text('NOT IMPLEMENTED. $message')),
-      );
-    }
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -38,8 +30,10 @@ class PlaySessionScreen extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Board(
-                setting: setting,
-              ),
+                  setting: setting,
+                  onPlayerWon: () {
+                    GoRouter.of(context).go('/play/won');
+                  }),
               const Spacer(),
               Builder(builder: (context) {
                 return RoughButton(
