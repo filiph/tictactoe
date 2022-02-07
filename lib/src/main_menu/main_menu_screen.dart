@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class MainMenuScreen extends StatelessWidget {
+  const MainMenuScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class SplashScreen extends StatelessWidget {
             const Spacer(),
             RoughButton(
               onTap: () {
-                GoRouter.of(context).go('/play/3/3/3');
+                GoRouter.of(context).go('/play');
               },
               child: const Text('Play'),
             ),

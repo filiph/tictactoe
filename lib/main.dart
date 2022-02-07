@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
+import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
+import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
-import 'package:flutter_game_sample/src/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
@@ -13,17 +14,23 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) => const SplashScreen(),
+          builder: (context, state) => const MainMenuScreen(),
           routes: [
-            // TODO: go route for "play", which is the setup screen
             GoRoute(
-              path: 'play/:m/:n/:k',
-              builder: (context, state) => PlaySessionScreen(BoardSetting(
-                int.parse(state.params['m']!),
-                int.parse(state.params['n']!),
-                int.parse(state.params['k']!),
-              )),
-            ),
+                path: 'play',
+                builder: (context, state) => const LevelSelectionScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':m/:n/:k',
+                    builder: (context, state) => PlaySessionScreen(
+                      BoardSetting(
+                        int.parse(state.params['m']!),
+                        int.parse(state.params['n']!),
+                        int.parse(state.params['k']!),
+                      ),
+                    ),
+                  )
+                ]),
           ]),
     ],
   );
@@ -33,17 +40,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: AspectRatio(
-        aspectRatio: 9 / 16,
-        child: MaterialApp.router(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            useMaterial3: true,
-            primarySwatch: Colors.red,
-          ),
-          routeInformationParser: _router.routeInformationParser,
-          routerDelegate: _router.routerDelegate,
+      child: MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          useMaterial3: true,
+          primarySwatch: Colors.red,
         ),
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
       ),
     );
   }

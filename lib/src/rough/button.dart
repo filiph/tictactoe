@@ -4,7 +4,7 @@ import 'package:rough/rough.dart';
 class RoughButton extends StatelessWidget {
   final Widget child;
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const RoughButton({
     Key? key,
@@ -16,7 +16,9 @@ class RoughButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: CustomPaint(
-        painter: _RoughButtonPainter(),
+        painter: _RoughButtonPainter(
+          borderColor: onTap != null ? Colors.red : Colors.grey,
+        ),
         child: InkWell(
           onTap: onTap,
           child: Padding(
@@ -42,8 +44,10 @@ class RoughButton extends StatelessWidget {
 class _RoughButtonPainter extends CustomPainter {
   //ZigZagFiller(myFillerConfig);
 
-  final Paint pathPaint = Paint()
-    ..color = Colors.red
+  final Color borderColor;
+
+  late final Paint pathPaint = Paint()
+    ..color = borderColor
     ..style = PaintingStyle.stroke
     ..isAntiAlias = true
     ..strokeCap = StrokeCap.round
@@ -55,7 +59,7 @@ class _RoughButtonPainter extends CustomPainter {
     ..isAntiAlias = true
     ..strokeWidth = 3;
 
-  _RoughButtonPainter();
+  _RoughButtonPainter({this.borderColor = Colors.yellow});
 
   @override
   paint(Canvas canvas, Size size) {
