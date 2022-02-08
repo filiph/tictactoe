@@ -93,14 +93,16 @@ class BoardState extends ChangeNotifier {
           _hasOpenTiles, 'Somehow, tiles got taken while waiting for AI turn');
       final tile = aiOpponent.chooseNextMove(this);
       _takeTile(tile, setting.aiOpponentSide);
-      _isLocked = false;
-      notifyListeners();
 
       if (_getWinner() == setting.aiOpponentSide) {
         // Player won with this move.
         aiOpponentWon.notifyListeners();
-        return;
+      } else {
+        // Play continues.
+        _isLocked = false;
       }
+
+      notifyListeners();
     }
   }
 

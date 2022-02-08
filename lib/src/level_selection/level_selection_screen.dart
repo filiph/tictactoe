@@ -28,7 +28,7 @@ class LevelSelectionScreen extends StatelessWidget {
               child: GridView.extent(
                 maxCrossAxisExtent: 170,
                 children: [
-                  for (var i = 0; i < 12; i++)
+                  for (var i = 0; i < 9; i++)
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         minWidth: 30,
@@ -41,7 +41,11 @@ class LevelSelectionScreen extends StatelessWidget {
                               ? () {
                                   GoRouter.of(context).go('/play/3/3/3/');
                                 }
-                              : null,
+                              : i == 1
+                                  ? () {
+                                      GoRouter.of(context).go('/play/5/5/4/');
+                                    }
+                                  : null,
                           child: Center(child: Text('#${i + 1}')),
                         ),
                       ),

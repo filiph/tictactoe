@@ -7,10 +7,24 @@ import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class PlaySessionScreen extends StatelessWidget {
+class PlaySessionScreen extends StatefulWidget {
   final BoardSetting setting;
 
   const PlaySessionScreen(this.setting, {Key? key}) : super(key: key);
+
+  @override
+  State<PlaySessionScreen> createState() => _PlaySessionScreenState();
+}
+
+class _PlaySessionScreenState extends State<PlaySessionScreen> {
+  ScaffoldFeatureController<MaterialBanner, MaterialBannerClosedReason>?
+      _banner;
+
+  @override
+  void dispose() {
+    _banner?.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +32,11 @@ class PlaySessionScreen extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) {
-            final state = BoardState.clean(setting, RandomOpponent(setting));
+            final state = BoardState.clean(
+                widget.setting, RandomOpponent(widget.setting));
 
-            state.playerWon.addListener(() {
-              GoRouter.of(context).go('/play/won');
-            });
+            state.playerWon.addListener(_playerWon);
+            state.aiOpponentWon.addListener(_aiOpponentWon);
 
             return state;
           },
@@ -34,11 +48,14 @@ class PlaySessionScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              Board(setting: setting),
+              Board(setting: widget.setting),
               const Spacer(),
               Builder(builder: (context) {
                 return RoughButton(
-                  onTap: () => context.read<BoardState>().clearBoard(),
+                  onTap: () {
+                    context.read<BoardState>().clearBoard();
+                    _banner?.close();
+                  },
                   child: const Text('Restart'),
                 );
               }),
@@ -54,5 +71,25 @@ class PlaySessionScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _aiOpponentWon() {
+    _banner?.close();
+
+    var banner = MaterialBanner(
+        content: Text('Oh no! You lost. Might want to restart.'),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                ScaffoldMessenger.of(context).removeCurrentMaterialBanner(),
+            child: Text('OK'),
+          ),
+        ]);
+
+    _banner = ScaffoldMessenger.of(context).showMaterialBanner(banner);
+  }
+
+  void _playerWon() {
+    GoRouter.of(context).go('/play/won');
   }
 }
