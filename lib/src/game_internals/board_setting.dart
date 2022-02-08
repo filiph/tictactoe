@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 
 /// The setting of an m,n,k-game.
 ///
@@ -15,7 +16,12 @@ class BoardSetting {
   /// The number of tiles in a row needed to win.
   final int k;
 
-  const BoardSetting(this.m, this.n, this.k);
+  /// Which side is the player taking?
+  final Side playerSide;
+
+  Side get aiOpponentSide => playerSide == Side.x ? Side.o : Side.x;
+
+  const BoardSetting(this.m, this.n, this.k, {this.playerSide = Side.x});
 
   @override
   int get hashCode => Object.hash(m, n, k);

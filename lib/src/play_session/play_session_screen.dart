@@ -19,7 +19,7 @@ class PlaySessionScreen extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => BoardState.clean(setting),
         ),
-        Provider(
+        Provider<AiOpponent>(
           create: (context) => RandomOpponent(setting),
         ),
       ],

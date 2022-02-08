@@ -22,19 +22,19 @@ class BoardState extends ChangeNotifier {
     for (var x = 0; x < setting.m; x++) {
       for (var y = 0; y < setting.n; y++) {
         final owner = whoIsAt(Tile(x, y));
-        if (owner == Owner.none) return true;
+        if (owner == Side.none) return true;
       }
     }
     return false;
   }
 
-  Set<int> _selectSet(Owner owner) {
+  Set<int> _selectSet(Side owner) {
     switch (owner) {
-      case Owner.x:
+      case Side.x:
         return _xTaken;
-      case Owner.o:
+      case Side.o:
         return _oTaken;
-      case Owner.none:
+      case Side.none:
         throw ArgumentError.value(owner);
     }
   }
@@ -55,12 +55,12 @@ class BoardState extends ChangeNotifier {
   ///
   /// This is a function and not a getter merely because it might take some
   /// time on bigger boards to evaluate.
-  Owner? getWinner() {
+  Side? getWinner() {
     for (final tile in allTakenTiles) {
       // TODO: instead of checking each tile, check each valid line just once
       for (final validLine in getValidLinesThrough(tile)) {
         final owner = whoIsAt(validLine.first);
-        if (owner == Owner.none) continue;
+        if (owner == Side.none) continue;
         if (validLine.every((tile) => whoIsAt(tile) == owner)) {
           return owner;
         }
@@ -79,7 +79,7 @@ class BoardState extends ChangeNotifier {
   }
 
   Iterable<Tile> get allTakenTiles =>
-      allTiles.where((tile) => whoIsAt(tile) != Owner.none);
+      allTiles.where((tile) => whoIsAt(tile) != Side.none);
 
   /// Returns all valid lines going through [tile].
   Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
@@ -130,7 +130,7 @@ class BoardState extends ChangeNotifier {
     }
   }
 
-  Owner whoIsAt(Tile tile) {
+  Side whoIsAt(Tile tile) {
     final pointer = tile.toPointer(setting);
     bool takenByX = _xTaken.contains(pointer);
     bool takenByO = _oTaken.contains(pointer);
@@ -139,33 +139,33 @@ class BoardState extends ChangeNotifier {
       throw StateError('The $tile at is taken by both X and Y.');
     }
     if (takenByX) {
-      return Owner.x;
+      return Side.x;
     } else if (takenByO) {
-      return Owner.o;
+      return Side.o;
     }
-    return Owner.none;
+    return Side.none;
   }
 
-  void playerTakeTile(Tile tile, Owner who) {
+  void playerTakeTile(Tile tile, Side side) {
     assert(!_isLocked);
     final pointer = tile.toPointer(setting);
-    final set = _selectSet(who);
+    final set = _selectSet(side);
     set.add(pointer);
     _isLocked = true;
     notifyListeners();
   }
 
-  void aiTakeTile(Tile tile, Owner who) {
+  void aiTakeTile(Tile tile, Side side) {
     assert(_isLocked);
     final pointer = tile.toPointer(setting);
-    final set = _selectSet(who);
+    final set = _selectSet(side);
     set.add(pointer);
     _isLocked = false;
     notifyListeners();
   }
 }
 
-enum Owner {
+enum Side {
   x,
   o,
   none,

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
@@ -72,13 +71,13 @@ class _BoardTile extends StatelessWidget {
     final owner = context.select((BoardState state) => state.whoIsAt(tile));
     Widget representation;
     switch (owner) {
-      case Owner.none:
+      case Side.none:
         representation = SizedBox();
         break;
-      case Owner.x:
+      case Side.x:
         representation = Text('X');
         break;
-      case Owner.o:
+      case Side.o:
         representation = Text('O');
         break;
     }
@@ -86,7 +85,7 @@ class _BoardTile extends StatelessWidget {
     return InkResponse(
       onTap: () async {
         final state = context.read<BoardState>();
-        if (owner != Owner.none) {
+        if (owner != Side.none) {
           // Ignore input when the tile is already taken by someone.
           // But keep this InkWell active, so the player can more easily
           // navigate the field with a controller / keyboard.
@@ -94,8 +93,8 @@ class _BoardTile extends StatelessWidget {
           // Ignore input when the board is locked.
           // But keep the InkWell active, for the same reason as above.
         } else {
-          state.playerTakeTile(tile, Owner.x);
-          if (state.getWinner() == Owner.x) {
+          state.playerTakeTile(tile, state.setting.playerSide);
+          if (state.getWinner() == Side.x) {
             // Player won with this move.
             onPlayerWon?.call();
             return;
@@ -104,9 +103,9 @@ class _BoardTile extends StatelessWidget {
           // Time for AI to move.
           await Future.delayed(const Duration(milliseconds: 300));
           if (state.hasOpenTiles) {
-            final ai = context.read<RandomOpponent>();
+            final ai = context.read<AiOpponent>();
             final tile = ai.chooseNextMove(state);
-            state.aiTakeTile(tile, ai.playingAs);
+            state.aiTakeTile(tile, state.setting.aiOpponentSide);
           }
         }
       },

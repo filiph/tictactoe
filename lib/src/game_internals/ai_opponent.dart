@@ -7,8 +7,6 @@ import 'package:flutter_game_sample/src/game_internals/tile.dart';
 abstract class AiOpponent {
   final BoardSetting setting;
 
-  final Owner playingAs = Owner.o;
-
   const AiOpponent(this.setting);
 
   /// Returns the move that the AI wants to play.
@@ -28,7 +26,7 @@ class RandomOpponent extends AiOpponent {
     for (var x = 0; x < setting.m; x++) {
       for (var y = 0; y < setting.n; y++) {
         final tile = Tile(x, y);
-        if (state.whoIsAt(tile) == Owner.none) {
+        if (state.whoIsAt(tile) == Side.none) {
           options.add(tile);
         }
       }
