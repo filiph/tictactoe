@@ -32,7 +32,7 @@ class WinGameScreen extends StatelessWidget {
               onTap: () {
                 GoRouter.of(context).pop();
               },
-              child: const Text('Back'),
+              child: const Text('Continue'),
             ),
             const Spacer(),
           ],

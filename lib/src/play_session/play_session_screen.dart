@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/ads/interstitial_ad.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/play_session/game_board.dart';
 import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
+import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +31,23 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    final settings = context.read<Settings>();
+
+    if (widget.level.number == 1 || settings.adsRemoved) {
+      // Don't show ad if this is the first level or the player
+      // paid for removed ads.
+      _showAd = false;
+    } else {
+      // Show ad.
+      _showAd = true;
+    }
+  }
+
+  bool _showAd = true;
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -49,42 +68,52 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       child: IgnorePointer(
         ignoring: _duringCelebration,
         child: Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Spacer(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  child: Text(
-                    widget.level.message,
-                    style:
-                        TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
-                    textAlign: TextAlign.center,
+          body: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Spacer(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    child: Text(
+                      widget.level.message,
+                      style: TextStyle(
+                          fontFamily: 'Permanent Marker', fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Board(setting: widget.level.setting),
-                const Spacer(),
-                Builder(builder: (context) {
-                  return RoughButton(
+                  const Spacer(),
+                  Board(setting: widget.level.setting),
+                  const Spacer(),
+                  Builder(builder: (context) {
+                    return RoughButton(
+                      onTap: () {
+                        context.read<BoardState>().clearBoard();
+                        _banner?.close();
+                        _banner = null;
+                      },
+                      child: const Text('Restart'),
+                    );
+                  }),
+                  RoughButton(
                     onTap: () {
-                      context.read<BoardState>().clearBoard();
-                      _banner?.close();
-                      _banner = null;
+                      GoRouter.of(context).pop();
                     },
-                    child: const Text('Restart'),
-                  );
-                }),
-                RoughButton(
-                  onTap: () {
-                    GoRouter.of(context).pop();
+                    child: const Text('Back'),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+              if (_showAd)
+                InterstitialAd(
+                  onClose: () {
+                    setState(() {
+                      _showAd = false;
+                    });
                   },
-                  child: const Text('Back'),
                 ),
-                const Spacer(),
-              ],
-            ),
+            ],
           ),
         ),
       ),

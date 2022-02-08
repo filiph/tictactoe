@@ -5,6 +5,7 @@ import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
 import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
+import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/settings/settings_screen.dart';
 import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +39,10 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session',
                     builder: (context, state) {
+                      if (state.extra == null || state.extra is! Level) {
+                        // TODO: redirect somewhere else?
+                        throw ArgumentError.value(state.extra);
+                      }
                       final level = state.extra! as Level;
                       return PlaySessionScreen(level);
                     },
@@ -66,12 +71,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        var progress = PlayerProgress(playerProgressPersistentStore);
-        progress.getLatestFromStore();
-        return progress;
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            var progress = PlayerProgress(playerProgressPersistentStore);
+            progress.getLatestFromStore();
+            return progress;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Settings(),
+        ),
+      ],
       child: MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
