@@ -32,7 +32,8 @@ class AchievementsScreen extends StatelessWidget {
                       'Nothing to show here yet, '
                       'but this screen will hold a leaderboard '
                       'as well as a list of “achievements” such as '
-                      '“Won in 5 moves” or '
+                      '“Won in 5 moves,” '
+                      '“Gomoku champion” or '
                       '“The only winning move is not to play.”'),
                   _gap,
                 ],
