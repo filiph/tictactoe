@@ -9,14 +9,6 @@ class MainMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void showSnackDebug(String message) {
-      final messenger = ScaffoldMessenger.of(context);
-      messenger.clearSnackBars();
-      messenger.showSnackBar(
-        SnackBar(content: Text('NOT IMPLEMENTED. $message')),
-      );
-    }
-
     return Scaffold(
       body: Center(
         child: Column(
@@ -58,9 +50,7 @@ class MainMenuScreen extends StatelessWidget {
               child: const Text('Play'),
             ),
             RoughButton(
-              onTap: () =>
-                  showSnackDebug("You haven't achieved anything yet, have you. "
-                      "This is also where the leaderboard will be."),
+              onTap: () => GoRouter.of(context).go('/achievements'),
               child: const Text('Achievements'),
             ),
             Row(
@@ -71,7 +61,13 @@ class MainMenuScreen extends StatelessWidget {
                   child: const Text('Settings'),
                 ),
                 IconButton(
-                  onPressed: () => showSnackDebug('No sound yet.'),
+                  onPressed: () {
+                    final messenger = ScaffoldMessenger.of(context);
+                    messenger.clearSnackBars();
+                    messenger.showSnackBar(
+                      SnackBar(content: Text('NOT IMPLEMENTED. No sound yet.')),
+                    );
+                  },
                   icon: Icon(
                     (defaultTargetPlatform == TargetPlatform.iOS ||
                             defaultTargetPlatform == TargetPlatform.macOS)

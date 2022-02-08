@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/achievements/achievements_screen.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
 import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
@@ -46,6 +47,10 @@ class MyApp extends StatelessWidget {
             GoRoute(
               path: 'settings',
               builder: (context, state) => const SettingsScreen(),
+            ),
+            GoRoute(
+              path: 'achievements',
+              builder: (context, state) => const AchievementsScreen(),
             ),
           ]),
     ],
