@@ -55,6 +55,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   onTap: () {
                     context.read<BoardState>().clearBoard();
                     _banner?.close();
+                    _banner = null;
                   },
                   child: const Text('Restart'),
                 );

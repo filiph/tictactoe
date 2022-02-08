@@ -68,16 +68,21 @@ class _BoardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final owner = context.select((BoardState state) => state.whoIsAt(tile));
+    final isWinning = context.select(
+        (BoardState state) => state.winningLine?.contains(tile) ?? false);
+
     Widget representation;
+    final color = isWinning ? Colors.red : Colors.black;
+    final style = TextStyle(color: color);
     switch (owner) {
       case Side.none:
         representation = SizedBox();
         break;
       case Side.x:
-        representation = Text('X');
+        representation = Text('X', style: style);
         break;
       case Side.o:
-        representation = Text('O');
+        representation = Text('O', style: style);
         break;
     }
 

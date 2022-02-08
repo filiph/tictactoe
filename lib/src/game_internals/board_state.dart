@@ -21,6 +21,8 @@ class BoardState extends ChangeNotifier {
 
   final ChangeNotifier aiOpponentWon = ChangeNotifier();
 
+  Set<Tile>? _winningLine;
+
   BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
       : this._(setting, {}, {}, aiOpponent);
 
@@ -28,6 +30,8 @@ class BoardState extends ChangeNotifier {
 
   /// This is `true` if the board game is locked for the player.
   bool get isLocked => _isLocked;
+
+  Iterable<Tile>? get winningLine => _winningLine;
 
   Iterable<Tile> get _allTakenTiles =>
       _allTiles.where((tile) => whoIsAt(tile) != Side.none);
@@ -58,6 +62,7 @@ class BoardState extends ChangeNotifier {
   void clearBoard() {
     _xTaken.clear();
     _oTaken.clear();
+    _winningLine?.clear();
     _isLocked = false;
 
     notifyListeners();
@@ -77,15 +82,17 @@ class BoardState extends ChangeNotifier {
 
     _takeTile(tile, setting.playerSide);
     _isLocked = true;
-    notifyListeners();
 
-    if (_getWinner() == setting.playerSide) {
+    final playerJustWon = _getWinner() == setting.playerSide;
+
+    if (playerJustWon) {
       // Player won with this move.
       playerWon.notifyListeners();
-      return;
     }
 
-    if (_hasOpenTiles) {
+    notifyListeners();
+
+    if (!playerJustWon && _hasOpenTiles) {
       // Time for AI to move.
       await Future.delayed(const Duration(milliseconds: 300));
       assert(_isLocked);
@@ -177,8 +184,9 @@ class BoardState extends ChangeNotifier {
   /// If somehow both parties are winning, then the behavior of this method
   /// is undefined.
   ///
-  /// This is a function and not a getter merely because it might take some
-  /// time on bigger boards to evaluate.
+  /// As a side-effect, this function sets [winningLine] if found.
+  ///
+  /// This function might take some time on bigger boards to evaluate.
   Side? _getWinner() {
     for (final tile in _allTakenTiles) {
       // TODO: instead of checking each tile, check each valid line just once
@@ -186,6 +194,7 @@ class BoardState extends ChangeNotifier {
         final owner = whoIsAt(validLine.first);
         if (owner == Side.none) continue;
         if (validLine.every((tile) => whoIsAt(tile) == owner)) {
+          _winningLine = validLine;
           return owner;
         }
       }
