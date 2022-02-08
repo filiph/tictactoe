@@ -23,6 +23,7 @@ linter:
   # producing the lint.
   rules:
     prefer_const_constructors: false  # Annoying.
+    prefer_const_literals_to_create_immutables: false  # Annoying
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

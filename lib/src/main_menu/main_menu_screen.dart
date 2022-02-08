@@ -67,8 +67,7 @@ class MainMenuScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 RoughButton(
-                  onTap: () => showSnackDebug(
-                      'This will have settings such as language.'),
+                  onTap: () => GoRouter.of(context).go('/settings'),
                   child: const Text('Settings'),
                 ),
                 IconButton(

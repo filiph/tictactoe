@@ -3,6 +3,7 @@ import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
 import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
+import 'package:flutter_game_sample/src/settings/settings_screen.dart';
 import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
@@ -42,6 +43,10 @@ class MyApp extends StatelessWidget {
                     builder: (context, state) => WinGameScreen(),
                   )
                 ]),
+            GoRoute(
+              path: 'settings',
+              builder: (context, state) => const SettingsScreen(),
+            ),
           ]),
     ],
   );
