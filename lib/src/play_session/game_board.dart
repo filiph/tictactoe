@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
@@ -82,7 +83,7 @@ class _BoardTile extends StatelessWidget {
         break;
     }
 
-    return InkWell(
+    return InkResponse(
       onTap: () async {
         final state = context.read<BoardState>();
         if (owner != Owner.none) {
