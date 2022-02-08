@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/level_selection/levels.dart';
+import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LevelSelectionScreen extends StatelessWidget {
   const LevelSelectionScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final playerProgress = context.watch<PlayerProgress>();
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -28,7 +33,7 @@ class LevelSelectionScreen extends StatelessWidget {
               child: GridView.extent(
                 maxCrossAxisExtent: 170,
                 children: [
-                  for (var i = 0; i < 9; i++)
+                  for (final level in gameLevels)
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         minWidth: 30,
@@ -37,16 +42,12 @@ class LevelSelectionScreen extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: RoughButton(
-                          onTap: i == 0
-                              ? () {
-                                  GoRouter.of(context).go('/play/3/3/3/');
-                                }
-                              : i == 1
-                                  ? () {
-                                      GoRouter.of(context).go('/play/5/5/4/');
-                                    }
-                                  : null,
-                          child: Center(child: Text('#${i + 1}')),
+                          onTap: playerProgress.highestLevelReached >=
+                                  level.number - 1
+                              ? () => GoRouter.of(context)
+                                  .go('/play/session/', extra: level)
+                              : null,
+                          child: Center(child: Text('#${level.number}')),
                         ),
                       ),
                     )

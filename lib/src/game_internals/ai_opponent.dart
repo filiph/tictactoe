@@ -16,9 +16,9 @@ abstract class AiOpponent {
 }
 
 class RandomOpponent extends AiOpponent {
-  RandomOpponent(BoardSetting setting) : super(setting);
+  const RandomOpponent(BoardSetting setting) : super(setting);
 
-  final Random _random = Random();
+  static final Random _random = Random();
 
   @override
   Tile chooseNextMove(BoardState state) {

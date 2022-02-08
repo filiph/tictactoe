@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
-import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
+import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/play_session/game_board.dart';
+import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class PlaySessionScreen extends StatefulWidget {
-  final BoardSetting setting;
+  final Level level;
 
-  const PlaySessionScreen(this.setting, {Key? key}) : super(key: key);
+  const PlaySessionScreen(this.level, {Key? key}) : super(key: key);
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -35,7 +35,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         ChangeNotifierProvider(
           create: (context) {
             final state = BoardState.clean(
-                widget.setting, RandomOpponent(widget.setting));
+              widget.level.setting,
+              widget.level.aiOpponentBuilder(widget.level.setting),
+            );
 
             state.playerWon.addListener(_playerWon);
             state.aiOpponentWon.addListener(_aiOpponentWon);
@@ -52,7 +54,17 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Spacer(),
-                Board(setting: widget.setting),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  child: Text(
+                    widget.level.message,
+                    style:
+                        TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Spacer(),
+                Board(setting: widget.level.setting),
                 const Spacer(),
                 Builder(builder: (context) {
                   return RoughButton(
@@ -99,6 +111,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     setState(() {
       _duringCelebration = true;
     });
+
+    context.read<PlayerProgress>().setLevelReached(widget.level.number);
 
     await Future.delayed(const Duration(milliseconds: 500));
 

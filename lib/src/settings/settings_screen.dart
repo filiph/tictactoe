@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -32,7 +34,20 @@ class SettingsScreen extends StatelessWidget {
                   _SettingsLine('Music', Icons.music_off),
                   _SettingsLine('Remove ads', Icons.monetization_on),
                   _SettingsLine('Language', Icons.language),
-                  _SettingsLine('Reset game', Icons.restart_alt),
+                  _SettingsLine(
+                    'Reset game',
+                    Icons.restart_alt,
+                    onSelected: () {
+                      context.read<PlayerProgress>().reset();
+
+                      final messenger = ScaffoldMessenger.of(context);
+                      messenger.clearSnackBars();
+                      messenger.showSnackBar(
+                        SnackBar(
+                            content: Text('Player progress has been reset.')),
+                      );
+                    },
+                  ),
                   _gap,
                 ],
               ),
@@ -58,7 +73,10 @@ class _SettingsLine extends StatelessWidget {
 
   final IconData icon;
 
-  const _SettingsLine(this.title, this.icon, {Key? key}) : super(key: key);
+  final VoidCallback? onSelected;
+
+  const _SettingsLine(this.title, this.icon, {this.onSelected, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +91,11 @@ class _SettingsLine extends StatelessWidget {
         Spacer(),
         RoughButton(
           onTap: () {
+            if (onSelected != null) {
+              onSelected!();
+              return;
+            }
+
             final messenger = ScaffoldMessenger.of(context);
             messenger.clearSnackBars();
             messenger.showSnackBar(
