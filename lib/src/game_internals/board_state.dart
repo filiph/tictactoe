@@ -5,14 +5,11 @@ import 'package:flutter_game_sample/src/game_internals/tile.dart';
 import 'package:logging/logging.dart';
 
 class BoardState extends ChangeNotifier {
+  static final Logger _log = Logger('BoardState');
+
   final BoardSetting setting;
 
   final AiOpponent aiOpponent;
-
-  BoardState._(this.setting, this._xTaken, this._oTaken, this.aiOpponent);
-
-  BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
-      : this._(setting, {}, {}, aiOpponent);
 
   final Set<int> _xTaken;
 
@@ -20,10 +17,30 @@ class BoardState extends ChangeNotifier {
 
   bool _isLocked = false;
 
+  final ChangeNotifier playerWon = ChangeNotifier();
+
+  final ChangeNotifier aiOpponentWon = ChangeNotifier();
+
+  BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
+      : this._(setting, {}, {}, aiOpponent);
+
+  BoardState._(this.setting, this._xTaken, this._oTaken, this.aiOpponent);
+
   /// This is `true` if the board game is locked for the player.
   bool get isLocked => _isLocked;
 
-  bool get hasOpenTiles {
+  Iterable<Tile> get _allTakenTiles =>
+      _allTiles.where((tile) => whoIsAt(tile) != Side.none);
+
+  Iterable<Tile> get _allTiles sync* {
+    for (var x = 0; x < setting.m; x++) {
+      for (var y = 0; y < setting.n; y++) {
+        yield Tile(x, y);
+      }
+    }
+  }
+
+  bool get _hasOpenTiles {
     for (var x = 0; x < setting.m; x++) {
       for (var y = 0; y < setting.n; y++) {
         final owner = whoIsAt(Tile(x, y));
@@ -33,15 +50,9 @@ class BoardState extends ChangeNotifier {
     return false;
   }
 
-  Set<int> _selectSet(Side owner) {
-    switch (owner) {
-      case Side.x:
-        return _xTaken;
-      case Side.o:
-        return _oTaken;
-      case Side.none:
-        throw ArgumentError.value(owner);
-    }
+  /// Returns true if this tile can be taken by the player.
+  bool canTake(Tile tile) {
+    return whoIsAt(tile) == Side.none;
   }
 
   void clearBoard() {
@@ -52,42 +63,65 @@ class BoardState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Returns `null` if nobody has yet won this board. Otherwise, returns
-  /// the winner.
-  ///
-  /// If somehow both parties are winning, then the behavior of this method
-  /// is undefined.
-  ///
-  /// This is a function and not a getter merely because it might take some
-  /// time on bigger boards to evaluate.
-  Side? getWinner() {
-    for (final tile in allTakenTiles) {
-      // TODO: instead of checking each tile, check each valid line just once
-      for (final validLine in getValidLinesThrough(tile)) {
-        final owner = whoIsAt(validLine.first);
-        if (owner == Side.none) continue;
-        if (validLine.every((tile) => whoIsAt(tile) == owner)) {
-          return owner;
-        }
-      }
-    }
-
-    return null;
+  @override
+  void dispose() {
+    playerWon.dispose();
+    super.dispose();
   }
 
-  Iterable<Tile> get allTiles sync* {
-    for (var x = 0; x < setting.m; x++) {
-      for (var y = 0; y < setting.n; y++) {
-        yield Tile(x, y);
+  /// Take [tile] with player's token.
+  void take(Tile tile) async {
+    _log.info(() => 'taking $tile');
+    assert(canTake(tile));
+    assert(!_isLocked);
+
+    _takeTile(tile, setting.playerSide);
+    _isLocked = true;
+    notifyListeners();
+
+    if (_getWinner() == setting.playerSide) {
+      // Player won with this move.
+      playerWon.notifyListeners();
+      return;
+    }
+
+    if (_hasOpenTiles) {
+      // Time for AI to move.
+      await Future.delayed(const Duration(milliseconds: 300));
+      assert(_isLocked);
+      assert(
+          _hasOpenTiles, 'Somehow, tiles got taken while waiting for AI turn');
+      final tile = aiOpponent.chooseNextMove(this);
+      _takeTile(tile, setting.aiOpponentSide);
+      _isLocked = false;
+      notifyListeners();
+
+      if (_getWinner() == setting.aiOpponentSide) {
+        // Player won with this move.
+        aiOpponentWon.notifyListeners();
+        return;
       }
     }
   }
 
-  Iterable<Tile> get allTakenTiles =>
-      allTiles.where((tile) => whoIsAt(tile) != Side.none);
+  Side whoIsAt(Tile tile) {
+    final pointer = tile.toPointer(setting);
+    bool takenByX = _xTaken.contains(pointer);
+    bool takenByO = _oTaken.contains(pointer);
+
+    if (takenByX && takenByO) {
+      throw StateError('The $tile at is taken by both X and Y.');
+    }
+    if (takenByX) {
+      return Side.x;
+    } else if (takenByO) {
+      return Side.o;
+    }
+    return Side.none;
+  }
 
   /// Returns all valid lines going through [tile].
-  Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
+  Iterable<Set<Tile>> _getValidLinesThrough(Tile tile) sync* {
     // Horizontal lines.
     for (var startX = tile.x - setting.m + 1; startX <= tile.x; startX++) {
       final startTile = Tile(startX, tile.y);
@@ -135,72 +169,38 @@ class BoardState extends ChangeNotifier {
     }
   }
 
-  @override
-  void dispose() {
-    playerWon.dispose();
-    super.dispose();
-  }
-
-  final ChangeNotifier playerWon = ChangeNotifier();
-
-  final ChangeNotifier aiOpponentWon = ChangeNotifier();
-
-  /// Returns true if this tile can be taken by the player.
-  bool canTake(Tile tile) {
-    return whoIsAt(tile) == Side.none;
-  }
-
-  static final Logger _log = Logger('BoardState');
-
-  /// Take [tile] with player's token.
-  void take(Tile tile) async {
-    _log.info(() => 'taking $tile');
-    assert(canTake(tile));
-    assert(!_isLocked);
-
-    _takeTile(tile, setting.playerSide);
-    _isLocked = true;
-    notifyListeners();
-
-    if (getWinner() == setting.playerSide) {
-      // Player won with this move.
-      playerWon.notifyListeners();
-      return;
-    }
-
-    if (hasOpenTiles) {
-      // Time for AI to move.
-      await Future.delayed(const Duration(milliseconds: 300));
-      assert(_isLocked);
-      assert(
-          hasOpenTiles, 'Somehow, tiles got taken while waiting for AI turn');
-      final tile = aiOpponent.chooseNextMove(this);
-      _takeTile(tile, setting.aiOpponentSide);
-      _isLocked = false;
-      notifyListeners();
-
-      if (getWinner() == setting.aiOpponentSide) {
-        // Player won with this move.
-        aiOpponentWon.notifyListeners();
-        return;
+  /// Returns `null` if nobody has yet won this board. Otherwise, returns
+  /// the winner.
+  ///
+  /// If somehow both parties are winning, then the behavior of this method
+  /// is undefined.
+  ///
+  /// This is a function and not a getter merely because it might take some
+  /// time on bigger boards to evaluate.
+  Side? _getWinner() {
+    for (final tile in _allTakenTiles) {
+      // TODO: instead of checking each tile, check each valid line just once
+      for (final validLine in _getValidLinesThrough(tile)) {
+        final owner = whoIsAt(validLine.first);
+        if (owner == Side.none) continue;
+        if (validLine.every((tile) => whoIsAt(tile) == owner)) {
+          return owner;
+        }
       }
     }
+
+    return null;
   }
 
-  Side whoIsAt(Tile tile) {
-    final pointer = tile.toPointer(setting);
-    bool takenByX = _xTaken.contains(pointer);
-    bool takenByO = _oTaken.contains(pointer);
-
-    if (takenByX && takenByO) {
-      throw StateError('The $tile at is taken by both X and Y.');
+  Set<int> _selectSet(Side owner) {
+    switch (owner) {
+      case Side.x:
+        return _xTaken;
+      case Side.o:
+        return _oTaken;
+      case Side.none:
+        throw ArgumentError.value(owner);
     }
-    if (takenByX) {
-      return Side.x;
-    } else if (takenByO) {
-      return Side.o;
-    }
-    return Side.none;
   }
 
   void _takeTile(Tile tile, Side side) {
