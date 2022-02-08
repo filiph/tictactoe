@@ -20,6 +20,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   ScaffoldFeatureController<MaterialBanner, MaterialBannerClosedReason>?
       _banner;
 
+  bool _duringCelebration = false;
+
   @override
   void dispose() {
     _banner?.close();
@@ -42,32 +44,35 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           },
         ),
       ],
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Spacer(),
-              Board(setting: widget.setting),
-              const Spacer(),
-              Builder(builder: (context) {
-                return RoughButton(
+      child: IgnorePointer(
+        ignoring: _duringCelebration,
+        child: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Spacer(),
+                Board(setting: widget.setting),
+                const Spacer(),
+                Builder(builder: (context) {
+                  return RoughButton(
+                    onTap: () {
+                      context.read<BoardState>().clearBoard();
+                      _banner?.close();
+                      _banner = null;
+                    },
+                    child: const Text('Restart'),
+                  );
+                }),
+                RoughButton(
                   onTap: () {
-                    context.read<BoardState>().clearBoard();
-                    _banner?.close();
-                    _banner = null;
+                    GoRouter.of(context).pop();
                   },
-                  child: const Text('Restart'),
-                );
-              }),
-              RoughButton(
-                onTap: () {
-                  GoRouter.of(context).pop();
-                },
-                child: const Text('Back'),
-              ),
-              const Spacer(),
-            ],
+                  child: const Text('Back'),
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),
@@ -90,7 +95,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _banner = ScaffoldMessenger.of(context).showMaterialBanner(banner);
   }
 
-  void _playerWon() {
+  void _playerWon() async {
+    setState(() {
+      _duringCelebration = true;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
     GoRouter.of(context).go('/play/won');
   }
 }
