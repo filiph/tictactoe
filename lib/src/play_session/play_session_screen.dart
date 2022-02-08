@@ -17,10 +17,15 @@ class PlaySessionScreen extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => BoardState.clean(setting),
-        ),
-        Provider<AiOpponent>(
-          create: (context) => RandomOpponent(setting),
+          create: (context) {
+            final state = BoardState.clean(setting, RandomOpponent(setting));
+
+            state.playerWon.addListener(() {
+              GoRouter.of(context).go('/play/won');
+            });
+
+            return state;
+          },
         ),
       ],
       child: Scaffold(
@@ -29,11 +34,7 @@ class PlaySessionScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              Board(
-                  setting: setting,
-                  onPlayerWon: () {
-                    GoRouter.of(context).go('/play/won');
-                  }),
+              Board(setting: setting),
               const Spacer(),
               Builder(builder: (context) {
                 return RoughButton(

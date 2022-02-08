@@ -5,8 +5,14 @@ import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
 import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  Logger.root.onRecord.listen((record) {
+    debugPrint('${record.level.name}: ${record.time}: ${record.message}');
+  });
+
+  debugPrint('Starting app');
   runApp(const MyApp());
 }
 

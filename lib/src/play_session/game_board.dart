@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
 import 'package:flutter_game_sample/src/rough/grid.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class Board extends StatefulWidget {
@@ -37,7 +37,7 @@ class _BoardState extends State<Board> {
                     children: [
                       for (var x = 0; x < widget.setting.m; x++)
                         Expanded(
-                          child: _BoardTile(Tile(x, y), widget.onPlayerWon),
+                          child: _BoardTile(Tile(x, y)),
                         ),
                     ],
                   ),
@@ -51,7 +51,7 @@ class _BoardState extends State<Board> {
 }
 
 class _BoardTile extends StatelessWidget {
-  _BoardTile(this.tile, this.onPlayerWon, {Key? key})
+  _BoardTile(this.tile, {Key? key})
       : angle =
             (Random(Object.hash(tile.x, tile.y) + 1000).nextDouble() * 2 - 1) *
                 0.2,
@@ -63,8 +63,7 @@ class _BoardTile extends StatelessWidget {
   /// A slight angle with which to draw the tile, so it's not that uniform.
   final double angle;
 
-  /// Callback to call when the game is won.
-  final VoidCallback? onPlayerWon;
+  static final Logger _log = Logger('_BoardTile');
 
   @override
   Widget build(BuildContext context) {
@@ -85,28 +84,17 @@ class _BoardTile extends StatelessWidget {
     return InkResponse(
       onTap: () async {
         final state = context.read<BoardState>();
-        if (owner != Side.none) {
+        if (!state.canTake(tile)) {
           // Ignore input when the tile is already taken by someone.
           // But keep this InkWell active, so the player can more easily
           // navigate the field with a controller / keyboard.
+          _log.info('Cannot take $tile.');
         } else if (state.isLocked) {
           // Ignore input when the board is locked.
           // But keep the InkWell active, for the same reason as above.
+          _log.info('Can take $tile but board is locked.');
         } else {
-          state.playerTakeTile(tile, state.setting.playerSide);
-          if (state.getWinner() == Side.x) {
-            // Player won with this move.
-            onPlayerWon?.call();
-            return;
-          }
-
-          // Time for AI to move.
-          await Future.delayed(const Duration(milliseconds: 300));
-          if (state.hasOpenTiles) {
-            final ai = context.read<AiOpponent>();
-            final tile = ai.chooseNextMove(state);
-            state.aiTakeTile(tile, state.setting.aiOpponentSide);
-          }
+          state.take(tile);
         }
       },
       child: Center(

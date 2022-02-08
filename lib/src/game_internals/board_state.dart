@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
+import 'package:logging/logging.dart';
 
 class BoardState extends ChangeNotifier {
   final BoardSetting setting;
 
-  BoardState._(this.setting, this._xTaken, this._oTaken);
+  final AiOpponent aiOpponent;
 
-  BoardState.clean(BoardSetting setting) : this._(setting, {}, {});
+  BoardState._(this.setting, this._xTaken, this._oTaken, this.aiOpponent);
+
+  BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
+      : this._(setting, {}, {}, aiOpponent);
 
   final Set<int> _xTaken;
 
@@ -130,6 +135,58 @@ class BoardState extends ChangeNotifier {
     }
   }
 
+  @override
+  void dispose() {
+    playerWon.dispose();
+    super.dispose();
+  }
+
+  final ChangeNotifier playerWon = ChangeNotifier();
+
+  final ChangeNotifier aiOpponentWon = ChangeNotifier();
+
+  /// Returns true if this tile can be taken by the player.
+  bool canTake(Tile tile) {
+    return whoIsAt(tile) == Side.none;
+  }
+
+  static final Logger _log = Logger('BoardState');
+
+  /// Take [tile] with player's token.
+  void take(Tile tile) async {
+    _log.info(() => 'taking $tile');
+    assert(canTake(tile));
+    assert(!_isLocked);
+
+    _takeTile(tile, setting.playerSide);
+    _isLocked = true;
+    notifyListeners();
+
+    if (getWinner() == setting.playerSide) {
+      // Player won with this move.
+      playerWon.notifyListeners();
+      return;
+    }
+
+    if (hasOpenTiles) {
+      // Time for AI to move.
+      await Future.delayed(const Duration(milliseconds: 300));
+      assert(_isLocked);
+      assert(
+          hasOpenTiles, 'Somehow, tiles got taken while waiting for AI turn');
+      final tile = aiOpponent.chooseNextMove(this);
+      _takeTile(tile, setting.aiOpponentSide);
+      _isLocked = false;
+      notifyListeners();
+
+      if (getWinner() == setting.aiOpponentSide) {
+        // Player won with this move.
+        aiOpponentWon.notifyListeners();
+        return;
+      }
+    }
+  }
+
   Side whoIsAt(Tile tile) {
     final pointer = tile.toPointer(setting);
     bool takenByX = _xTaken.contains(pointer);
@@ -146,22 +203,10 @@ class BoardState extends ChangeNotifier {
     return Side.none;
   }
 
-  void playerTakeTile(Tile tile, Side side) {
-    assert(!_isLocked);
+  void _takeTile(Tile tile, Side side) {
     final pointer = tile.toPointer(setting);
     final set = _selectSet(side);
     set.add(pointer);
-    _isLocked = true;
-    notifyListeners();
-  }
-
-  void aiTakeTile(Tile tile, Side side) {
-    assert(_isLocked);
-    final pointer = tile.toPointer(setting);
-    final set = _selectSet(side);
-    set.add(pointer);
-    _isLocked = false;
-    notifyListeners();
   }
 }
 
