@@ -32,6 +32,14 @@ class AchievementsScreen extends StatelessWidget {
                     ),
                   ),
                   _gap,
+                  const Text(
+                    'Leaderboard',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'Permanent Marker',
+                      fontSize: 30,
+                    ),
+                  ),
                   Table(
                     children: [
                       TableRow(

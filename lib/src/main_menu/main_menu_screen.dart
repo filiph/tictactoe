@@ -65,7 +65,12 @@ class MainMenuScreen extends StatelessWidget {
                     final messenger = ScaffoldMessenger.of(context);
                     messenger.clearSnackBars();
                     messenger.showSnackBar(
-                      SnackBar(content: Text('NOT IMPLEMENTED. No sound yet.')),
+                      SnackBar(
+                          content: Text('NOT IMPLEMENTED. No sound yet. '
+                              'This will be a "quick mute" button that stops '
+                              'both music and sounds. Many mobile players don’t '
+                              'appreciate having to dig in settings to prevent '
+                              'the game from blasting music.')),
                     );
                   },
                   icon: Icon(
