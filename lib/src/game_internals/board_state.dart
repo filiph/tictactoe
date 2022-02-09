@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_game_sample/src/game_internals/ai_opponent.dart';
+import 'package:flutter_game_sample/src/ai/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
 import 'package:logging/logging.dart';
@@ -130,7 +130,7 @@ class BoardState extends ChangeNotifier {
   }
 
   /// Returns all valid lines going through [tile].
-  Iterable<Set<Tile>> _getValidLinesThrough(Tile tile) sync* {
+  Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
     // Horizontal lines.
     for (var startX = tile.x - setting.m + 1; startX <= tile.x; startX++) {
       final startTile = Tile(startX, tile.y);
@@ -190,7 +190,7 @@ class BoardState extends ChangeNotifier {
   Side? _getWinner() {
     for (final tile in _allTakenTiles) {
       // TODO: instead of checking each tile, check each valid line just once
-      for (final validLine in _getValidLinesThrough(tile)) {
+      for (final validLine in getValidLinesThrough(tile)) {
         final owner = whoIsAt(validLine.first);
         if (owner == Side.none) continue;
         if (validLine.every((tile) => whoIsAt(tile) == owner)) {
