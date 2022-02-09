@@ -143,6 +143,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   void _playerWon() async {
     final score = Score(
+      widget.level.number,
       widget.level.setting,
       1 /* TODO: input AI difficuly */,
       DateTime.now().difference(_startOfPlay),

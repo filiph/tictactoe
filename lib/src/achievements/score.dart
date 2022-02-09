@@ -7,12 +7,17 @@ class Score {
 
   final Duration duration;
 
-  factory Score(BoardSetting setting, int aiDifficulty, Duration duration) {
+  final int level;
+
+  factory Score(
+      int level, BoardSetting setting, int aiDifficulty, Duration duration) {
     var score = setting.m * setting.n * setting.k;
     score *= aiDifficulty;
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    return Score._(score, duration);
+    return Score._(score, duration, level);
   }
+
+  const Score._(this.score, this.duration, this.level);
 
   String get formattedTime {
     final buf = StringBuffer();
@@ -33,6 +38,4 @@ class Score {
         .padLeft(2, '0'));
     return buf.toString();
   }
-
-  const Score._(this.score, this.duration);
 }
