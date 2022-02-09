@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/game_internals/score.dart';
 import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:go_router/go_router.dart';
 
 class WinGameScreen extends StatelessWidget {
-  const WinGameScreen({Key? key}) : super(key: key);
+  final Score score;
+
+  const WinGameScreen({Key? key, required this.score}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +20,34 @@ class WinGameScreen extends StatelessWidget {
               child: Text(
                 'You won!',
                 style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: Text(
+                'Score: ${score.score}\n'
+                'Time: ${score.formattedTime}',
+                style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('NOT IMPLEMENTED YET, but this could use '
+                        'Firebase / Google Cloud to save the finished game '
+                        'board as a picture, so that the share is interesting'),
+                  ));
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.share),
+                    SizedBox(width: 10),
+                    Text('Share'),
+                  ],
+                ),
               ),
             ),
             const Spacer(),

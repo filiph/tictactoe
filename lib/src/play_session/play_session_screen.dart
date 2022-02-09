@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/ads/interstitial_ad.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
+import 'package:flutter_game_sample/src/game_internals/score.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/play_session/game_board.dart';
 import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
@@ -24,6 +25,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   bool _duringCelebration = false;
 
+  late DateTime _startOfPlay;
+
   @override
   void dispose() {
     _banner?.close();
@@ -39,6 +42,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       // Don't show ad if this is the first level or the player
       // paid for removed ads.
       _showAd = false;
+      _startOfPlay = DateTime.now();
     } else {
       // Show ad.
       _showAd = true;
@@ -110,6 +114,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   onClose: () {
                     setState(() {
                       _showAd = false;
+                      _startOfPlay = DateTime.now();
                     });
                   },
                 ),
@@ -137,14 +142,22 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   void _playerWon() async {
+    final score = Score(
+      widget.level.setting,
+      1 /* TODO: input AI difficuly */,
+      DateTime.now().difference(_startOfPlay),
+    );
+
     setState(() {
       _duringCelebration = true;
     });
 
-    context.read<PlayerProgress>().setLevelReached(widget.level.number);
+    final playerProgress = context.read<PlayerProgress>();
+    playerProgress.setLevelReached(widget.level.number);
+    playerProgress.addScore(score);
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    GoRouter.of(context).go('/play/won');
+    GoRouter.of(context).go('/play/won', extra: score);
   }
 }

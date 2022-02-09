@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_game_sample/src/game_internals/score.dart';
 
 class MemoryOnlyPlayerProgressPersistentStore
     implements PlayerProgressPersistentStore {
   int level = 0;
+
+  List<Score> highestScores = [];
 
   @override
   Future<int> getHighestLevelReached() async {
@@ -17,6 +21,18 @@ class MemoryOnlyPlayerProgressPersistentStore
     await Future.delayed(const Duration(milliseconds: 500));
     this.level = level;
   }
+
+  @override
+  Future<List<Score>> getHighestScores() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return highestScores;
+  }
+
+  @override
+  Future<void> saveHighestScores(List<Score> scores) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    highestScores = scores;
+  }
 }
 
 class PlayerProgress extends ChangeNotifier {
@@ -24,9 +40,14 @@ class PlayerProgress extends ChangeNotifier {
 
   int _highestLevelReached = 0;
 
+  List<Score> _highestScores = [];
+
   PlayerProgress(this._store);
 
   int get highestLevelReached => _highestLevelReached;
+
+  UnmodifiableListView<Score> get highestScores =>
+      UnmodifiableListView(_highestScores);
 
   void getLatestFromStore() async {
     final level = await _store.getHighestLevelReached();
@@ -38,8 +59,21 @@ class PlayerProgress extends ChangeNotifier {
 
   reset() {
     _highestLevelReached = 0;
+    _highestScores = [];
+    notifyListeners();
     unawaited(_store.saveHighestLevelReached(_highestLevelReached));
   }
+
+  void addScore(Score score) {
+    _highestScores.add(score);
+    _highestScores.sort((a, b) => -a.score.compareTo(b.score));
+    while (_highestScores.length > maxHighestScoresPerPlayer) {
+      _highestScores.removeLast();
+    }
+    notifyListeners();
+  }
+
+  static const maxHighestScoresPerPlayer = 10;
 
   void setLevelReached(int level) {
     if (level > _highestLevelReached) {
@@ -55,4 +89,8 @@ abstract class PlayerProgressPersistentStore {
   Future<int> getHighestLevelReached();
 
   Future<void> saveHighestLevelReached(int level);
+
+  Future<List<Score>> getHighestScores();
+
+  Future<void> saveHighestScores(List<Score> scores);
 }

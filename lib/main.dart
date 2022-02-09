@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/achievements_screen.dart';
+import 'package:flutter_game_sample/src/game_internals/score.dart';
 import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
                   ),
                   GoRoute(
                     path: 'won',
-                    builder: (context, state) => WinGameScreen(),
+                    builder: (context, state) =>
+                        WinGameScreen(score: state.extra! as Score),
                   )
                 ]),
             GoRoute(
