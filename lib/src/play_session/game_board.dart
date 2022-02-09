@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
-import 'package:flutter_game_sample/src/rough/grid.dart';
+import 'package:flutter_game_sample/src/style/rough/grid.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 

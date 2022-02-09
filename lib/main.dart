@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/achievements_screen.dart';
-import 'package:flutter_game_sample/src/game_internals/score.dart';
+import 'package:flutter_game_sample/src/achievements/player_progress.dart';
+import 'package:flutter_game_sample/src/achievements/score.dart';
 import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
-import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
 import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/settings/settings_screen.dart';
 import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';

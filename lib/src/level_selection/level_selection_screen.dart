@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/achievements/player_progress.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
-import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
-import 'package:flutter_game_sample/src/rough/button.dart';
+import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

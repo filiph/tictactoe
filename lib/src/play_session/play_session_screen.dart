@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/src/achievements/player_progress.dart';
+import 'package:flutter_game_sample/src/achievements/score.dart';
 import 'package:flutter_game_sample/src/ads/interstitial_ad.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
-import 'package:flutter_game_sample/src/game_internals/score.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/play_session/game_board.dart';
-import 'package:flutter_game_sample/src/player_progress/player_progress.dart';
-import 'package:flutter_game_sample/src/rough/button.dart';
 import 'package:flutter_game_sample/src/settings/settings.dart';
+import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

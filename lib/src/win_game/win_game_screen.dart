@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/game_internals/score.dart';
-import 'package:flutter_game_sample/src/rough/button.dart';
+import 'package:flutter_game_sample/src/achievements/score.dart';
+import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 
 class WinGameScreen extends StatelessWidget {
