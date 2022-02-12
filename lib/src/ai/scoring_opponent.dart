@@ -10,7 +10,27 @@ import 'package:flutter_game_sample/src/game_internals/tile.dart';
 /// Heavily inspired by an ancient algorithm called "Piskvorky 95"
 /// by Miroslav Novak.
 class ScoringOpponent extends AiOpponent {
-  const ScoringOpponent(BoardSetting setting) : super(setting);
+  /// Scores corresponding to a given number of taken tiles.
+  ///
+  /// For example, if a run of `k` tiles has 3 player tiles in it,
+  /// it will be scored with `400`. If it has 0 player tiles in it,
+  /// it will be scored with `1`.
+  List<int> get _playerScoring => const [1, 20, 90, 400, 8000, 0];
+
+  /// Same as [_playerScoring], but this time we're scoring the AI's
+  /// own tiles.
+  List<int> get _aiScoring => const [2, 30, 100, 500, 10000, 0];
+
+  ScoringOpponent(BoardSetting setting) : super(setting) {
+    assert(
+        setting.k <= _playerScoring.length + 1,
+        'Scoring opponent does not support games '
+        'with more than 5 in a row');
+    assert(
+        setting.k <= _aiScoring.length + 1,
+        'Scoring opponent does not support games '
+        'with more than 5 in a row');
+  }
 
   @override
   Tile chooseNextMove(BoardState state) {
@@ -38,26 +58,12 @@ class ScoringOpponent extends AiOpponent {
             continue;
           }
 
-          if (aiTiles == 0 && playerTiles == 0) {
-            // Completely blank line. Add 1 for attack and 1 for defense.
-            score += 2;
-            continue;
+          if (aiTiles == 0) {
+            score += _playerScoring[playerTiles];
           }
 
-          if (playerTiles > 0) {
-            // Defense. Add +1 to have at least as much as blank lines.
-            score += playerTiles + 1;
-            if (playerTiles == setting.k - 2) {
-              score += 20;
-            }
-            continue;
-          }
-
-          assert(aiTiles > 0);
-          // Attack. Add +1 to have at least as much as blank lines.
-          score += aiTiles + 1;
-          if (aiTiles == setting.k - 1) {
-            score += 50;
+          if (playerTiles == 0) {
+            score += _aiScoring[aiTiles];
           }
         }
 
@@ -70,4 +76,15 @@ class ScoringOpponent extends AiOpponent {
 
     return sorted.firstKey()!;
   }
+}
+
+/// A scoring opponent that just cares about attacking.
+class AttackOnlyScoringOpponent extends ScoringOpponent {
+  AttackOnlyScoringOpponent(BoardSetting setting) : super(setting);
+
+  @override
+  List<int> get _playerScoring => const [1, 1, 20, 90, 8000, 0];
+
+  @override
+  List<int> get _aiScoring => const [2, 30, 100, 500, 10000, 0];
 }

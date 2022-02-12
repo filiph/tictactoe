@@ -8,6 +8,7 @@ import 'package:flutter_game_sample/src/play_session/game_board.dart';
 import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
 class PlaySessionScreen extends StatefulWidget {
@@ -20,34 +21,14 @@ class PlaySessionScreen extends StatefulWidget {
 }
 
 class _PlaySessionScreenState extends State<PlaySessionScreen> {
+  static final _log = Logger('PlaySessionScreen');
+
   ScaffoldFeatureController<MaterialBanner, MaterialBannerClosedReason>?
       _banner;
 
   bool _duringCelebration = false;
 
   late DateTime _startOfPlay;
-
-  @override
-  void dispose() {
-    _banner?.close();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final settings = context.read<Settings>();
-
-    if (widget.level.number == 1 || settings.adsRemoved) {
-      // Don't show ad if this is the first level or the player
-      // paid for removed ads.
-      _showAd = false;
-      _startOfPlay = DateTime.now();
-    } else {
-      // Show ad.
-      _showAd = true;
-    }
-  }
 
   bool _showAd = true;
 
@@ -57,9 +38,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       providers: [
         ChangeNotifierProvider(
           create: (context) {
+            final opponent =
+                widget.level.aiOpponentBuilder(widget.level.setting);
+            _log.info('$opponent enters');
+
             final state = BoardState.clean(
               widget.level.setting,
-              widget.level.aiOpponentBuilder(widget.level.setting),
+              opponent,
             );
 
             state.playerWon.addListener(_playerWon);
@@ -123,6 +108,28 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _banner?.close();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final settings = context.read<Settings>();
+
+    if (widget.level.number == 1 || settings.adsRemoved) {
+      // Don't show ad if this is the first level or the player
+      // paid for removed ads.
+      _showAd = false;
+      _startOfPlay = DateTime.now();
+    } else {
+      // Show ad.
+      _showAd = true;
+    }
   }
 
   void _aiOpponentWon() {
