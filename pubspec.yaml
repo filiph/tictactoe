@@ -30,13 +30,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   cupertino_icons: ^1.0.2
   go_router: ^3.0.1
   logging: ^1.0.2
   provider: ^6.0.2
-
-  rough: ^0.1.1  # TODO: remove after no longer needed for the "preview"
 
 dev_dependencies:
   flutter_test:

@@ -11,7 +11,6 @@ To make it easier for everyone to play with the sample, it's currently
 
 ## Building
 
-Right now, we're using `pkg:rough` which is not null safe. So, in order
-to build for the web, we need to do all this:
+To build and publish to github.io:
 
-    fvm flutter pub global run peanut --extra-args "--no-sound-null-safety"
+    fvm flutter pub global run peanut && git push origin --set-upstream gh-pages

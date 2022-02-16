@@ -59,6 +59,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         child: Scaffold(
           body: Stack(
             children: [
+              SizedBox.expand(
+                child: Opacity(
+                  opacity: 0.3,
+                  child: Image.asset(
+                    'assets/images/background.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
