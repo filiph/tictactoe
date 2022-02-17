@@ -81,10 +81,18 @@ class _BoardTileState extends State<BoardTile>
         representation = SizedBox.expand();
         break;
       case Side.x:
-        representation = _SketchedX(color: color, progress: progress);
+        representation = _SketchedX(
+          color: color,
+          progress: progress,
+          variantSeed: widget.tile.hashCode,
+        );
         break;
       case Side.o:
-        representation = _SketchedO(color: color, progress: progress);
+        representation = _SketchedO(
+          color: color,
+          progress: progress,
+          variantSeed: widget.tile.hashCode,
+        );
         break;
     }
 
@@ -114,73 +122,109 @@ class _SketchedX extends StatelessWidget {
 
   final Color color;
 
-  const _SketchedX({Key? key, required this.color, required this.progress})
-      : super(key: key);
+  /// An integer that will be used to select a variant of the mark.
+  /// Can be any integer.
+  final int variantSeed;
+
+  const _SketchedX({
+    Key? key,
+    required this.color,
+    required this.progress,
+    required this.variantSeed,
+  }) : super(key: key);
+
+  static const _startImageAssets = [
+    'assets/images/cross-start-1.png',
+    'assets/images/cross-start-2.png',
+    'assets/images/cross-start-3.png',
+    'assets/images/cross-start-4.png',
+    'assets/images/cross-start-5.png',
+  ];
+
+  static const _endImageAssets = [
+    'assets/images/cross-end-1.png',
+    'assets/images/cross-end-2.png',
+    'assets/images/cross-end-3.png',
+    'assets/images/cross-end-4.png',
+    'assets/images/cross-end-5.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final crossStart = Image.asset(
-      'assets/images/cross-start.png',
-      color: color,
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      final width =
+          constraints.maxWidth * MediaQuery.of(context).devicePixelRatio;
+      final resizeCrossStart = ResizeImage(
+        AssetImage(_startImageAssets[variantSeed % _startImageAssets.length]),
+        width: width.ceil(),
+      );
+      final crossStart = Image(
+        image: resizeCrossStart,
+        color: color,
+      );
+      final resizeCrossEnd = ResizeImage(
+        AssetImage(
+            _endImageAssets[(42 + variantSeed >> 1) % _endImageAssets.length]),
+        width: width.ceil(),
+      );
+      final crossEnd = Image(
+        image: resizeCrossEnd,
+        color: color,
+      );
 
-    final crossEnd = Image.asset(
-      'assets/images/cross-end.png',
-      color: color,
-    );
-
-    return Stack(
-      children: [
-        AnimatedBuilder(
-          animation: progress,
-          builder: (context, child) {
-            return ShaderMask(
-              blendMode: BlendMode.dstIn,
-              shaderCallback: (bounds) {
-                return LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.black,
-                    Colors.white.withOpacity(0),
-                  ],
-                  stops: [
-                    progress.value * 2,
-                    progress.value * 2 + 0.05,
-                  ],
-                ).createShader(bounds);
-              },
-              child: child,
-            );
-          },
-          child: crossStart,
-        ),
-        AnimatedBuilder(
-          animation: progress,
-          builder: (context, child) {
-            return ShaderMask(
-              blendMode: BlendMode.dstIn,
-              shaderCallback: (bounds) {
-                return LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Colors.black,
-                    Colors.white.withOpacity(0),
-                  ],
-                  stops: [
-                    -1 + progress.value * 2,
-                    -1 + progress.value * 2 + 0.05,
-                  ],
-                ).createShader(bounds);
-              },
-              child: child,
-            );
-          },
-          child: crossEnd,
-        ),
-      ],
-    );
+      return Stack(
+        children: [
+          AnimatedBuilder(
+            animation: progress,
+            builder: (context, child) {
+              return ShaderMask(
+                blendMode: BlendMode.dstIn,
+                shaderCallback: (bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.black,
+                      Colors.white.withOpacity(0),
+                    ],
+                    stops: [
+                      progress.value * 2,
+                      progress.value * 2 + 0.05,
+                    ],
+                  ).createShader(bounds);
+                },
+                child: child,
+              );
+            },
+            child: crossStart,
+          ),
+          AnimatedBuilder(
+            animation: progress,
+            builder: (context, child) {
+              return ShaderMask(
+                blendMode: BlendMode.dstIn,
+                shaderCallback: (bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.black,
+                      Colors.white.withOpacity(0),
+                    ],
+                    stops: [
+                      -1 + progress.value * 2,
+                      -1 + progress.value * 2 + 0.05,
+                    ],
+                  ).createShader(bounds);
+                },
+                child: child,
+              );
+            },
+            child: crossEnd,
+          ),
+        ],
+      );
+    });
   }
 }
 
@@ -189,38 +233,64 @@ class _SketchedO extends StatelessWidget {
 
   final Color color;
 
-  const _SketchedO({Key? key, required this.color, required this.progress})
-      : super(key: key);
+  /// An integer that will be used to select a variant of the mark.
+  /// Can be any integer.
+  final int variantSeed;
+
+  const _SketchedO({
+    Key? key,
+    required this.color,
+    required this.progress,
+    required this.variantSeed,
+  }) : super(key: key);
+
+  static const _imageAssets = [
+    'assets/images/circle1.png',
+    'assets/images/circle2.png',
+    'assets/images/circle3.png',
+    'assets/images/circle4.png',
+    'assets/images/circle5.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final circle = Image.asset(
-      'assets/images/circle.png',
-      color: color,
-    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width =
+            constraints.maxWidth * MediaQuery.of(context).devicePixelRatio;
+        final resizeImage = ResizeImage(
+          AssetImage(_imageAssets[variantSeed % _imageAssets.length]),
+          width: width.ceil(),
+        );
+        final circle = Image(
+          image: resizeImage,
+          color: color,
+        );
 
-    return AnimatedBuilder(
-      animation: progress,
-      builder: (context, child) {
-        return ShaderMask(
-          blendMode: BlendMode.dstIn,
-          shaderCallback: (bounds) {
-            return SweepGradient(
-              transform: GradientRotation(-110 / 180 * math.pi),
-              colors: [
-                Colors.black,
-                Colors.white.withOpacity(0),
-              ],
-              stops: [
-                progress.value,
-                progress.value + 0.05,
-              ],
-            ).createShader(bounds);
+        return AnimatedBuilder(
+          animation: progress,
+          builder: (context, child) {
+            return ShaderMask(
+              blendMode: BlendMode.dstIn,
+              shaderCallback: (bounds) {
+                return SweepGradient(
+                  transform: GradientRotation(-110 / 180 * math.pi),
+                  colors: [
+                    Colors.black,
+                    Colors.white.withOpacity(0),
+                  ],
+                  stops: [
+                    progress.value,
+                    progress.value + 0.05,
+                  ],
+                ).createShader(bounds);
+              },
+              child: child,
+            );
           },
-          child: child,
+          child: circle,
         );
       },
-      child: circle,
     );
   }
 }
