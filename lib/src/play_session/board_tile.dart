@@ -112,7 +112,10 @@ class _BoardTileState extends State<BoardTile>
           state.take(widget.tile);
         }
       },
-      child: representation,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: representation,
+      ),
     );
   }
 }
@@ -163,8 +166,8 @@ class _SketchedX extends StatelessWidget {
         color: color,
       );
       final resizeCrossEnd = ResizeImage(
-        AssetImage(
-            _endImageAssets[(42 + variantSeed >> 1) % _endImageAssets.length]),
+        AssetImage(_endImageAssets[
+            Object.hash(42, variantSeed) % _endImageAssets.length]),
         width: width.ceil(),
       );
       final crossEnd = Image(
