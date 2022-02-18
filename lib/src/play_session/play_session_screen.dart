@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/player_progress.dart';
 import 'package:flutter_game_sample/src/achievements/score.dart';
-import 'package:flutter_game_sample/src/ads/interstitial_ad.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/play_session/game_board.dart';
-import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -26,8 +24,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   bool _duringCelebration = false;
 
   late DateTime _startOfPlay;
-
-  bool _showAd = true;
 
   @override
   Widget build(BuildContext context) {
@@ -99,15 +95,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   const Spacer(),
                 ],
               ),
-              if (_showAd)
-                InterstitialAd(
-                  onClose: () {
-                    setState(() {
-                      _showAd = false;
-                      _startOfPlay = DateTime.now();
-                    });
-                  },
-                ),
             ],
           ),
         ),
@@ -118,17 +105,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   void initState() {
     super.initState();
-    final settings = context.read<Settings>();
-
-    if (widget.level.number == 1 || settings.adsRemoved) {
-      // Don't show ad if this is the first level or the player
-      // paid for removed ads.
-      _showAd = false;
-      _startOfPlay = DateTime.now();
-    } else {
-      // Show ad.
-      _showAd = true;
-    }
+    _startOfPlay = DateTime.now();
   }
 
   void _aiOpponentWon() {
