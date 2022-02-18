@@ -69,6 +69,7 @@ class Palette {
   final pen = const Color(0xff0b8fe4);
   final darkPen = const Color(0xFF020887);
   final redPen = const Color(0xFF930006);
-  final ink = const Color(0xff3a3e3a);
+  final inkFullOpacity = const Color(0xff3a3e3a);
+  final ink = const Color(0xdd1a1e1a);
   final background = const Color(0xfff2f5f1);
 }

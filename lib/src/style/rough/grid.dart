@@ -42,7 +42,7 @@ class RoughGrid extends StatelessWidget {
             painter: _RoughGridPainter(
               width,
               height,
-              lineColor: palette.darkPen,
+              lineColor: palette.ink,
               horizontal: snapshot.data!.a,
               vertical: snapshot.data!.b,
             ),

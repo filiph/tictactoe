@@ -101,15 +101,18 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Builder(builder: (context) {
+        final palette = context.watch<Palette>();
+
         return MaterialApp.router(
           title: 'Flutter Demo',
           theme: ThemeData.from(
             colorScheme: ColorScheme.fromSeed(
-              seedColor: context.watch<Palette>().darkPen,
+              seedColor: palette.darkPen,
+              background: palette.background,
             ),
             textTheme: TextTheme(
               bodyText2: TextStyle(
-                color: context.watch<Palette>().ink,
+                color: palette.ink,
               ),
             ),
           ),

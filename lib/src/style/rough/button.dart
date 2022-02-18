@@ -17,21 +17,24 @@ class RoughButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
 
-    return InkWell(
+    return InkResponse(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 34,
-          vertical: 18,
-        ),
-        child: DefaultTextStyle(
-          style: TextStyle(
-            fontFamily: 'Permanent Marker',
-            fontSize: 26,
-            color: onTap != null ? palette.darkPen : palette.ink,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          Image.asset(
+            'assets/images/bar1.png',
+            color: palette.ink,
           ),
-          child: child,
-        ),
+          DefaultTextStyle(
+            style: TextStyle(
+              fontFamily: 'Permanent Marker',
+              fontSize: 32,
+              color: onTap != null ? palette.background : palette.ink,
+            ),
+            child: child,
+          ),
+        ],
       ),
     );
   }

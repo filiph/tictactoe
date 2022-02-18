@@ -78,7 +78,7 @@ class _BoardTileState extends State<BoardTile>
 
     Widget representation;
 
-    var color = owner == playerSide ? palette.darkPen : palette.darkPen;
+    var color = owner == playerSide ? palette.ink : palette.ink;
     color = isWinning ? palette.redPen : color;
     final progress =
         CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);

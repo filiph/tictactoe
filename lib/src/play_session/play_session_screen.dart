@@ -61,7 +61,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             children: [
               SizedBox.expand(
                 child: Opacity(
-                  opacity: 0.3,
+                  opacity: 0.2,
                   child: Image.asset(
                     'assets/images/background.jpg',
                     fit: BoxFit.cover,
