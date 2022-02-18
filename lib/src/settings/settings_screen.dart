@@ -33,7 +33,6 @@ class SettingsScreen extends StatelessWidget {
                   _SettingsLine('Sound FX', Icons.volume_off),
                   _SettingsLine('Music', Icons.music_off),
                   _SettingsLine('Remove ads', Icons.monetization_on),
-                  _SettingsLine('Language', Icons.language),
                   _SettingsLine(
                     'Reset game',
                     Icons.restart_alt,
@@ -89,8 +88,9 @@ class _SettingsLine extends StatelessWidget {
               fontSize: 30,
             )),
         Spacer(),
-        RoughButton(
-          onTap: () {
+        IconButton(
+          icon: Icon(icon),
+          onPressed: () {
             if (onSelected != null) {
               onSelected!();
               return;
@@ -102,7 +102,6 @@ class _SettingsLine extends StatelessWidget {
               SnackBar(content: Text('Not implemented yet.')),
             );
           },
-          child: Icon(icon),
         ),
       ],
     );
