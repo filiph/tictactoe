@@ -38,34 +38,32 @@ class MainMenuScreen extends StatelessWidget {
               onTap: () => GoRouter.of(context).go('/achievements'),
               child: const Text('Achievements'),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RoughButton(
-                  onTap: () => GoRouter.of(context).go('/settings'),
-                  child: const Text('Settings'),
+            RoughButton(
+              onTap: () => GoRouter.of(context).go('/settings'),
+              child: const Text('Settings'),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: IconButton(
+                onPressed: () {
+                  final messenger = ScaffoldMessenger.of(context);
+                  messenger.clearSnackBars();
+                  messenger.showSnackBar(
+                    SnackBar(
+                        content: Text('NOT IMPLEMENTED. No sound yet. '
+                            'This will be a "quick mute" button that stops '
+                            'both music and sounds. Many mobile players don’t '
+                            'appreciate having to dig in settings to prevent '
+                            'the game from blasting music.')),
+                  );
+                },
+                icon: Icon(
+                  (defaultTargetPlatform == TargetPlatform.iOS ||
+                          defaultTargetPlatform == TargetPlatform.macOS)
+                      ? CupertinoIcons.volume_off
+                      : Icons.volume_off,
                 ),
-                IconButton(
-                  onPressed: () {
-                    final messenger = ScaffoldMessenger.of(context);
-                    messenger.clearSnackBars();
-                    messenger.showSnackBar(
-                      SnackBar(
-                          content: Text('NOT IMPLEMENTED. No sound yet. '
-                              'This will be a "quick mute" button that stops '
-                              'both music and sounds. Many mobile players don’t '
-                              'appreciate having to dig in settings to prevent '
-                              'the game from blasting music.')),
-                    );
-                  },
-                  icon: Icon(
-                    (defaultTargetPlatform == TargetPlatform.iOS ||
-                            defaultTargetPlatform == TargetPlatform.macOS)
-                        ? CupertinoIcons.volume_off
-                        : Icons.volume_off,
-                  ),
-                )
-              ],
+              ),
             ),
             const Spacer(),
           ],
