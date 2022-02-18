@@ -23,9 +23,6 @@ class PlaySessionScreen extends StatefulWidget {
 class _PlaySessionScreenState extends State<PlaySessionScreen> {
   static final _log = Logger('PlaySessionScreen');
 
-  ScaffoldFeatureController<MaterialBanner, MaterialBannerClosedReason>?
-      _banner;
-
   bool _duringCelebration = false;
 
   late DateTime _startOfPlay;
@@ -88,8 +85,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     return RoughButton(
                       onTap: () {
                         context.read<BoardState>().clearBoard();
-                        _banner?.close();
-                        _banner = null;
                         _startOfPlay = DateTime.now();
                       },
                       child: const Text('Restart'),
@@ -121,12 +116,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   @override
-  void dispose() {
-    _banner?.close();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     final settings = context.read<Settings>();
@@ -143,28 +132,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   void _aiOpponentWon() {
-    _banner?.close();
-
-    var banner = MaterialBanner(
-        content: Text('Oh no! You lost. Might want to restart.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-              _banner = null;
-            },
-            child: Text('OK'),
-          ),
-        ]);
-
-    _banner = ScaffoldMessenger.of(context).showMaterialBanner(banner);
+    // Nothing to do. The board is locked.
   }
 
   void _playerWon() async {
     final score = Score(
       widget.level.number,
       widget.level.setting,
-      1 /* TODO: input AI difficuly */,
+      widget.level.aiDifficulty,
       DateTime.now().difference(_startOfPlay),
     );
 
@@ -176,7 +151,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     playerProgress.setLevelReached(widget.level.number);
     playerProgress.addScore(score);
 
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 1000));
 
     GoRouter.of(context).go('/play/won', extra: score);
   }
