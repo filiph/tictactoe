@@ -37,16 +37,98 @@ class RoughGrid extends StatelessWidget {
 
         final palette = context.watch<Palette>();
 
-        return RepaintBoundary(
-          child: CustomPaint(
-            painter: _RoughGridPainter(
-              width,
-              height,
-              lineColor: palette.ink,
-              horizontal: snapshot.data!.a,
-              vertical: snapshot.data!.b,
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            // First, "draw" (reveal) the horizontal lines
+            TweenAnimationBuilder(
+              // The tween start's with a negative number to achieve
+              // a bit of delay before drawing. This is quite dirty, so maybe
+              // optimize later?
+              tween: Tween<double>(begin: -0.5, end: 1),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutCubic,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: _RoughGridPainter(
+                    width,
+                    height,
+                    lineColor: palette.ink,
+                    horizontal: snapshot.data!.a,
+                    vertical: snapshot.data!.b,
+                    paintOnly: _Direction.horizontal,
+                  ),
+                ),
+              ),
+              builder: (BuildContext context, double progress, Widget? child) {
+                return ShaderMask(
+                  // BlendMode.dstIn means that opacity of the linear
+                  // gradient below will be applied to the child (the horizontal
+                  // lines).
+                  blendMode: BlendMode.dstIn,
+                  shaderCallback: (Rect bounds) {
+                    // A linear gradient that sweeps from
+                    // "top-slightly-left-off-center" to
+                    // "bottom-slightly-right-of-center". This achieves the
+                    // quick "drawing" of the lines.
+                    return LinearGradient(
+                      begin: Alignment(-0.1, -1),
+                      end: Alignment(0.1, 1),
+                      colors: [
+                        Colors.black,
+                        Colors.white.withOpacity(0),
+                      ],
+                      stops: [
+                        progress,
+                        progress + 0.05,
+                      ],
+                    ).createShader(bounds);
+                  },
+                  child: child!,
+                );
+              },
             ),
-          ),
+            // Same as above, but for vertical lines.
+            TweenAnimationBuilder(
+              // Wait even longer before starting.
+              tween: Tween<double>(begin: -1, end: 1),
+              // Take longer to draw.
+              duration: const Duration(milliseconds: 1600),
+              curve: Curves.easeOutCubic,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: _RoughGridPainter(
+                    width,
+                    height,
+                    lineColor: palette.ink,
+                    horizontal: snapshot.data!.a,
+                    vertical: snapshot.data!.b,
+                    paintOnly: _Direction.vertical,
+                  ),
+                ),
+              ),
+              builder: (BuildContext context, double progress, Widget? child) {
+                return ShaderMask(
+                  blendMode: BlendMode.dstIn,
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment(-1, -0.1),
+                      end: Alignment(1, 0.1),
+                      colors: [
+                        Colors.black,
+                        Colors.white.withOpacity(0),
+                      ],
+                      stops: [
+                        progress,
+                        progress + 0.05,
+                      ],
+                    ).createShader(bounds);
+                  },
+                  child: child!,
+                );
+              },
+            ),
+          ],
         );
       },
     );
@@ -58,6 +140,8 @@ class _RoughGridPainter extends CustomPainter {
   final int height;
 
   final Color lineColor;
+
+  final _Direction? paintOnly;
 
   late final Paint pathPaint = Paint()
     ..colorFilter = ColorFilter.mode(lineColor, BlendMode.srcIn);
@@ -74,6 +158,7 @@ class _RoughGridPainter extends CustomPainter {
     required this.vertical,
     required this.horizontal,
     this.lineColor = Colors.black,
+    this.paintOnly,
   });
 
   @override
@@ -89,44 +174,49 @@ class _RoughGridPainter extends CustomPainter {
 
     // Draw vertical lines.
     final verticalScale = (size.height - padding) / vertical.height;
-    for (var i = 1; i < width; i++) {
-      canvas.drawPicture(
-        _roughLine(
-          vertical,
-          Offset(i * widthStep, padding),
-          maxCrossDisplacement,
-          pathPaint,
-          mainAxisScale: verticalScale,
-          lineThickness: lineThickness,
-          directionIsVertical: true,
-          random: _random,
-        ),
-      );
+
+    if (paintOnly == null || paintOnly == _Direction.vertical) {
+      for (var i = 1; i < width; i++) {
+        canvas.drawPicture(
+          _roughLine(
+            vertical,
+            Offset(i * widthStep, padding),
+            maxCrossDisplacement,
+            pathPaint,
+            mainAxisScale: verticalScale,
+            lineThickness: lineThickness,
+            direction: _Direction.vertical,
+            random: _random,
+          ),
+        );
+      }
     }
 
     // Draw horizontal lines.
     final heightStep = size.height / height;
     final horizontalScale = (size.width - padding) / horizontal.width;
-    for (var i = 1; i < height; i++) {
-      canvas.drawPicture(
-        _roughLine(
-          horizontal,
-          Offset(padding, i * heightStep),
-          maxCrossDisplacement,
-          pathPaint,
-          mainAxisScale: horizontalScale,
-          lineThickness: lineThickness,
-          directionIsVertical: false,
-          random: _random,
-        ),
-      );
-      // canvas.drawImageNine(
-      //   horizontal,
-      //   Rect.fromLTRB(15, 15, 15, 15),
-      //   Rect.fromLTWH(padding, i * heightStep - lineWidth / 2,
-      //       size.width - padding, lineWidth),
-      //   pathPaint,
-      // );
+    if (paintOnly == null || paintOnly == _Direction.horizontal) {
+      for (var i = 1; i < height; i++) {
+        canvas.drawPicture(
+          _roughLine(
+            horizontal,
+            Offset(padding, i * heightStep),
+            maxCrossDisplacement,
+            pathPaint,
+            mainAxisScale: horizontalScale,
+            lineThickness: lineThickness,
+            direction: _Direction.horizontal,
+            random: _random,
+          ),
+        );
+        // canvas.drawImageNine(
+        //   horizontal,
+        //   Rect.fromLTRB(15, 15, 15, 15),
+        //   Rect.fromLTWH(padding, i * heightStep - lineWidth / 2,
+        //       size.width - padding, lineWidth),
+        //   pathPaint,
+        // );
+      }
     }
   }
 
@@ -140,8 +230,8 @@ class _RoughGridPainter extends CustomPainter {
     Offset position,
     double maxCrossAxisDisplacement,
     Paint paint, {
-    required directionIsVertical,
     required double lineThickness,
+    required _Direction direction,
     Random? random,
     double mainAxisScale = 1.0,
   }) {
@@ -155,6 +245,7 @@ class _RoughGridPainter extends CustomPainter {
     const segmentLength = 100.0;
     final outputSegmentLength = segmentLength * mainAxisScale;
 
+    final directionIsVertical = direction == _Direction.vertical;
     final length = directionIsVertical ? image.height : image.width;
 
     var totalCrossAxisDisplacement = 0.0;
@@ -217,4 +308,9 @@ class _Tuple<T> {
     final results = await Future.wait([a, b]);
     return _Tuple(results[0], results[1]);
   }
+}
+
+enum _Direction {
+  horizontal,
+  vertical,
 }
