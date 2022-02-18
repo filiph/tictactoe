@@ -20,10 +20,10 @@ final gameLevels = [
   ),
   GameLevel(
     number: 3,
-    message: 'Defeat a solid AI at four-in-a-row!',
-    setting: BoardSetting(5, 5, 4),
-    aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => ScoringOpponent(setting),
+    message: 'Defeat a naive AI at four-in-a-row!',
+    setting: BoardSetting(6, 6, 4),
+    aiDifficulty: 1,
+    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(setting),
   ),
   GameLevel(
     number: 4,
