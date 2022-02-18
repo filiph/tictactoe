@@ -12,7 +12,7 @@ import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
 class PlaySessionScreen extends StatefulWidget {
-  final Level level;
+  final GameLevel level;
 
   const PlaySessionScreen(this.level, {Key? key}) : super(key: key);
 

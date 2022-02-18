@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/flavors.dart';
 import 'package:flutter_game_sample/src/achievements/achievements_screen.dart';
 import 'package:flutter_game_sample/src/achievements/player_progress.dart';
 import 'package:flutter_game_sample/src/achievements/score.dart';
@@ -10,15 +12,23 @@ import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/settings/settings_screen.dart';
 import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logging/logging.dart' hide Level;
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  checkFlavorDefined();
+
+  if (kReleaseMode) {
+    // Don't log anything below warnings in production.
+    Logger.root.level = Level.WARNING;
+  }
   Logger.root.onRecord.listen((record) {
-    debugPrint('${record.level.name}: ${record.time}: ${record.message}');
+    debugPrint('${record.level.name}: ${record.time}: '
+        '${record.loggerName}: '
+        '${record.message}');
   });
 
-  debugPrint('Starting app');
+  _log.info('Starting game in $flavor');
   runApp(
     MyApp(
       playerProgressPersistentStore: MemoryOnlyPlayerProgressPersistentStore(),
@@ -40,11 +50,11 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session',
                     builder: (context, state) {
-                      if (state.extra == null || state.extra is! Level) {
+                      if (state.extra == null || state.extra is! GameLevel) {
                         // TODO: redirect somewhere else?
                         throw ArgumentError.value(state.extra);
                       }
-                      final level = state.extra! as Level;
+                      final level = state.extra! as GameLevel;
                       return PlaySessionScreen(level);
                     },
                   ),
@@ -98,3 +108,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+Logger _log = Logger('main.dart');

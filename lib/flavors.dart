@@ -1,0 +1,39 @@
+/// This compile-time constant will be set according to Dart's compile-time
+/// environment variable named 'flavor'.
+///
+/// To get this to be [Flavor.full], run the app with:
+///
+///     flutter run --dart-define=flavor=full
+///
+/// To get this to be [Flavor.lite], run the app with:
+///
+///     flutter run --dart-define=flavor=lite
+///
+/// If you don't define the flag at all, [flavor] will be [Flavor.undefined].
+/// The app should refuse to execute (throw an error at startup). That way,
+/// there's no way to forget to specify a flavor (a common source of confusion
+/// when debugging).
+const Flavor flavor = _flavorFlag == 'full'
+    ? Flavor.full
+    : _flavorFlag == 'lite'
+        ? Flavor.lite
+        : Flavor.undefined;
+
+/// Checks if [flavor] is defined and throws an error if it isn't.
+void checkFlavorDefined() {
+  if (flavor == Flavor.undefined) {
+    throw ArgumentError(
+        'No flavor environment variable defined. Please provide a value when '
+        'running `flutter build` or `flutter run`. For example, if you '
+        'want to debug the full app, run '
+        '`flutter run --dart-define=flavor=full`.');
+  }
+}
+
+const String _flavorFlag = String.fromEnvironment('flavor');
+
+enum Flavor {
+  undefined,
+  full,
+  lite,
+}
