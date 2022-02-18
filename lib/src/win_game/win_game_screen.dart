@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/score.dart';
+import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +14,7 @@ class WinGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final adsRemoved = context.watch<Settings>().adsRemoved;
 
     return Scaffold(
       body: Center(
@@ -55,14 +57,16 @@ class WinGameScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                color: palette.light,
-                child: Center(child: Text('Ads here')),
+            if (!adsRemoved) ...[
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Container(
+                  color: palette.light,
+                  child: Center(child: Text('Ads here')),
+                ),
               ),
-            ),
-            Spacer(),
+              Spacer(),
+            ],
             RoughButton(
               onTap: () {
                 GoRouter.of(context).pop();

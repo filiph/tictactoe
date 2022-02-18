@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_game_sample/flavors.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,6 +28,10 @@ class MainMenuScreen extends StatelessWidget {
                 ),
               ),
             ),
+            if (flavor == Flavor.lite) ...[
+              const Spacer(),
+              Text('‘Lite’ version (for the web)'),
+            ],
             const Spacer(),
             RoughButton(
               onTap: () {

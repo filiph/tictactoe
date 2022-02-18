@@ -13,4 +13,4 @@ To make it easier for everyone to play with the sample, it's currently
 
 To build and publish to github.io:
 
-    fvm flutter pub global run peanut && git push origin --set-upstream gh-pages
+    fvm flutter pub global run peanut --extra-args "--dart-define flavor=lite" && git push origin --set-upstream gh-pages
