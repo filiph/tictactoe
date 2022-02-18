@@ -148,8 +148,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         content: Text('Oh no! You lost. Might want to restart.'),
         actions: [
           TextButton(
-            onPressed: () =>
-                ScaffoldMessenger.of(context).removeCurrentMaterialBanner(),
+            onPressed: () {
+              ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+              _banner = null;
+            },
             child: Text('OK'),
           ),
         ]);

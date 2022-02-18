@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/score.dart';
+import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class WinGameScreen extends StatelessWidget {
   final Score score;
@@ -10,6 +12,8 @@ class WinGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<Palette>();
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -54,7 +58,7 @@ class WinGameScreen extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Container(
-                color: Colors.grey,
+                color: palette.light,
                 child: Center(child: Text('Ads here')),
               ),
             ),

@@ -14,22 +14,7 @@ class MainMenuScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              color: Colors.red,
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Ignore the design at this point. This is a structural & '
-                    'functional wireframe, basically.',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const Spacer(),
+            Spacer(),
             Transform.rotate(
               angle: -0.1,
               child: const Text(

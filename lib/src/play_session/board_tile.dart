@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
+import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
@@ -67,13 +68,18 @@ class _BoardTileState extends State<BoardTile>
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<Palette>();
     final owner =
         context.select((BoardState state) => state.whoIsAt(widget.tile));
+    final playerSide =
+        context.select((BoardState state) => state.setting.playerSide);
     final isWinning = context.select((BoardState state) =>
         state.winningLine?.contains(widget.tile) ?? false);
 
     Widget representation;
-    final color = isWinning ? Colors.red : Colors.black87;
+
+    var color = owner == playerSide ? palette.darkPen : palette.darkPen;
+    color = isWinning ? palette.redPen : color;
     final progress =
         CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
     switch (owner) {

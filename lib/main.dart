@@ -10,6 +10,7 @@ import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
 import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
 import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/settings/settings_screen.dart';
+import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
@@ -95,16 +96,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Settings(),
         ),
-      ],
-      child: MaterialApp.router(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
-          primarySwatch: Colors.red,
+        Provider(
+          create: (context) => Palette(),
         ),
-        routeInformationParser: _router.routeInformationParser,
-        routerDelegate: _router.routerDelegate,
-      ),
+      ],
+      child: Builder(builder: (context) {
+        return MaterialApp.router(
+          title: 'Flutter Demo',
+          theme: ThemeData.from(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: context.watch<Palette>().darkPen,
+            ),
+            textTheme: TextTheme(
+              bodyText2: TextStyle(
+                color: context.watch<Palette>().ink,
+              ),
+            ),
+          ),
+          routeInformationParser: _router.routeInformationParser,
+          routerDelegate: _router.routerDelegate,
+        );
+      }),
     );
   }
 }
