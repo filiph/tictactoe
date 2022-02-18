@@ -90,6 +90,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         context.read<BoardState>().clearBoard();
                         _banner?.close();
                         _banner = null;
+                        _startOfPlay = DateTime.now();
                       },
                       child: const Text('Restart'),
                     );
