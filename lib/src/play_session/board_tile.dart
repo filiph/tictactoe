@@ -182,6 +182,7 @@ class _SketchedX extends StatelessWidget {
       );
 
       return Stack(
+        fit: StackFit.expand,
         children: [
           AnimatedBuilder(
             animation: progress,
