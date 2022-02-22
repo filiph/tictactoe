@@ -93,8 +93,8 @@ class RoughGrid extends StatelessWidget {
               // Wait even longer before starting.
               tween: Tween<double>(begin: -1, end: 1),
               // Take longer to draw.
-              duration: const Duration(milliseconds: 1600),
-              curve: Curves.easeOutCubic,
+              duration: const Duration(milliseconds: 1200),
+              curve: Curves.easeOut,
               child: RepaintBoundary(
                 child: CustomPaint(
                   painter: _RoughGridPainter(
