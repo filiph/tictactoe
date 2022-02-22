@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/player_progress.dart';
+import 'package:flutter_game_sample/src/style/responsive_screen.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -12,55 +13,44 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(34),
-        child: Column(
+      body: ResponsiveScreen(
+        squarishMainArea: ListView(
           children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  _gap,
-                  const Text(
-                    'Settings',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Permanent Marker',
-                      fontSize: 55,
-                      height: 1,
-                    ),
-                  ),
-                  _gap,
-                  _SettingsLine('Sound FX', Icons.volume_off),
-                  _SettingsLine('Music', Icons.music_off),
-                  _SettingsLine('Remove ads', Icons.monetization_on),
-                  _SettingsLine(
-                    'Reset game',
-                    Icons.restart_alt,
-                    onSelected: () {
-                      context.read<PlayerProgress>().reset();
-
-                      final messenger = ScaffoldMessenger.of(context);
-                      messenger.clearSnackBars();
-                      messenger.showSnackBar(
-                        SnackBar(
-                            content: Text('Player progress has been reset.')),
-                      );
-                    },
-                  ),
-                  _gap,
-                ],
-              ),
-            ),
-            Center(
-              child: RoughButton(
-                onTap: () {
-                  GoRouter.of(context).pop();
-                },
-                child: const Text('Back'),
+            _gap,
+            const Text(
+              'Settings',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 55,
+                height: 1,
               ),
             ),
             _gap,
+            _SettingsLine('Sound FX', Icons.volume_off),
+            _SettingsLine('Music', Icons.music_off),
+            _SettingsLine('Remove ads', Icons.monetization_on),
+            _SettingsLine(
+              'Reset game',
+              Icons.restart_alt,
+              onSelected: () {
+                context.read<PlayerProgress>().reset();
+
+                final messenger = ScaffoldMessenger.of(context);
+                messenger.clearSnackBars();
+                messenger.showSnackBar(
+                  SnackBar(content: Text('Player progress has been reset.')),
+                );
+              },
+            ),
+            _gap,
           ],
+        ),
+        rectangularMenuArea: RoughButton(
+          onTap: () {
+            GoRouter.of(context).pop();
+          },
+          child: const Text('Back'),
         ),
       ),
     );

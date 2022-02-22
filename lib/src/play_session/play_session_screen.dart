@@ -4,6 +4,7 @@ import 'package:flutter_game_sample/src/achievements/score.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
 import 'package:flutter_game_sample/src/play_session/game_board.dart';
+import 'package:flutter_game_sample/src/style/responsive_screen.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -61,39 +62,38 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   ),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Spacer(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    child: Text(
-                      widget.level.message,
-                      style: TextStyle(
-                          fontFamily: 'Permanent Marker', fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const Spacer(),
-                  Board(setting: widget.level.setting),
-                  const Spacer(),
-                  Builder(builder: (context) {
-                    return RoughButton(
+              ResponsiveScreen(
+                topMessageArea: Text(
+                  widget.level.message,
+                  key: Key('level message'),
+                  style:
+                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+                squarishMainArea: Board(
+                  key: Key('main board'),
+                  setting: widget.level.setting,
+                ),
+                rectangularMenuArea: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Builder(builder: (context) {
+                      return RoughButton(
+                        onTap: () {
+                          context.read<BoardState>().clearBoard();
+                          _startOfPlay = DateTime.now();
+                        },
+                        child: const Text('Restart'),
+                      );
+                    }),
+                    RoughButton(
                       onTap: () {
-                        context.read<BoardState>().clearBoard();
-                        _startOfPlay = DateTime.now();
+                        GoRouter.of(context).pop();
                       },
-                      child: const Text('Restart'),
-                    );
-                  }),
-                  RoughButton(
-                    onTap: () {
-                      GoRouter.of(context).pop();
-                    },
-                    child: const Text('Back'),
-                  ),
-                  const Spacer(),
-                ],
+                      child: const Text('Back'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

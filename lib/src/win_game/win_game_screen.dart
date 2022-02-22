@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/score.dart';
 import 'package:flutter_game_sample/src/settings/settings.dart';
 import 'package:flutter_game_sample/src/style/colors.dart';
+import 'package:flutter_game_sample/src/style/responsive_screen.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -16,19 +17,32 @@ class WinGameScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final adsRemoved = context.watch<Settings>().adsRemoved;
 
+    const gap = SizedBox(height: 10);
+
     return Scaffold(
-      body: Center(
-        child: Column(
+      body: ResponsiveScreen(
+        squarishMainArea: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Spacer(),
+            if (!adsRemoved) ...[
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Container(
+                    color: palette.light,
+                    child: Center(child: Text('Ads here')),
+                  ),
+                ),
+              ),
+            ],
+            gap,
             Center(
               child: Text(
                 'You won!',
                 style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
               ),
             ),
-            const SizedBox(height: 10),
+            gap,
             Center(
               child: Text(
                 'Score: ${score.score}\n'
@@ -36,7 +50,7 @@ class WinGameScreen extends StatelessWidget {
                 style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
               ),
             ),
-            const SizedBox(height: 10),
+            gap,
             Center(
               child: TextButton(
                 onPressed: () {
@@ -56,25 +70,13 @@ class WinGameScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const Spacer(),
-            if (!adsRemoved) ...[
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Container(
-                  color: palette.light,
-                  child: Center(child: Text('Ads here')),
-                ),
-              ),
-              Spacer(),
-            ],
-            RoughButton(
-              onTap: () {
-                GoRouter.of(context).pop();
-              },
-              child: const Text('Continue'),
-            ),
-            const Spacer(),
           ],
+        ),
+        rectangularMenuArea: RoughButton(
+          onTap: () {
+            GoRouter.of(context).pop();
+          },
+          child: const Text('Continue'),
         ),
       ),
     );
