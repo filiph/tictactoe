@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_sample/src/achievements/player_progress.dart';
 import 'package:flutter_game_sample/src/level_selection/levels.dart';
+import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:flutter_game_sample/src/style/responsive_screen.dart';
 import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
@@ -12,22 +13,25 @@ class LevelSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerProgress = context.watch<PlayerProgress>();
+    final palette = context.watch<Palette>();
 
     return Scaffold(
       body: ResponsiveScreen(
         squarishMainArea: SingleChildScrollView(
           child: Wrap(
-            alignment: WrapAlignment.spaceBetween,
+            alignment: WrapAlignment.center,
             runAlignment: WrapAlignment.center,
             children: [
               SizedBox(
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text(
-                    'Select level',
-                    style:
-                        TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+                  child: Center(
+                    child: Text(
+                      'Select level',
+                      style: TextStyle(
+                          fontFamily: 'Permanent Marker', fontSize: 30),
+                    ),
                   ),
                 ),
               ),
@@ -38,14 +42,30 @@ class LevelSelectionScreen extends StatelessWidget {
                     maxWidth: 120,
                   ),
                   child: AspectRatio(
-                    aspectRatio: 3 / 2,
-                    child: RoughButton(
+                    aspectRatio: 1,
+                    child: InkResponse(
                       onTap:
                           playerProgress.highestLevelReached >= level.number - 1
                               ? () => GoRouter.of(context)
                                   .go('/play/session/', extra: level)
                               : null,
-                      child: Center(child: Text('#${level.number}')),
+                      child: Stack(
+                        children: [
+                          Image.asset('assets/images/circle1.png'),
+                          Center(
+                              child: Text(
+                            '#${level.number}',
+                            style: TextStyle(
+                              color: playerProgress.highestLevelReached >=
+                                      level.number - 1
+                                  ? palette.redPen
+                                  : palette.ink.withOpacity(0.5),
+                              fontFamily: 'Permanent Marker',
+                              fontSize: 30,
+                            ),
+                          )),
+                        ],
+                      ),
                     ),
                   ),
                 )
