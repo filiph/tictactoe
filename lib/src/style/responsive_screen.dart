@@ -32,19 +32,23 @@ class ResponsiveScreen extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: padding,
-                child: topMessageArea,
-              ),
-              Expanded(
+              SafeArea(
                 child: Padding(
                   padding: padding,
+                  child: topMessageArea,
+                ),
+              ),
+              Expanded(
+                child: SafeArea(
+                  minimum: padding,
                   child: squarishMainArea,
                 ),
               ),
-              Padding(
-                padding: padding,
-                child: rectangularMenuArea,
+              SafeArea(
+                child: Padding(
+                  padding: padding,
+                  child: rectangularMenuArea,
+                ),
               ),
             ],
           );
@@ -55,8 +59,8 @@ class ResponsiveScreen extends StatelessWidget {
             children: [
               Expanded(
                 flex: 7,
-                child: Padding(
-                  padding: padding,
+                child: SafeArea(
+                  minimum: padding,
                   child: squarishMainArea,
                 ),
               ),
@@ -64,16 +68,20 @@ class ResponsiveScreen extends StatelessWidget {
                 flex: 3,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: padding,
-                      child: topMessageArea,
+                    SafeArea(
+                      child: Padding(
+                        padding: padding,
+                        child: topMessageArea,
+                      ),
                     ),
                     Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: padding,
-                          child: rectangularMenuArea,
+                      child: SafeArea(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: padding,
+                            child: rectangularMenuArea,
+                          ),
                         ),
                       ),
                     )
