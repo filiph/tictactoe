@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_game_sample/flavors.dart';
 import 'package:flutter_game_sample/src/achievements/achievements_screen.dart';
 import 'package:flutter_game_sample/src/achievements/player_progress.dart';
@@ -28,6 +29,13 @@ void main() {
         '${record.loggerName}: '
         '${record.message}');
   });
+
+  _log.info('Going full screen');
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: [SystemUiOverlay.top],
+  );
 
   _log.info('Starting game in $flavor');
   runApp(
