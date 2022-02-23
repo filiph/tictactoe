@@ -70,9 +70,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
-                squarishMainArea: Board(
-                  key: Key('main board'),
-                  setting: widget.level.setting,
+                squarishMainArea: Center(
+                  child: Board(
+                    key: Key('main board'),
+                    setting: widget.level.setting,
+                  ),
                 ),
                 rectangularMenuArea: Column(
                   mainAxisSize: MainAxisSize.min,
