@@ -22,6 +22,10 @@ class PlaySessionScreen extends StatefulWidget {
 class _PlaySessionScreenState extends State<PlaySessionScreen> {
   static final _log = Logger('PlaySessionScreen');
 
+  static const _celebrationDuration = Duration(milliseconds: 2000);
+
+  static const _preCelebrationDuration = Duration(milliseconds: 500);
+
   bool _duringCelebration = false;
 
   late DateTime _startOfPlay;
@@ -97,6 +101,17 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   ],
                 ),
               ),
+              SizedBox.expand(
+                child: Visibility(
+                  visible: _duringCelebration,
+                  child: IgnorePointer(
+                    child: Image.asset(
+                      'assets/images/confetti.gif',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -122,15 +137,19 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       DateTime.now().difference(_startOfPlay),
     );
 
-    setState(() {
-      _duringCelebration = true;
-    });
-
     final playerProgress = context.read<PlayerProgress>();
     playerProgress.setLevelReached(widget.level.number);
     playerProgress.addScore(score);
 
-    await Future.delayed(const Duration(milliseconds: 1000));
+    /// Let the player see the board just after winning for a bit.
+    await Future.delayed(_preCelebrationDuration);
+
+    setState(() {
+      _duringCelebration = true;
+    });
+
+    /// Give the player some time to see the celebration animation.
+    await Future.delayed(_celebrationDuration);
 
     GoRouter.of(context).go('/play/won', extra: score);
   }
