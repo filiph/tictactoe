@@ -33,6 +33,7 @@ class ResponsiveScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SafeArea(
+                bottom: false,
                 child: Padding(
                   padding: padding,
                   child: topMessageArea,
@@ -40,11 +41,14 @@ class ResponsiveScreen extends StatelessWidget {
               ),
               Expanded(
                 child: SafeArea(
+                  top: false,
+                  bottom: false,
                   minimum: padding,
                   child: squarishMainArea,
                 ),
               ),
               SafeArea(
+                top: false,
                 child: Padding(
                   padding: padding,
                   child: rectangularMenuArea,
@@ -60,6 +64,7 @@ class ResponsiveScreen extends StatelessWidget {
               Expanded(
                 flex: 7,
                 child: SafeArea(
+                  right: false,
                   minimum: padding,
                   child: squarishMainArea,
                 ),
@@ -69,6 +74,8 @@ class ResponsiveScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     SafeArea(
+                      bottom: false,
+                      left: false,
                       child: Padding(
                         padding: padding,
                         child: topMessageArea,
@@ -76,6 +83,8 @@ class ResponsiveScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: SafeArea(
+                        top: false,
+                        left: false,
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
