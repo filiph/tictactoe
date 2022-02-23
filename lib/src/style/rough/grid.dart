@@ -56,7 +56,7 @@ class RoughGrid extends StatelessWidget {
                     lineColor: palette.ink,
                     horizontal: snapshot.data!.a,
                     vertical: snapshot.data!.b,
-                    paintOnly: _Direction.horizontal,
+                    paintOnly: Axis.horizontal,
                   ),
                 ),
               ),
@@ -103,7 +103,7 @@ class RoughGrid extends StatelessWidget {
                     lineColor: palette.ink,
                     horizontal: snapshot.data!.a,
                     vertical: snapshot.data!.b,
-                    paintOnly: _Direction.vertical,
+                    paintOnly: Axis.vertical,
                   ),
                 ),
               ),
@@ -141,7 +141,7 @@ class _RoughGridPainter extends CustomPainter {
 
   final Color lineColor;
 
-  final _Direction? paintOnly;
+  final Axis? paintOnly;
 
   late final Paint pathPaint = Paint()
     ..colorFilter = ColorFilter.mode(lineColor, BlendMode.srcIn);
@@ -175,7 +175,7 @@ class _RoughGridPainter extends CustomPainter {
     // Draw vertical lines.
     final verticalScale = (size.height - padding) / vertical.height;
 
-    if (paintOnly == null || paintOnly == _Direction.vertical) {
+    if (paintOnly == null || paintOnly == Axis.vertical) {
       for (var i = 1; i < width; i++) {
         canvas.drawPicture(
           _roughLine(
@@ -185,7 +185,7 @@ class _RoughGridPainter extends CustomPainter {
             pathPaint,
             mainAxisScale: verticalScale,
             lineThickness: lineThickness,
-            direction: _Direction.vertical,
+            direction: Axis.vertical,
             random: _random,
           ),
         );
@@ -195,7 +195,7 @@ class _RoughGridPainter extends CustomPainter {
     // Draw horizontal lines.
     final heightStep = size.height / height;
     final horizontalScale = (size.width - padding) / horizontal.width;
-    if (paintOnly == null || paintOnly == _Direction.horizontal) {
+    if (paintOnly == null || paintOnly == Axis.horizontal) {
       for (var i = 1; i < height; i++) {
         canvas.drawPicture(
           _roughLine(
@@ -205,7 +205,7 @@ class _RoughGridPainter extends CustomPainter {
             pathPaint,
             mainAxisScale: horizontalScale,
             lineThickness: lineThickness,
-            direction: _Direction.horizontal,
+            direction: Axis.horizontal,
             random: _random,
           ),
         );
@@ -231,7 +231,7 @@ class _RoughGridPainter extends CustomPainter {
     double maxCrossAxisDisplacement,
     Paint paint, {
     required double lineThickness,
-    required _Direction direction,
+    required Axis direction,
     Random? random,
     double mainAxisScale = 1.0,
   }) {
@@ -245,7 +245,7 @@ class _RoughGridPainter extends CustomPainter {
     const segmentLength = 100.0;
     final outputSegmentLength = segmentLength * mainAxisScale;
 
-    final directionIsVertical = direction == _Direction.vertical;
+    final directionIsVertical = direction == Axis.vertical;
     final length = directionIsVertical ? image.height : image.width;
 
     var totalCrossAxisDisplacement = 0.0;
@@ -308,9 +308,4 @@ class _Tuple<T> {
     final results = await Future.wait([a, b]);
     return _Tuple(results[0], results[1]);
   }
-}
-
-enum _Direction {
-  horizontal,
-  vertical,
 }
