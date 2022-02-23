@@ -15,6 +15,10 @@ class BoardState extends ChangeNotifier {
 
   final Set<int> _oTaken;
 
+  Tile? _latestXTile;
+
+  Tile? _latestOTile;
+
   bool _isLocked = false;
 
   final ChangeNotifier playerWon = ChangeNotifier();
@@ -24,9 +28,20 @@ class BoardState extends ChangeNotifier {
   Set<Tile>? _winningLine;
 
   BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
-      : this._(setting, {}, {}, aiOpponent);
+      : this._(setting, {}, {}, aiOpponent, null, null);
 
-  BoardState._(this.setting, this._xTaken, this._oTaken, this.aiOpponent);
+  @visibleForTesting
+  BoardState.withExistingState({
+    required BoardSetting setting,
+    required AiOpponent aiOpponent,
+    required Set<int> takenByX,
+    required Set<int> takenByO,
+    Tile? latestX,
+    Tile? latestO,
+  }) : this._(setting, takenByX, takenByO, aiOpponent, latestX, latestO);
+
+  BoardState._(this.setting, this._xTaken, this._oTaken, this.aiOpponent,
+      this._latestXTile, this._latestOTile);
 
   /// This is `true` if the board game is locked for the player.
   bool get isLocked => _isLocked;
@@ -63,6 +78,8 @@ class BoardState extends ChangeNotifier {
     _xTaken.clear();
     _oTaken.clear();
     _winningLine?.clear();
+    _latestXTile = null;
+    _latestOTile = null;
     _isLocked = false;
 
     notifyListeners();
@@ -71,7 +88,85 @@ class BoardState extends ChangeNotifier {
   @override
   void dispose() {
     playerWon.dispose();
+    aiOpponentWon.dispose();
     super.dispose();
+  }
+
+  Tile? getLatestTileForSide(Side side) {
+    if (side == Side.x) {
+      return _latestXTile;
+    }
+    if (side == Side.o) {
+      return _latestOTile;
+    }
+    return null;
+  }
+
+  Iterable<Tile> getNeighborhood(Tile tile) sync* {
+    for (var dx = -1; dx <= 1; dx++) {
+      for (var dy = -1; dy <= 1; dy++) {
+        if (dx == 0 && dy == 0) {
+          // Same tile as [tile], skipping.
+          continue;
+        }
+        final x = tile.x + dx;
+        final y = tile.y + dy;
+        if (x < 0) continue;
+        if (y < 0) continue;
+        if (x >= setting.m) continue;
+        if (y >= setting.n) continue;
+        yield Tile(x, y);
+      }
+    }
+  }
+
+  /// Returns all valid lines going through [tile].
+  Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
+    // Horizontal lines.
+    for (var startX = tile.x - setting.m + 1; startX <= tile.x; startX++) {
+      final startTile = Tile(startX, tile.y);
+      if (!startTile.isValid(setting)) continue;
+      final endTile = Tile(startTile.x + setting.k - 1, tile.y);
+      if (!endTile.isValid(setting)) continue;
+      yield {for (var i = startTile.x; i <= endTile.x; i++) Tile(i, tile.y)};
+    }
+
+    // Vertical lines.
+    for (var startY = tile.y - setting.n + 1; startY <= tile.y; startY++) {
+      final startTile = Tile(tile.x, startY);
+      if (!startTile.isValid(setting)) continue;
+      final endTile = Tile(tile.x, startTile.y + setting.k - 1);
+      if (!endTile.isValid(setting)) continue;
+      yield {for (var i = startTile.y; i <= endTile.y; i++) Tile(tile.x, i)};
+    }
+
+    // Downward diagonal lines.
+    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
+      var yOffset = xOffset;
+      final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
+      if (!startTile.isValid(setting)) continue;
+      final endTile =
+          Tile(startTile.x + setting.k - 1, startTile.y + setting.k - 1);
+      if (!endTile.isValid(setting)) continue;
+      yield {
+        for (var i = 0; i < setting.k; i++)
+          Tile(startTile.x + i, startTile.y + i)
+      };
+    }
+
+    // Upward diagonal lines.
+    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
+      var yOffset = -xOffset;
+      final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
+      if (!startTile.isValid(setting)) continue;
+      final endTile =
+          Tile(startTile.x + setting.k - 1, startTile.y - setting.k + 1);
+      if (!endTile.isValid(setting)) continue;
+      yield {
+        for (var i = 0; i < setting.k; i++)
+          Tile(startTile.x + i, startTile.y - i)
+      };
+    }
   }
 
   /// Take [tile] with player's token.
@@ -129,55 +224,6 @@ class BoardState extends ChangeNotifier {
     return Side.none;
   }
 
-  /// Returns all valid lines going through [tile].
-  Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
-    // Horizontal lines.
-    for (var startX = tile.x - setting.m + 1; startX <= tile.x; startX++) {
-      final startTile = Tile(startX, tile.y);
-      if (!startTile.isValid(setting)) continue;
-      final endTile = Tile(startTile.x + setting.k - 1, tile.y);
-      if (!endTile.isValid(setting)) continue;
-      yield {for (var i = startTile.x; i <= endTile.x; i++) Tile(i, tile.y)};
-    }
-
-    // Vertical lines.
-    for (var startY = tile.y - setting.n + 1; startY <= tile.y; startY++) {
-      final startTile = Tile(tile.x, startY);
-      if (!startTile.isValid(setting)) continue;
-      final endTile = Tile(tile.x, startTile.y + setting.k - 1);
-      if (!endTile.isValid(setting)) continue;
-      yield {for (var i = startTile.y; i <= endTile.y; i++) Tile(tile.x, i)};
-    }
-
-    // Downward diagonal lines.
-    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
-      var yOffset = xOffset;
-      final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
-      if (!startTile.isValid(setting)) continue;
-      final endTile =
-          Tile(startTile.x + setting.k - 1, startTile.y + setting.k - 1);
-      if (!endTile.isValid(setting)) continue;
-      yield {
-        for (var i = 0; i < setting.k; i++)
-          Tile(startTile.x + i, startTile.y + i)
-      };
-    }
-
-    // Upward diagonal lines.
-    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
-      var yOffset = -xOffset;
-      final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
-      if (!startTile.isValid(setting)) continue;
-      final endTile =
-          Tile(startTile.x + setting.k - 1, startTile.y - setting.k + 1);
-      if (!endTile.isValid(setting)) continue;
-      yield {
-        for (var i = 0; i < setting.k; i++)
-          Tile(startTile.x + i, startTile.y - i)
-      };
-    }
-  }
-
   /// Returns `null` if nobody has yet won this board. Otherwise, returns
   /// the winner.
   ///
@@ -218,6 +264,11 @@ class BoardState extends ChangeNotifier {
     final pointer = tile.toPointer(setting);
     final set = _selectSet(side);
     set.add(pointer);
+    if (side == Side.x) {
+      _latestXTile = tile;
+    } else if (side == Side.o) {
+      _latestOTile = tile;
+    }
   }
 }
 

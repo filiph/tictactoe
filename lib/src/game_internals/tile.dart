@@ -5,13 +5,21 @@ import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 class Tile {
   final int x;
   final int y;
+
   const Tile(this.x, this.y);
 
-  int toPointer(BoardSetting setting) {
-    if (!isValid(setting)) {
-      throw ArgumentError.value(this, 'out of bounds of $setting');
-    }
-    return y * setting.m + x;
+  factory Tile.fromPointer(int pointer, BoardSetting setting) {
+    final y = pointer ~/ setting.m;
+    final x = pointer % setting.m;
+    return Tile(x, y);
+  }
+
+  @override
+  int get hashCode => Object.hash(x, y);
+
+  @override
+  bool operator ==(Object other) {
+    return other is Tile && other.x == x && other.y == y;
   }
 
   bool isValid(BoardSetting setting) {
@@ -22,12 +30,11 @@ class Tile {
     return true;
   }
 
-  @override
-  int get hashCode => Object.hash(x, y);
-
-  @override
-  bool operator ==(Object other) {
-    return other is Tile && other.x == x && other.y == y;
+  int toPointer(BoardSetting setting) {
+    if (!isValid(setting)) {
+      throw ArgumentError.value(this, 'out of bounds of $setting');
+    }
+    return y * setting.m + x;
   }
 
   @override
