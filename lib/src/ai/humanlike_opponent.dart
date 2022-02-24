@@ -1,42 +1,47 @@
-import 'dart:math';
-
 import 'package:flutter_game_sample/src/ai/ai_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 import 'package:flutter_game_sample/src/game_internals/board_state.dart';
 import 'package:flutter_game_sample/src/game_internals/tile.dart';
+import 'package:logging/logging.dart';
 
 /// An AI that doesn't look ahead, and only scores tiles.
 ///
 /// It makes moves that are similar to what a human player might make.
 class HumanlikeOpponent extends AiOpponent {
-  /// Scores corresponding to a given number of taken tiles.
-  ///
-  /// For example, if a run of `k` tiles has 3 player tiles in it,
-  /// it will be scored with `400`. If it has 0 player tiles in it,
-  /// it will be scored with `1`.
-  List<int> get _playerScoring => const [1, 20, 90, 400, 8000, 0];
-
-  /// Same as [_playerScoring], but this time we're scoring the AI's
-  /// own tiles.
-  List<int> get _aiScoring => const [2, 30, 100, 500, 10000, 0];
-
-  /// The strength of the AI, between `0` and `1`.
-  ///
-  /// At `1`, the AI plays "perfectly". At `0`, it plays according to a very
-  /// naive analysis.
-  final double strength;
+  static final _log = Logger('HumanlikeOpponent');
 
   /// The relative weight the AI gives to own "plans". A stubborn AI will go
   /// ahead with its own k-in-a-row line despite the fact it should be defending
   /// against the opponents line instead.
+  ///
+  /// Should be between `0` and `1`, and probably closer to zero.
   final double stubbornness;
+
+  /// The strength of the AI. The smaller this number is, the stronger the
+  /// options from which the AI will choose its next move.
+  ///
+  /// Setting this to `1` means the AI only takes the best computer move.
+  /// Setting this to `100` means it will only be directed by "humanlike"
+  /// analysis.
+  final int bestPlayCount;
+
+  /// The human-ness of the AI. The lower the number, the more "humanlike"
+  /// the options from which the AI will choose its next move.
+  ///
+  /// Setting this to `1` means the AI only takes the most humanlike move.
+  /// Setting this to `100` means the AI will play moves only according to
+  /// the "best play" (computer) analysis.
+  final int humanlikePlayCount;
 
   HumanlikeOpponent(
     BoardSetting setting, {
-    required this.strength,
+    this.humanlikePlayCount = 2,
+    this.bestPlayCount = 5,
     this.stubbornness = 0.05,
-  })  : assert(strength <= 1),
-        assert(strength >= 0),
+  })  : assert(stubbornness <= 1),
+        assert(stubbornness >= 0),
+        assert(humanlikePlayCount >= 1),
+        assert(bestPlayCount >= 1),
         super(setting) {
     assert(
         setting.k <= _playerScoring.length + 1,
@@ -47,6 +52,17 @@ class HumanlikeOpponent extends AiOpponent {
         'Scoring opponent does not support games '
         'with more than 5 in a row');
   }
+
+  /// Same as [_playerScoring], but this time we're scoring the AI's
+  /// own tiles.
+  List<int> get _aiScoring => const [2, 30, 100, 500, 10000, 0];
+
+  /// Scores corresponding to a given number of taken tiles.
+  ///
+  /// For example, if a run of `k` tiles has 3 player tiles in it,
+  /// it will be scored with `400`. If it has 0 player tiles in it,
+  /// it will be scored with `1`.
+  List<int> get _playerScoring => const [1, 20, 90, 400, 8000, 0];
 
   @override
   Tile chooseNextMove(BoardState state) {
@@ -67,23 +83,23 @@ class HumanlikeOpponent extends AiOpponent {
 
         for (final neighbor in state.getNeighborhood(tile)) {
           if (latestPlayerTile == neighbor) {
-            score.humanlikePlay += 100;
+            score.humanlikePlay += 50;
           }
 
           if (latestAiTile == neighbor) {
-            score.humanlikePlay += (100 * stubbornness).round();
+            score.humanlikePlay += (50 * stubbornness).round();
           }
         }
 
         for (final line in state.getValidLinesThrough(tile)) {
           if (line.contains(latestPlayerTile)) {
             // Humans love to play where the opponent just played.
-            score.humanlikePlay += 100;
+            score.humanlikePlay += 50;
           }
 
           if (line.contains(latestAiTile)) {
             // Humans also love to play where they played last.
-            score.humanlikePlay += (100 * stubbornness).round();
+            score.humanlikePlay += (50 * stubbornness).round();
           }
 
           var aiTiles = line
@@ -106,11 +122,27 @@ class HumanlikeOpponent extends AiOpponent {
           }
 
           if (aiTiles == 0) {
+            // Any player tiles should score towards best play.
             score.bestPlay += _playerScoring[playerTiles];
+            if (tile == line.first || tile == line.last) {
+              if (playerTiles == setting.k - 1) {
+                score.humanlikePlay += 300;
+              } else if (playerTiles == setting.k - 2) {
+                score.humanlikePlay += 200;
+              }
+            }
           }
 
           if (playerTiles == 0) {
+            // Any AI tiles should score towards best play.
             score.bestPlay += _aiScoring[aiTiles];
+            if (tile == line.first || tile == line.last) {
+              if (aiTiles == setting.k - 1) {
+                score.humanlikePlay += 100;
+              } else if (aiTiles == setting.k - 2) {
+                score.humanlikePlay += 50;
+              }
+            }
           }
         }
 
@@ -118,31 +150,36 @@ class HumanlikeOpponent extends AiOpponent {
       }
     }
 
-    final highestHumanlikeScore = scores.fold<int>(
-        0,
-        (previousValue, element) =>
-            max<int>(previousValue, element.humanlikePlay));
-    final lowestHumanlikeScore = scores.fold<int>(
-        0,
-        (previousValue, element) =>
-            min<int>(previousValue, element.humanlikePlay));
-    final range = highestHumanlikeScore - lowestHumanlikeScore;
+    // The options, sorted from the best play perspective...
+    final bestPlay = List.of(scores)
+      ..sort((a, b) => -a.bestPlay.compareTo(b.bestPlay))
+      // ... and truncated to just the percentile we want.
+      ..removeRange(bestPlayCount, scores.length);
 
-    for (final score in scores) {
-      double humanlikeness;
-      if (range == 0) {
-        humanlikeness = 0;
-      } else {
-        humanlikeness = (score.humanlikePlay - lowestHumanlikeScore) / range;
+    // The options, sorted from the "humanlike" play perspective.
+    final humanlike = List.of(scores)
+      ..sort((a, b) => -a.humanlikePlay.compareTo(b.humanlikePlay));
+
+    var defaultBest = true;
+    _TileScore best =
+        (humanlikePlayCount < bestPlayCount) ? humanlike.first : bestPlay.first;
+    for (var i = 0; i <= humanlikePlayCount; i++) {
+      final candidate = humanlike[i];
+      if (bestPlay.contains(candidate)) {
+        // Found the most "obvious" tile that's also among the best choices.
+        best = candidate;
+        defaultBest = false;
+        break;
       }
-
-      final naiveBoost = humanlikeness * (1 - strength);
-      score.finalScore = score.bestPlay * naiveBoost;
     }
 
-    scores.sort((a, b) => -a.finalScore!.compareTo(b.finalScore!));
+    if (defaultBest) {
+      _log.warning("We didn't find any tile that would be both in "
+          "best play percentile of $bestPlayCount and humalike play "
+          "percentile of $humanlikePlayCount. Chose $best.");
+    }
 
-    return scores.first.tile;
+    return best.tile;
   }
 }
 

@@ -16,14 +16,22 @@ final gameLevels = [
     message: 'Defeat a naive AI at four-in-a-row!',
     setting: BoardSetting(5, 5, 4),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.2),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 2,
+      bestPlayCount: 5,
+    ),
   ),
   GameLevel(
     number: 3,
     message: 'Defeat a naive AI at four-in-a-row!',
     setting: BoardSetting(6, 6, 4),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.2),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 5,
+      bestPlayCount: 3,
+    ),
   ),
   GameLevel(
     number: 4,
@@ -35,37 +43,59 @@ final gameLevels = [
   GameLevel(
     number: 5,
     message: 'Defeat an AI at miniature gomoku!',
-    setting: BoardSetting(8, 8, 5),
-    aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.1),
+    setting: BoardSetting(9, 9, 5),
+    aiDifficulty: 3,
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 2,
+      bestPlayCount: 10,
+      stubbornness: 0.1,
+    ),
   ),
   GameLevel(
     number: 6,
     message: 'Defeat a stronger AI at miniature gomoku!',
-    setting: BoardSetting(8, 8, 5),
-    aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.22),
+    setting: BoardSetting(9, 9, 5),
+    aiDifficulty: 3,
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 4,
+      bestPlayCount: 6,
+      stubbornness: 0.1,
+    ),
   ),
   GameLevel(
     number: 7,
     message: 'NOT IMPLEMENTED',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.24),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 3,
+      bestPlayCount: 5,
+    ),
   ),
   GameLevel(
     number: 8,
     message: 'NOT IMPLEMENTED',
     setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.26),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 4,
+      bestPlayCount: 5,
+    ),
   ),
   GameLevel(
     number: 9,
     message: 'NOT IMPLEMENTED',
     setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.3),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      humanlikePlayCount: 10,
+      bestPlayCount: 1,
+    ),
   ),
 ];
 

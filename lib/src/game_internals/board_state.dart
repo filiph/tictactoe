@@ -25,7 +25,7 @@ class BoardState extends ChangeNotifier {
 
   final ChangeNotifier aiOpponentWon = ChangeNotifier();
 
-  Set<Tile>? _winningLine;
+  List<Tile>? _winningLine;
 
   BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
       : this._(setting, {}, {}, aiOpponent, null, null);
@@ -121,14 +121,14 @@ class BoardState extends ChangeNotifier {
   }
 
   /// Returns all valid lines going through [tile].
-  Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
+  Iterable<List<Tile>> getValidLinesThrough(Tile tile) sync* {
     // Horizontal lines.
     for (var startX = tile.x - setting.k + 1; startX <= tile.x; startX++) {
       final startTile = Tile(startX, tile.y);
       if (!startTile.isValid(setting)) continue;
       final endTile = Tile(startTile.x + setting.k - 1, tile.y);
       if (!endTile.isValid(setting)) continue;
-      yield {for (var i = startTile.x; i <= endTile.x; i++) Tile(i, tile.y)};
+      yield [for (var i = startTile.x; i <= endTile.x; i++) Tile(i, tile.y)];
     }
 
     // Vertical lines.
@@ -137,7 +137,7 @@ class BoardState extends ChangeNotifier {
       if (!startTile.isValid(setting)) continue;
       final endTile = Tile(tile.x, startTile.y + setting.k - 1);
       if (!endTile.isValid(setting)) continue;
-      yield {for (var i = startTile.y; i <= endTile.y; i++) Tile(tile.x, i)};
+      yield [for (var i = startTile.y; i <= endTile.y; i++) Tile(tile.x, i)];
     }
 
     // Downward diagonal lines.
@@ -148,10 +148,10 @@ class BoardState extends ChangeNotifier {
       final endTile =
           Tile(startTile.x + setting.k - 1, startTile.y + setting.k - 1);
       if (!endTile.isValid(setting)) continue;
-      yield {
+      yield [
         for (var i = 0; i < setting.k; i++)
           Tile(startTile.x + i, startTile.y + i)
-      };
+      ];
     }
 
     // Upward diagonal lines.
@@ -162,10 +162,10 @@ class BoardState extends ChangeNotifier {
       final endTile =
           Tile(startTile.x + setting.k - 1, startTile.y - setting.k + 1);
       if (!endTile.isValid(setting)) continue;
-      yield {
+      yield [
         for (var i = 0; i < setting.k; i++)
           Tile(startTile.x + i, startTile.y - i)
-      };
+      ];
     }
   }
 

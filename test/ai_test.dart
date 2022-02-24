@@ -38,7 +38,11 @@ void main() {
 
     setUp(() {
       setting = BoardSetting(5, 5, 4);
-      opponent = HumanlikeOpponent(setting, strength: 0.1);
+      opponent = HumanlikeOpponent(
+        setting,
+        humanlikePlayCount: 1,
+        bestPlayCount: 5,
+      );
     });
 
     test('tries to stop a 4 close to where it should', () {
