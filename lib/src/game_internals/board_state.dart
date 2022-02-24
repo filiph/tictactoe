@@ -123,7 +123,7 @@ class BoardState extends ChangeNotifier {
   /// Returns all valid lines going through [tile].
   Iterable<Set<Tile>> getValidLinesThrough(Tile tile) sync* {
     // Horizontal lines.
-    for (var startX = tile.x - setting.m + 1; startX <= tile.x; startX++) {
+    for (var startX = tile.x - setting.k + 1; startX <= tile.x; startX++) {
       final startTile = Tile(startX, tile.y);
       if (!startTile.isValid(setting)) continue;
       final endTile = Tile(startTile.x + setting.k - 1, tile.y);
@@ -132,7 +132,7 @@ class BoardState extends ChangeNotifier {
     }
 
     // Vertical lines.
-    for (var startY = tile.y - setting.n + 1; startY <= tile.y; startY++) {
+    for (var startY = tile.y - setting.k + 1; startY <= tile.y; startY++) {
       final startTile = Tile(tile.x, startY);
       if (!startTile.isValid(setting)) continue;
       final endTile = Tile(tile.x, startTile.y + setting.k - 1);
@@ -141,7 +141,7 @@ class BoardState extends ChangeNotifier {
     }
 
     // Downward diagonal lines.
-    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
+    for (var xOffset = -setting.k + 1; xOffset <= 0; xOffset++) {
       var yOffset = xOffset;
       final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
       if (!startTile.isValid(setting)) continue;
@@ -155,7 +155,7 @@ class BoardState extends ChangeNotifier {
     }
 
     // Upward diagonal lines.
-    for (var xOffset = -setting.m + 1; xOffset <= 0; xOffset++) {
+    for (var xOffset = -setting.k + 1; xOffset <= 0; xOffset++) {
       var yOffset = -xOffset;
       final startTile = Tile(tile.x + xOffset, tile.y + yOffset);
       if (!startTile.isValid(setting)) continue;

@@ -1,6 +1,6 @@
 import 'package:flutter_game_sample/src/ai/ai_opponent.dart';
 import 'package:flutter_game_sample/src/ai/humanlike_opponent.dart';
-import 'package:flutter_game_sample/src/ai/random_opponent.dart';
+import 'package:flutter_game_sample/src/ai/scoring_opponent.dart';
 import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
 
 final gameLevels = [
@@ -9,7 +9,7 @@ final gameLevels = [
     message: 'Defeat a naive AI at tic tac toe!',
     setting: BoardSetting(3, 3, 3),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.2),
+    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(setting),
   ),
   GameLevel(
     number: 2,
@@ -27,45 +27,45 @@ final gameLevels = [
   ),
   GameLevel(
     number: 4,
-    message: 'Defeat a random generator at miniature gomoku!',
+    message: 'Defeat a naive AI at miniature gomoku!',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => RandomOpponent(setting),
+    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(setting),
   ),
   GameLevel(
     number: 5,
     message: 'Defeat an AI at miniature gomoku!',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.2),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.1),
   ),
   GameLevel(
     number: 6,
     message: 'Defeat a stronger AI at miniature gomoku!',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.5),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.22),
   ),
   GameLevel(
     number: 7,
     message: 'NOT IMPLEMENTED',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.8),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.24),
   ),
   GameLevel(
     number: 8,
     message: 'NOT IMPLEMENTED',
-    setting: BoardSetting(8, 8, 5),
+    setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.9),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.26),
   ),
   GameLevel(
     number: 9,
     message: 'NOT IMPLEMENTED',
-    setting: BoardSetting(8, 8, 5),
+    setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 1.0),
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(setting, strength: 0.3),
   ),
 ];
 

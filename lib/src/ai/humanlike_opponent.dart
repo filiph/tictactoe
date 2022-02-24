@@ -26,9 +26,15 @@ class HumanlikeOpponent extends AiOpponent {
   /// naive analysis.
   final double strength;
 
+  /// The relative weight the AI gives to own "plans". A stubborn AI will go
+  /// ahead with its own k-in-a-row line despite the fact it should be defending
+  /// against the opponents line instead.
+  final double stubbornness;
+
   HumanlikeOpponent(
     BoardSetting setting, {
     required this.strength,
+    this.stubbornness = 0.05,
   })  : assert(strength <= 1),
         assert(strength >= 0),
         super(setting) {
@@ -65,7 +71,7 @@ class HumanlikeOpponent extends AiOpponent {
           }
 
           if (latestAiTile == neighbor) {
-            score.humanlikePlay += 50;
+            score.humanlikePlay += (100 * stubbornness).round();
           }
         }
 
@@ -77,7 +83,7 @@ class HumanlikeOpponent extends AiOpponent {
 
           if (line.contains(latestAiTile)) {
             // Humans also love to play where they played last.
-            score.humanlikePlay += 50;
+            score.humanlikePlay += (100 * stubbornness).round();
           }
 
           var aiTiles = line
@@ -88,11 +94,14 @@ class HumanlikeOpponent extends AiOpponent {
               .length;
 
           // Humans love to play where their other marks already are.
-          score.humanlikePlay += playerTiles;
+          score.humanlikePlay += aiTiles;
 
           if (aiTiles > 0 && playerTiles > 0) {
             // Lost cause. Both sides have their tokens here.
             // Cannot make a line.
+            // Still, a human-like opponent will go for it anyway if there's
+            // any friendly tiles.
+            score.humanlikePlay += (100 * stubbornness).round();
             continue;
           }
 
@@ -127,8 +136,8 @@ class HumanlikeOpponent extends AiOpponent {
         humanlikeness = (score.humanlikePlay - lowestHumanlikeScore) / range;
       }
 
-      final naivePenalty = humanlikeness * (1 - strength);
-      score.finalScore = score.bestPlay * (1 - naivePenalty);
+      final naiveBoost = humanlikeness * (1 - strength);
+      score.finalScore = score.bestPlay * naiveBoost;
     }
 
     scores.sort((a, b) => -a.finalScore!.compareTo(b.finalScore!));
@@ -147,4 +156,10 @@ class _TileScore {
   double? finalScore;
 
   _TileScore(this.tile);
+
+  @override
+  String toString() {
+    return "_TileScore<$tile:bestPlay=$bestPlay:humanlike=$humanlikePlay"
+        ":final=${(finalScore ?? -1).toStringAsFixed(2)}>";
+  }
 }
