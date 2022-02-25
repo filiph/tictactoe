@@ -1,11 +1,11 @@
 {
-    "name": "flutter_game_sample",
-    "short_name": "flutter_game_sample",
+    "name": "Tic Tac Toe",
+    "short_name": "Tic Tac Toe",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A sample project for a casual game built in Flutter.",
+    "description": "A sample mobile game built in Flutter.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
