@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/achievements/player_progress.dart';
-import 'package:flutter_game_sample/src/style/responsive_screen.dart';
-import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/achievements/player_progress.dart';
+import 'package:tictactoe/src/style/responsive_screen.dart';
+import 'package:tictactoe/src/style/rough/button.dart';
 
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({Key? key}) : super(key: key);

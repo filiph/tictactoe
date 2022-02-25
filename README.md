@@ -1,4 +1,4 @@
-# flutter_game_sample
+# tictactoe
 
 A sample mobile game built in Flutter.
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/achievements/player_progress.dart';
-import 'package:flutter_game_sample/src/achievements/score.dart';
-import 'package:flutter_game_sample/src/game_internals/board_state.dart';
-import 'package:flutter_game_sample/src/level_selection/levels.dart';
-import 'package:flutter_game_sample/src/play_session/game_board.dart';
-import 'package:flutter_game_sample/src/style/responsive_screen.dart';
-import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/achievements/player_progress.dart';
+import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/level_selection/levels.dart';
+import 'package:tictactoe/src/play_session/game_board.dart';
+import 'package:tictactoe/src/style/responsive_screen.dart';
+import 'package:tictactoe/src/style/rough/button.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final GameLevel level;

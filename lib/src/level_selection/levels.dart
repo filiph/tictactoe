@@ -1,7 +1,7 @@
-import 'package:flutter_game_sample/src/ai/ai_opponent.dart';
-import 'package:flutter_game_sample/src/ai/humanlike_opponent.dart';
-import 'package:flutter_game_sample/src/ai/scoring_opponent.dart';
-import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
+import 'package:tictactoe/src/ai/ai_opponent.dart';
+import 'package:tictactoe/src/ai/humanlike_opponent.dart';
+import 'package:tictactoe/src/ai/scoring_opponent.dart';
+import 'package:tictactoe/src/game_internals/board_setting.dart';
 
 final gameLevels = [
   GameLevel(

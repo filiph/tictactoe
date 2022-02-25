@@ -1,4 +1,4 @@
-name: flutter_game_sample
+name: tictactoe
 description: A sample mobile game built in Flutter.
 
 # Prevent accidental publishing to pub.dev.

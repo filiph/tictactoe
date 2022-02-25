@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/style/colors.dart';
 
 class RoughButton extends StatelessWidget {
   final Widget child;

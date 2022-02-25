@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/game_internals/board_state.dart';
-import 'package:flutter_game_sample/src/game_internals/tile.dart';
-import 'package:flutter_game_sample/src/style/colors.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/game_internals/tile.dart';
+import 'package:tictactoe/src/style/colors.dart';
 
 class BoardTile extends StatefulWidget {
   const BoardTile(this.tile, {Key? key}) : super(key: key);

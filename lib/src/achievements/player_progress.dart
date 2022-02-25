@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_game_sample/src/achievements/score.dart';
+import 'package:tictactoe/src/achievements/score.dart';
 
 class MemoryOnlyPlayerProgressPersistentStore
     implements PlayerProgressPersistentStore {

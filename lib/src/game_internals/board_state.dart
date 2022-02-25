@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_game_sample/src/ai/ai_opponent.dart';
-import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
-import 'package:flutter_game_sample/src/game_internals/tile.dart';
 import 'package:logging/logging.dart';
+import 'package:tictactoe/src/ai/ai_opponent.dart';
+import 'package:tictactoe/src/game_internals/board_setting.dart';
+import 'package:tictactoe/src/game_internals/tile.dart';
 
 class BoardState extends ChangeNotifier {
   static final Logger _log = Logger('BoardState');

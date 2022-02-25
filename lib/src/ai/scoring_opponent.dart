@@ -1,9 +1,9 @@
 import 'dart:collection';
 
-import 'package:flutter_game_sample/src/ai/ai_opponent.dart';
-import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
-import 'package:flutter_game_sample/src/game_internals/board_state.dart';
-import 'package:flutter_game_sample/src/game_internals/tile.dart';
+import 'package:tictactoe/src/ai/ai_opponent.dart';
+import 'package:tictactoe/src/game_internals/board_setting.dart';
+import 'package:tictactoe/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/game_internals/tile.dart';
 
 /// An AI that doesn't look ahead, and only scores tiles.
 ///

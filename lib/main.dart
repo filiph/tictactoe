@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/flavors.dart';
-import 'package:flutter_game_sample/src/achievements/achievements_screen.dart';
-import 'package:flutter_game_sample/src/achievements/player_progress.dart';
-import 'package:flutter_game_sample/src/achievements/score.dart';
-import 'package:flutter_game_sample/src/level_selection/level_selection_screen.dart';
-import 'package:flutter_game_sample/src/level_selection/levels.dart';
-import 'package:flutter_game_sample/src/main_menu/main_menu_screen.dart';
-import 'package:flutter_game_sample/src/play_session/play_session_screen.dart';
-import 'package:flutter_game_sample/src/settings/settings.dart';
-import 'package:flutter_game_sample/src/settings/settings_screen.dart';
-import 'package:flutter_game_sample/src/style/colors.dart';
-import 'package:flutter_game_sample/src/win_game/win_game_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/flavors.dart';
+import 'package:tictactoe/src/achievements/achievements_screen.dart';
+import 'package:tictactoe/src/achievements/player_progress.dart';
+import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
+import 'package:tictactoe/src/level_selection/levels.dart';
+import 'package:tictactoe/src/main_menu/main_menu_screen.dart';
+import 'package:tictactoe/src/play_session/play_session_screen.dart';
+import 'package:tictactoe/src/settings/settings.dart';
+import 'package:tictactoe/src/settings/settings_screen.dart';
+import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/win_game/win_game_screen.dart';
 
 void main() {
   checkFlavorDefined();

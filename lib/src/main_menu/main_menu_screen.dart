@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/flavors.dart';
-import 'package:flutter_game_sample/src/style/responsive_screen.dart';
-import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tictactoe/flavors.dart';
+import 'package:tictactoe/src/style/responsive_screen.dart';
+import 'package:tictactoe/src/style/rough/button.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({Key? key}) : super(key: key);

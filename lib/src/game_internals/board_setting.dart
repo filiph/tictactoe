@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_game_sample/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/game_internals/board_state.dart';
 
 /// The setting of an m,n,k-game.
 ///

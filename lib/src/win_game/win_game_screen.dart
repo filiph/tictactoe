@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_sample/src/achievements/score.dart';
-import 'package:flutter_game_sample/src/settings/settings.dart';
-import 'package:flutter_game_sample/src/style/colors.dart';
-import 'package:flutter_game_sample/src/style/responsive_screen.dart';
-import 'package:flutter_game_sample/src/style/rough/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/settings/settings.dart';
+import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/responsive_screen.dart';
+import 'package:tictactoe/src/style/rough/button.dart';
 
 class WinGameScreen extends StatelessWidget {
   final Score score;

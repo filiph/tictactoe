@@ -1,6 +1,6 @@
-import 'package:flutter_game_sample/src/game_internals/board_setting.dart';
-import 'package:flutter_game_sample/src/game_internals/board_state.dart';
-import 'package:flutter_game_sample/src/game_internals/tile.dart';
+import 'package:tictactoe/src/game_internals/board_setting.dart';
+import 'package:tictactoe/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/game_internals/tile.dart';
 
 abstract class AiOpponent {
   final BoardSetting setting;
