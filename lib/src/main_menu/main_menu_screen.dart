@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
+import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/colors.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
@@ -68,25 +69,29 @@ class MainMenuScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 32),
-              child: IconButton(
-                onPressed: () {
-                  final messenger = ScaffoldMessenger.of(context);
-                  messenger.clearSnackBars();
-                  messenger.showSnackBar(
-                    SnackBar(
-                        content: Text('NOT IMPLEMENTED. No sound yet. '
-                            'This will be a "quick mute" button that stops '
-                            'both music and sounds. Many mobile players don’t '
-                            'appreciate having to dig in settings to prevent '
-                            'the game from blasting music.')),
+              child: Selector<Settings, bool>(
+                selector: (context, settings) => settings.soundIsOn,
+                builder: (context, soundIsOn, child) {
+                  IconData icon;
+                  if (soundIsOn) {
+                    icon = (defaultTargetPlatform == TargetPlatform.iOS ||
+                            defaultTargetPlatform == TargetPlatform.macOS)
+                        ? CupertinoIcons.volume_up
+                        : Icons.volume_up;
+                  } else {
+                    icon = (defaultTargetPlatform == TargetPlatform.iOS ||
+                            defaultTargetPlatform == TargetPlatform.macOS)
+                        ? CupertinoIcons.volume_off
+                        : Icons.volume_off;
+                  }
+
+                  return IconButton(
+                    onPressed: () {
+                      context.read<Settings>().toggleSound();
+                    },
+                    icon: Icon(icon),
                   );
                 },
-                icon: Icon(
-                  (defaultTargetPlatform == TargetPlatform.iOS ||
-                          defaultTargetPlatform == TargetPlatform.macOS)
-                      ? CupertinoIcons.volume_off
-                      : Icons.volume_off,
-                ),
               ),
             ),
             gap,

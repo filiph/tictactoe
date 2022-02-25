@@ -7,6 +7,7 @@ import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/achievements_screen.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/main_menu/main_menu_screen.dart';
@@ -94,42 +95,50 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) {
-            var progress = PlayerProgress(playerProgressPersistentStore);
-            progress.getLatestFromStore();
-            return progress;
-          },
-        ),
-        ChangeNotifierProvider(
-          create: (context) => Settings(),
-        ),
-        Provider(
-          create: (context) => Palette(),
-        ),
-      ],
-      child: Builder(builder: (context) {
-        final palette = context.watch<Palette>();
+    return AudioSystemWrapper(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) {
+              var progress = PlayerProgress(playerProgressPersistentStore);
+              progress.getLatestFromStore();
+              return progress;
+            },
+          ),
+          ChangeNotifierProxyProvider<AudioSystem, Settings>(
+            lazy: false,
+            create: (context) => Settings(),
+            update: (context, audioSystem, settings) {
+              if (settings == null) throw ArgumentError.notNull();
+              settings.attachAudioSystem(audioSystem);
+              return settings;
+            },
+          ),
+          Provider(
+            create: (context) => Palette(),
+          ),
+        ],
+        child: Builder(builder: (context) {
+          final palette = context.watch<Palette>();
 
-        return MaterialApp.router(
-          title: 'Flutter Demo',
-          theme: ThemeData.from(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: palette.darkPen,
-              background: palette.background,
-            ),
-            textTheme: TextTheme(
-              bodyText2: TextStyle(
-                color: palette.ink,
+          return MaterialApp.router(
+            title: 'Flutter Demo',
+            theme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: palette.darkPen,
+                background: palette.background,
+              ),
+              textTheme: TextTheme(
+                bodyText2: TextStyle(
+                  color: palette.ink,
+                ),
               ),
             ),
-          ),
-          routeInformationParser: _router.routeInformationParser,
-          routerDelegate: _router.routerDelegate,
-        );
-      }),
+            routeInformationParser: _router.routeInformationParser,
+            routerDelegate: _router.routerDelegate,
+          );
+        }),
+      ),
     );
   }
 }
