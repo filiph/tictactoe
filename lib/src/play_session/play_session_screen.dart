@@ -83,20 +83,24 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 rectangularMenuArea: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Builder(builder: (context) {
-                      return RoughButton(
+                    Expanded(
+                      child: Builder(builder: (context) {
+                        return RoughButton(
+                          onTap: () {
+                            context.read<BoardState>().clearBoard();
+                            _startOfPlay = DateTime.now();
+                          },
+                          child: const Text('Restart'),
+                        );
+                      }),
+                    ),
+                    Expanded(
+                      child: RoughButton(
                         onTap: () {
-                          context.read<BoardState>().clearBoard();
-                          _startOfPlay = DateTime.now();
+                          GoRouter.of(context).pop();
                         },
-                        child: const Text('Restart'),
-                      );
-                    }),
-                    RoughButton(
-                      onTap: () {
-                        GoRouter.of(context).pop();
-                      },
-                      child: const Text('Back'),
+                        child: const Text('Back'),
+                      ),
                     ),
                   ],
                 ),
