@@ -95,13 +95,15 @@ class _AudioSystemWrapperState extends State<AudioSystemWrapper>
     _log.info('didChangeAppLifecycleState: $state');
     switch (state) {
       case AppLifecycleState.paused:
-        // TODO: Handle this case.
+        _audioSystem.stopForAppPaused();
         break;
       case AppLifecycleState.resumed:
-        // TODO: Handle this case.
+        _audioSystem.resumeAfterAppPaused();
+        break;
+      case AppLifecycleState.detached:
+        _audioSystem.stopForAppPaused();
         break;
       case AppLifecycleState.inactive:
-      case AppLifecycleState.detached:
         // No need to react to this state change.
         break;
     }
