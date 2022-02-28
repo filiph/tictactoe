@@ -18,8 +18,6 @@ import 'package:tictactoe/src/style/colors.dart';
 import 'package:tictactoe/src/win_game/win_game_screen.dart';
 
 void main() {
-  checkFlavorDefined();
-
   if (kReleaseMode) {
     // Don't log anything below warnings in production.
     Logger.root.level = Level.WARNING;
@@ -29,6 +27,15 @@ void main() {
         '${record.loggerName}: '
         '${record.message}');
   });
+
+  final flavorIsDefined = checkFlavorDefined();
+
+  if (!flavorIsDefined) {
+    runApp(MaterialApp(
+      home: ErrorWidget(StateError('Game was built with undefined flavor')),
+    ));
+    return;
+  }
 
   // Blocked on a profile/release mode bug:
   //     https://github.com/flutter/flutter/issues/98973

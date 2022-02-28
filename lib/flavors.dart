@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// This compile-time constant will be set according to Dart's compile-time
 /// environment variable named 'flavor'.
 ///
@@ -19,15 +21,23 @@ const Flavor flavor = _flavorFlag == 'full'
         ? Flavor.lite
         : Flavor.undefined;
 
-/// Checks if [flavor] is defined and throws an error if it isn't.
-void checkFlavorDefined() {
+/// Checks if [flavor] is defined.
+///
+/// In Debug mode, throws an error if it isn't.
+bool checkFlavorDefined() {
   if (flavor == Flavor.undefined) {
-    throw ArgumentError(
-        'No flavor environment variable defined. Please provide a value when '
-        'running `flutter build` or `flutter run`. For example, if you '
-        'want to debug the full app, run '
-        '`flutter run --dart-define=flavor=full`.');
+    if (kDebugMode) {
+      // Fail fast.
+      throw ArgumentError(
+          'No flavor environment variable defined. Please provide a value when '
+          'running `flutter build` or `flutter run`. For example, if you '
+          'want to debug the full app, run '
+          '`flutter run --dart-define=flavor=full`.');
+    }
+
+    return false;
   }
+  return true;
 }
 
 const String _flavorFlag = String.fromEnvironment('flavor');
