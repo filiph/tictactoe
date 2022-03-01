@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/ads/banner_ad.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/colors.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
@@ -24,13 +28,13 @@ class WinGameScreen extends StatelessWidget {
         squarishMainArea: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (!adsRemoved) ...[
+            if (!adsRemoved && (Platform.isIOS || Platform.isAndroid)) ...[
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
                   child: Container(
                     color: palette.light,
-                    child: Center(child: Text('Ads here')),
+                    child: Center(child: MyBannerAd()),
                   ),
                 ),
               ),

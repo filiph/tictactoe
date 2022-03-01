@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
@@ -37,15 +38,21 @@ void main() {
     return;
   }
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Blocked on a profile/release mode bug:
   //     https://github.com/flutter/flutter/issues/98973
   //
   // _log.info('Going full screen');
-  // WidgetsFlutterBinding.ensureInitialized();
   // SystemChrome.setEnabledSystemUIMode(
   //   SystemUiMode.manual,
   //   overlays: [SystemUiOverlay.top],
   // );
+
+  /// Prepare the google_mobile_ads plugin so that the first ad loads
+  /// immediately. This can be done later or with a delay if startup experience
+  /// suffers.
+  MobileAds.instance.initialize();
 
   _log.info('Starting game in $flavor');
   runApp(
