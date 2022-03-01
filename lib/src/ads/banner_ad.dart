@@ -123,9 +123,9 @@ class _MyBannerAdState extends State<MyBannerAd> {
         _log.warning('Banner failedToLoad: $error');
         ad.dispose();
       }, onAdImpression: (Ad ad) {
-        _log.info('Add impression registered');
+        _log.info('Ad impression registered');
       }, onAdClicked: (Ad ad) {
-        _log.info('Add click registered');
+        _log.info('Ad click registered');
       }),
     );
     return _bannerAd!.load();

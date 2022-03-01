@@ -24,4 +24,4 @@ To build the app for iOS:
 
 To build the app for Android:
 
-    fvm flutter build appbundle --dart-define flavor=full
+    fvm flutter build appbundle --dart-define flavor=full && open build/app/outputs/bundle/release
