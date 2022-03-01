@@ -17,3 +17,11 @@ To build and publish to github.io:
     --web-renderer canvaskit \
     --extra-args "--dart-define flavor=lite --base-href=/flutter_game_sample/" \
     && git push origin --set-upstream gh-pages
+
+To build the app for iOS:
+
+    fvm flutter build ipa --dart-define flavor=full && open build/ios/archive/Runner.xcarchive
+
+To build the app for Android:
+
+    fvm flutter build appbundle --dart-define flavor=full
