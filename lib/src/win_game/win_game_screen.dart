@@ -28,7 +28,11 @@ class WinGameScreen extends StatelessWidget {
         squarishMainArea: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (!adsRemoved && (Platform.isIOS || Platform.isAndroid)) ...[
+            if (!adsRemoved &&
+                // Since this is a compile-time constant, the web version
+                // won't even import the code for ad serving. Tree shaking ftw.
+                !kIsWeb &&
+                (Platform.isIOS || Platform.isAndroid)) ...[
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
