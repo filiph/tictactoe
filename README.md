@@ -16,7 +16,7 @@ Examples of such "app-like games":
 - [Incremental games](https://en.wikipedia.org/wiki/Incremental_game)
 - Digitized board games (like chess)
 - Card games (digitized, like poker, or digital-only, like Hearthstone or Slay The Spire)
-- Manager games (like Football Manager)
+- Manager games (like old Football Manager games, where most of the "action" is in spreadsheets)
 
 These types of games are a great fit for Flutter, since they can use Flutter's widget layer for
 building UIs and still have powerful pixel-perfect control of visuals on all platforms.
