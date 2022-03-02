@@ -49,10 +49,12 @@ void main() {
   //   overlays: [SystemUiOverlay.top],
   // );
 
-  /// Prepare the google_mobile_ads plugin so that the first ad loads
-  /// immediately. This can be done later or with a delay if startup experience
-  /// suffers.
-  MobileAds.instance.initialize();
+  if (platformSupportsAds) {
+    /// Prepare the google_mobile_ads plugin so that the first ad loads
+    /// immediately. This can be done later or with a delay if startup experience
+    /// suffers.
+    MobileAds.instance.initialize();
+  }
 
   _log.info('Starting game in $flavor');
   runApp(
@@ -74,13 +76,11 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) => const LevelSelectionScreen(),
                 routes: [
                   GoRoute(
-                    path: 'session',
+                    path: 'session/:level',
                     builder: (context, state) {
-                      if (state.extra == null || state.extra is! GameLevel) {
-                        // TODO: redirect somewhere else?
-                        throw ArgumentError.value(state.extra);
-                      }
-                      final level = state.extra! as GameLevel;
+                      final levelNumber = int.parse(state.params['level']!);
+                      final level = gameLevels
+                          .singleWhere((e) => e.number == levelNumber);
                       return PlaySessionScreen(level);
                     },
                   ),

@@ -51,7 +51,7 @@ class LevelSelectionScreen extends StatelessWidget {
                       onTap:
                           playerProgress.highestLevelReached >= level.number - 1
                               ? () => GoRouter.of(context)
-                                  .go('/play/session/', extra: level)
+                                  .go('/play/session/${level.number}')
                               : null,
                       child: Stack(
                         children: [

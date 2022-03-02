@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 /// This compile-time constant will be set according to Dart's compile-time
@@ -21,6 +23,13 @@ const Flavor flavor = _flavorFlag == 'full'
         ? Flavor.lite
         : Flavor.undefined;
 
+/// This constant is populated from something like
+/// `flutter run --dart-define=flavor=x`.
+const String _flavorFlag = String.fromEnvironment('flavor');
+
+/// Returns `true` if it the platform supports ads.
+final platformSupportsAds = Platform.isIOS || Platform.isAndroid;
+
 /// Checks if [flavor] is defined.
 ///
 /// In Debug mode, throws an error if it isn't.
@@ -39,8 +48,6 @@ bool checkFlavorDefined() {
   }
   return true;
 }
-
-const String _flavorFlag = String.fromEnvironment('flavor');
 
 enum Flavor {
   undefined,
