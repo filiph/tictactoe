@@ -27,6 +27,8 @@ It's just that *this* sample game is focused on "app-like games".
 
 [Flame]: https://flame-engine.org/
 
+Note: The name of the game in app stores is "Tic Tac Toe Puzzle Game". Because that's what it is,
+and because every other variation of "Tic Tac Toe" is already taken.
 
 ## Demo
 
