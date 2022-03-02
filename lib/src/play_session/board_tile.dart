@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
 import 'package:tictactoe/src/style/colors.dart';
@@ -55,6 +56,10 @@ class _BoardTileState extends State<BoardTile>
     // Play animation if the player or the AI marked this tile.
     if (_previousOwner == Side.none && owner != Side.none) {
       _controller.forward();
+
+      // Also, play sound.
+      final audioSystem = context.read<AudioSystem>();
+      audioSystem.playSfx(owner == Side.x ? SfxType.drawX : SfxType.drawO);
     }
 
     _previousOwner = owner;

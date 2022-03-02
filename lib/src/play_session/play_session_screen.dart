@@ -4,6 +4,7 @@ import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
@@ -151,6 +152,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     setState(() {
       _duringCelebration = true;
     });
+
+    final audioSystem = context.read<AudioSystem>();
+    audioSystem.playSfx(SfxType.congrats);
 
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart' hide Logger;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -25,7 +27,6 @@ class AudioSystem extends ChangeNotifier {
           prefix: 'assets/music/',
         ),
         _sfxCache = AudioCache(
-          fixedPlayer: musicPlayer,
           prefix: 'assets/sfx/',
         );
 
@@ -45,7 +46,9 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void resumeAfterAppPaused() {
-    resumeMusic();
+    if (_isOn) {
+      resumeMusic();
+    }
   }
 
   void startMusic() {
@@ -58,12 +61,28 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void stopForAppPaused() {
-    stopSound();
+    mute();
   }
 
-  void stopSound() {
+  void mute() {
     musicPlayer.pause();
     sfxPlayer.stop();
+  }
+
+  final Random _random = Random();
+
+  void playSfx(SfxType type) {
+    _log.info('Playing sound: $type');
+    final options = _soundTypeToFilename(type);
+    final filename = options[_random.nextInt(options.length)];
+    _log.info('- Chosen filename: $filename');
+    _sfxCache.play(filename, mode: PlayerMode.LOW_LATENCY);
+  }
+
+  void initialize() async {
+    _log.info('Preloading sound effects');
+    await _sfxCache
+        .loadAll(SfxType.values.expand(_soundTypeToFilename).toList());
   }
 }
 
@@ -128,7 +147,52 @@ class _AudioSystemWrapperState extends State<AudioSystemWrapper>
     );
     _log.info('AudioSystem created');
 
+    _audioSystem.initialize();
+
     WidgetsBinding.instance!.addObserver(this);
     _log.info('Subscribed to app lifecycle updates');
+  }
+}
+
+enum SfxType {
+  drawX,
+  drawO,
+  buttonTap,
+  congrats,
+}
+
+List<String> _soundTypeToFilename(SfxType type) {
+  switch (type) {
+    case SfxType.drawX:
+      return [
+        'hash1.mp3',
+        'hash2.mp3',
+        'hash3.mp3',
+      ];
+    case SfxType.drawO:
+      return [
+        'wssh1.mp3',
+        'wssh2.mp3',
+        'dsht1.mp3',
+        'ws1.mp3',
+        'spsh1.mp3',
+        'hh1.mp3',
+        'hh2.mp3',
+        'kss1.mp3',
+      ];
+    case SfxType.buttonTap:
+      return [
+        'k1.mp3',
+        'k2.mp3',
+        'p1.mp3',
+        'p2.mp3',
+      ];
+    case SfxType.congrats:
+      return [
+        'yay1.mp3',
+        'wehee1.mp3',
+        'oo1.mp3',
+        'ehehee1.mp3',
+      ];
   }
 }

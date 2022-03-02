@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/style/colors.dart';
 
 class RoughButton extends StatelessWidget {
@@ -13,12 +14,20 @@ class RoughButton extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  void _handleTap(BuildContext context) {
+    assert(onTap != null, "Don't call _handleTap when onTap is null");
+
+    final audioSystem = context.read<AudioSystem>();
+    audioSystem.playSfx(SfxType.buttonTap);
+    onTap!();
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
 
     return InkResponse(
-      onTap: onTap,
+      onTap: onTap == null ? null : () => _handleTap(context),
       child: Stack(
         alignment: AlignmentDirectional.center,
         children: [

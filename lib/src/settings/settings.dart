@@ -15,7 +15,7 @@ class Settings extends ChangeNotifier {
     if (_soundIsOn) {
       _audioSystem?.resumeMusic();
     } else {
-      _audioSystem?.stopSound();
+      _audioSystem?.mute();
     }
     notifyListeners();
   }
