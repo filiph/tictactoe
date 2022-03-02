@@ -28,7 +28,10 @@ const Flavor flavor = _flavorFlag == 'full'
 const String _flavorFlag = String.fromEnvironment('flavor');
 
 /// Returns `true` if it the platform supports ads.
-final platformSupportsAds = Platform.isIOS || Platform.isAndroid;
+///
+/// Checks first that `kIsWeb` is not true, because [Platform] is not
+/// supported on the web.
+final platformSupportsAds = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 
 /// Checks if [flavor] is defined.
 ///
