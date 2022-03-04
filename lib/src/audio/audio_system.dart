@@ -123,7 +123,7 @@ class AudioSystem extends ChangeNotifier {
     // Put the song that just finished playing to the end of the playlist.
     _playlist.addLast(_playlist.removeFirst());
     // Play the next song.
-    _log.info('Playing ${_playlist.first} now.');
+    _log.info(() => 'Playing ${_playlist.first} now.');
     _musicCache.play(_playlist.first.filename);
   }
 }

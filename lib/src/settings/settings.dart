@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 
 class Settings extends ChangeNotifier {
@@ -6,9 +6,13 @@ class Settings extends ChangeNotifier {
 
   final bool _adsRemoved = false;
 
+  /// Whether or not the sound is on at all. This overrides both music
+  /// and sound.
   bool get soundIsOn => _soundIsOn;
 
-  bool _soundIsOn = true;
+  /// The sound starts on (`true`) on every device target except for the web.
+  /// On the web, sound can only start after user interaction.
+  bool _soundIsOn = !kIsWeb;
 
   void toggleSound() {
     _soundIsOn = !_soundIsOn;
