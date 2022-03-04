@@ -86,7 +86,27 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void resumeMusic() {
-    _musicPlayer.resume();
+    switch (_musicPlayer.state) {
+      case PlayerState.PAUSED:
+        _musicPlayer.resume();
+        break;
+      case PlayerState.STOPPED:
+        _log.info("resumeMusic() called when music is stopped. "
+            "This probably means we haven't yet started the music. "
+            "For example, the game was started with sound off.");
+        _musicCache.play(_playlist.first.filename);
+        break;
+      case PlayerState.PLAYING:
+        _log.warning('resumeMusic() called when music is playing. '
+            'Nothing to do.');
+        break;
+      case PlayerState.COMPLETED:
+        _log.warning('resumeMusic() called when music is completed. '
+            "Music should never be 'completed' as it's either not playing "
+            "or looping forever.");
+        _musicCache.play(_playlist.first.filename);
+        break;
+    }
   }
 
   void stopForAppPaused() {

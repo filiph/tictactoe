@@ -35,7 +35,7 @@ and because every other variation of "Tic Tac Toe" is already taken.
 To make it easier for everyone to play with the sample, it's currently
 [published here][].
 
-[published here]: https://filiph.github.io/flutter_game_sample/mobile.html.
+[published here]: https://filiph.github.io/flutter_game_sample/mobile.html
 
 
 ## Development
