@@ -1,9 +1,11 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart' hide Logger;
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/audio/songs.dart';
 
 class AudioSystem extends ChangeNotifier {
   static final _log = Logger('AudioSystem');
@@ -26,6 +28,8 @@ class AudioSystem extends ChangeNotifier {
 
   int _currentSfxPlayer = 0;
 
+  final Queue<Song> _playlist;
+
   /// Creates an instance that plays music and sound.
   ///
   /// Use [polyphony] to configure the number of sound effects (SFX) that can
@@ -39,7 +43,8 @@ class AudioSystem extends ChangeNotifier {
             polyphony,
             (i) => AudioPlayer(
                 playerId: 'sfxPlayer#$i',
-                mode: PlayerMode.LOW_LATENCY)).toList(growable: false) {
+                mode: PlayerMode.LOW_LATENCY)).toList(growable: false),
+        _playlist = Queue.from(List.of(songs)..shuffle()) {
     _musicCache = AudioCache(
       fixedPlayer: _musicPlayer,
       prefix: 'assets/music/',
@@ -48,6 +53,8 @@ class AudioSystem extends ChangeNotifier {
       fixedPlayer: _sfxPlayers.first,
       prefix: 'assets/sfx/',
     );
+
+    _musicPlayer.onPlayerCompletion.listen(_changeSong);
   }
 
   bool get isOn => _isOn;
@@ -75,7 +82,7 @@ class AudioSystem extends ChangeNotifier {
 
   void startMusic() {
     _log.info('starting music');
-    _musicCache.loop('Mr-Smith-Sonorus.mp3');
+    _musicCache.play(_playlist.first.filename);
   }
 
   void resumeMusic() {
@@ -109,6 +116,15 @@ class AudioSystem extends ChangeNotifier {
     _log.info('Preloading sound effects');
     await _sfxCache
         .loadAll(SfxType.values.expand(_soundTypeToFilename).toList());
+  }
+
+  void _changeSong(void _) {
+    _log.info('Last song finished playing.');
+    // Put the song that just finished playing to the end of the playlist.
+    _playlist.addLast(_playlist.removeFirst());
+    // Play the next song.
+    _log.info('Playing ${_playlist.first} now.');
+    _musicCache.play(_playlist.first.filename);
   }
 }
 
