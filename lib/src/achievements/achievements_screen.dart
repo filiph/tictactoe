@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
@@ -78,11 +80,32 @@ class AchievementsScreen extends StatelessWidget {
             _gap,
           ],
         ),
-        rectangularMenuArea: RoughButton(
-          onTap: () {
-            GoRouter.of(context).pop();
-          },
-          child: const Text('Back'),
+        rectangularMenuArea: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (platformSupportsGameServices)
+              Expanded(
+                child: Builder(builder: (context) {
+                  return RoughButton(
+                    onTap: () {
+                      GamesServices.showLeaderboards(
+                        iOSLeaderboardID: "tictactoe.highest_score",
+                        androidLeaderboardID: "CgkIgZ29mawJEAIQAQ",
+                      );
+                    },
+                    child: const Text('Leaderboard'),
+                  );
+                }),
+              ),
+            Expanded(
+              child: RoughButton(
+                onTap: () {
+                  GoRouter.of(context).pop();
+                },
+                child: const Text('Back'),
+              ),
+            ),
+          ],
         ),
       ),
     );

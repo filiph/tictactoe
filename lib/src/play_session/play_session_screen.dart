@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:games_services/games_services.dart' as games_services;
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
+import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
@@ -158,6 +160,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);
+
+    if (platformSupportsGameServices) {
+      if (await games_services.GamesServices.isSignedIn) {
+        _log.info('Submitting $score to leaderboard.');
+        games_services.GamesServices.submitScore(
+            score: games_services.Score(
+          iOSLeaderboardID: "tictactoe.highest_score",
+          androidLeaderboardID: "CgkIgZ29mawJEAIQAQ",
+          value: score.score,
+        ));
+      }
+    }
 
     GoRouter.of(context).go('/play/won', extra: score);
   }

@@ -27,11 +27,16 @@ const Flavor flavor = _flavorFlag == 'full'
 /// `flutter run --dart-define=flavor=x`.
 const String _flavorFlag = String.fromEnvironment('flavor');
 
-/// Returns `true` if it the platform supports ads.
+/// Returns `true` if the platform supports ads.
 ///
 /// Checks first that `kIsWeb` is not true, because [Platform] is not
 /// supported on the web.
 final platformSupportsAds = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
+
+/// Returns `true` if the platform supports game services (Games Center,
+/// Google Play Games).
+final platformSupportsGameServices =
+    !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 
 /// Checks if [flavor] is defined.
 ///

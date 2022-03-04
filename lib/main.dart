@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:games_services/games_services.dart' hide Score;
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
@@ -54,6 +55,10 @@ void main() {
     /// immediately. This can be done later or with a delay if startup experience
     /// suffers.
     MobileAds.instance.initialize();
+  }
+
+  if (platformSupportsGameServices) {
+    GamesServices.signIn();
   }
 
   _log.info('Starting game in $flavor');
