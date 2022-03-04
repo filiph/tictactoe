@@ -3,4 +3,4 @@ Attribution 4.0 International (CC BY 4.0).
 
 https://freemusicarchive.org/music/mr-smith
 
-TODO(filiph): add exact wording about explicit permission from Mr Smith
+Mr Smith's music is used in this project with his explicit permission.

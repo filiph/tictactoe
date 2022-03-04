@@ -4,9 +4,9 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "version.json": "0f09962cd5722870abad3e777038ba2f",
-"index.html": "819307da2f369300e1f470a58c65a302",
-"/": "819307da2f369300e1f470a58c65a302",
-"main.dart.js": "e044785b7a08ec58d63c5ff6c7c11f7b",
+"index.html": "97b245835190c622ed5ec22db02b5bd6",
+"/": "97b245835190c622ed5ec22db02b5bd6",
+"main.dart.js": "3725a4317a1dc3116f73bf7352189925",
 "mobile.html": "898e4d7a9d5ee94bec5adfa2431979fc",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
@@ -14,13 +14,21 @@ const RESOURCES = {
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "manifest.json": "c8c45dc2d25e4ad129e26bf51c5315b8",
-"assets/AssetManifest.json": "a5c7c2266c7e9bc6d505abcabedfb8b3",
+"assets/AssetManifest.json": "1f6f0e9547b14f4c6aaceb5effa88d8a",
 "assets/NOTICES": "61419021873cfc136306b57a256967f5",
 "assets/FontManifest.json": "202bfb5144bfc3359dc068bcf44cba82",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
-"assets/assets/music/Mr-Smith-Sonorus.mp3": "9353b7bb732002062e2c9107a95f3d2a",
-"assets/assets/music/README.md": "84c10b972d9cfdfe7025d3a21a9baf7d",
+"assets/assets/music/Mr_Smith-Pequenas_Guitarras.mp3": "50de570341eaaefeb48867fd997df756",
+"assets/assets/music/Mr_Smith-Sunday_Solitude.mp3": "5fb1f2fbf4314eb5df35b62706942698",
+"assets/assets/music/Mr_Smith-This_Could_Get_Dark.mp3": "308dacb8d3333ae113b1d56416c12fa8",
+"assets/assets/music/Mr_Smith-Black_Top.mp3": "b97d0206eb8417fd85257299c8bb2af6",
+"assets/assets/music/README.md": "7370dc3b51335ce48fdf8fdf60c23519",
+"assets/assets/music/Mr_Smith-Sonorus.mp3": "9353b7bb732002062e2c9107a95f3d2a",
+"assets/assets/music/Mr_Smith-Reflector.mp3": "af7101ee88e8d16f8d3a4acd5a68722b",
+"assets/assets/music/Mr_Smith-The_Mariachi.mp3": "2639822dd11617822d13482623f1ee18",
+"assets/assets/music/Mr_Smith-The_Get_Away.mp3": "fd5783c285c5b443103cec404ef34f74",
+"assets/assets/music/Mr_Smith-Azul.mp3": "9463595498dc48b3d3d6805fb7c19dc7",
 "assets/assets/Permanent_Marker/PermanentMarker-Regular.ttf": "c863f8028c2505f92540e0ba7c379002",
 "assets/assets/images/3x/vertical.png": "7ade8d8e5639890548b58fbca4e5cdae",
 "assets/assets/images/3x/circle5.png": "ed162df1a2099976d28b0ff70b015c9c",
@@ -138,7 +146,11 @@ const RESOURCES = {
 "assets/assets/sfx/haw1.mp3": "00db66b69283acb63a887136dfe7a73c",
 "assets/assets/sfx/ehehee1.mp3": "52f5042736fa3f4d4198b97fe50ce7f3",
 "assets/assets/sfx/ws1.mp3": "5cfa8fda1ee940e65a19391ddef4d477",
-"assets/assets/sfx/wehee1.mp3": "5a986231104c9f084104e5ee1c564bc4"
+"assets/assets/sfx/wehee1.mp3": "5a986231104c9f084104e5ee1c564bc4",
+"canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
+"canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
+"canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
+"canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba"
 };
 
 // The application shell files that are downloaded before a service worker can
