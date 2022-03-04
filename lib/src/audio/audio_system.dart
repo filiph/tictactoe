@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart' hide Logger;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -11,24 +10,45 @@ class AudioSystem extends ChangeNotifier {
 
   bool _isOn = false;
 
-  final AudioCache _musicCache;
+  late AudioCache _musicCache;
 
-  final AudioCache _sfxCache;
+  late AudioCache _sfxCache;
 
-  final AudioPlayer musicPlayer;
+  final AudioPlayer _musicPlayer;
 
-  final AudioPlayer sfxPlayer;
+  /// This is a list of [AudioPlayer] instances which are rotated to play
+  /// sound effects.
+  ///
+  /// Normally, we would just call [AudioCache.play] and let it procure its
+  /// own [AudioPlayer] every time. But this seems to lead to errors and
+  /// bad performance on iOS devices.
+  final List<AudioPlayer> _sfxPlayers;
 
-  /// This class takes ownership of the [musicPlayer] and the [sfxPlayer]
-  /// and will dispose of them when disposed.
-  AudioSystem({required this.musicPlayer, required this.sfxPlayer})
-      : _musicCache = AudioCache(
-          fixedPlayer: musicPlayer,
-          prefix: 'assets/music/',
-        ),
-        _sfxCache = AudioCache(
-          prefix: 'assets/sfx/',
-        );
+  int _currentSfxPlayer = 0;
+
+  /// Creates an instance that plays music and sound.
+  ///
+  /// Use [polyphony] to configure the number of sound effects (SFX) that can
+  /// play at the same time. A [polyphony] of `1` will always only play one
+  /// sound (a new sound will stop the previous one). See discussion
+  /// of [_sfxPlayers] to learn why this is the case.
+  AudioSystem({int polyphony = 3})
+      : assert(polyphony >= 1),
+        _musicPlayer = AudioPlayer(playerId: 'musicPlayer'),
+        _sfxPlayers = Iterable.generate(
+            polyphony,
+            (i) => AudioPlayer(
+                playerId: 'sfxPlayer#$i',
+                mode: PlayerMode.LOW_LATENCY)).toList(growable: false) {
+    _musicCache = AudioCache(
+      fixedPlayer: _musicPlayer,
+      prefix: 'assets/music/',
+    );
+    _sfxCache = AudioCache(
+      fixedPlayer: _sfxPlayers.first,
+      prefix: 'assets/sfx/',
+    );
+  }
 
   bool get isOn => _isOn;
 
@@ -40,8 +60,10 @@ class AudioSystem extends ChangeNotifier {
 
   @override
   void dispose() {
-    musicPlayer.dispose();
-    sfxPlayer.dispose();
+    _musicPlayer.dispose();
+    for (final player in _sfxPlayers) {
+      player.dispose();
+    }
     super.dispose();
   }
 
@@ -57,7 +79,7 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void resumeMusic() {
-    musicPlayer.resume();
+    _musicPlayer.resume();
   }
 
   void stopForAppPaused() {
@@ -65,8 +87,10 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void mute() {
-    musicPlayer.pause();
-    sfxPlayer.stop();
+    _musicPlayer.pause();
+    for (final player in _sfxPlayers) {
+      player.stop();
+    }
   }
 
   final Random _random = Random();
@@ -76,7 +100,9 @@ class AudioSystem extends ChangeNotifier {
     final options = _soundTypeToFilename(type);
     final filename = options[_random.nextInt(options.length)];
     _log.info('- Chosen filename: $filename');
-    _sfxCache.play(filename, mode: PlayerMode.LOW_LATENCY);
+    _sfxCache.play(filename);
+    _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
+    _sfxCache.fixedPlayer = _sfxPlayers[_currentSfxPlayer];
   }
 
   void initialize() async {
@@ -138,13 +164,7 @@ class _AudioSystemWrapperState extends State<AudioSystemWrapper>
   @override
   void initState() {
     super.initState();
-    _audioSystem = AudioSystem(
-      musicPlayer: AudioPlayer(playerId: 'musicPlayer'),
-      sfxPlayer: AudioPlayer(
-        mode: kIsWeb ? PlayerMode.MEDIA_PLAYER : PlayerMode.LOW_LATENCY,
-        playerId: 'soundsPlayer',
-      ),
-    );
+    _audioSystem = AudioSystem();
     _log.info('AudioSystem created');
 
     _audioSystem.initialize();
