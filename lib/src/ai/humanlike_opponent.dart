@@ -152,9 +152,11 @@ class HumanlikeOpponent extends AiOpponent {
 
     // The options, sorted from the best play perspective...
     final bestPlay = List.of(scores)
-      ..sort((a, b) => -a.bestPlay.compareTo(b.bestPlay))
+      ..sort((a, b) => -a.bestPlay.compareTo(b.bestPlay));
+    if (scores.length > bestPlayCount) {
       // ... and truncated to just the percentile we want.
-      ..removeRange(bestPlayCount, scores.length);
+      bestPlay.removeRange(bestPlayCount, scores.length);
+    }
 
     // The options, sorted from the "humanlike" play perspective.
     final humanlike = List.of(scores)
