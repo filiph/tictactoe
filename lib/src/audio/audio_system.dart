@@ -86,8 +86,10 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void resumeMusic() {
+    _log.info('Resuming music');
     switch (_musicPlayer.state) {
       case PlayerState.PAUSED:
+        _log.info('Calling _musicPlayer.resume()');
         _musicPlayer.resume();
         break;
       case PlayerState.STOPPED:
