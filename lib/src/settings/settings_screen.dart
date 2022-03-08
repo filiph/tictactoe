@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
+import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
@@ -29,7 +30,18 @@ class SettingsScreen extends StatelessWidget {
             _gap,
             _SettingsLine('Sound FX', Icons.volume_off),
             _SettingsLine('Music', Icons.music_off),
-            _SettingsLine('Remove ads', Icons.monetization_on),
+            Consumer<InAppPurchaseNotifier>(
+                builder: (context, inAppPurchase, child) {
+              return _SettingsLine(
+                'Remove ads',
+                inAppPurchase.adRemoval.active ? Icons.check : Icons.ad_units,
+                onSelected: inAppPurchase.adRemoval.active
+                    ? null
+                    : () {
+                        inAppPurchase.buy();
+                      },
+              );
+            }),
             _SettingsLine(
               'Reset game',
               Icons.restart_alt,

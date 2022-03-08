@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart' hide Score;
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
@@ -10,12 +11,14 @@ import 'package:tictactoe/src/achievements/achievements_screen.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/main_menu/main_menu_screen.dart';
 import 'package:tictactoe/src/play_session/play_session_screen.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/settings/settings_screen.dart';
+import 'package:tictactoe/src/snack_bar/snack_bar.dart';
 import 'package:tictactoe/src/style/colors.dart';
 import 'package:tictactoe/src/win_game/win_game_screen.dart';
 
@@ -65,6 +68,8 @@ void main() {
   runApp(
     MyApp(
       playerProgressPersistentStore: MemoryOnlyPlayerProgressPersistentStore(),
+      inAppPurchaseNotifier:
+          InAppPurchaseNotifier(InAppPurchase.instance.purchaseStream),
     ),
   );
 }
@@ -109,8 +114,13 @@ class MyApp extends StatelessWidget {
 
   final PlayerProgressPersistentStore playerProgressPersistentStore;
 
-  const MyApp({required this.playerProgressPersistentStore, Key? key})
-      : super(key: key);
+  final InAppPurchaseNotifier inAppPurchaseNotifier;
+
+  const MyApp({
+    required this.playerProgressPersistentStore,
+    required this.inAppPurchaseNotifier,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +134,7 @@ class MyApp extends StatelessWidget {
               return progress;
             },
           ),
+          ChangeNotifierProvider.value(value: inAppPurchaseNotifier),
           ChangeNotifierProxyProvider<AudioSystem, Settings>(
             lazy: false,
             create: (context) => Settings(),
@@ -155,6 +166,7 @@ class MyApp extends StatelessWidget {
             ),
             routeInformationParser: _router.routeInformationParser,
             routerDelegate: _router.routerDelegate,
+            scaffoldMessengerKey: scaffoldMessengerKey,
           );
         }),
       ),

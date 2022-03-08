@@ -2,10 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 
 class Settings extends ChangeNotifier {
-  bool get adsRemoved => _adsRemoved;
-
-  final bool _adsRemoved = false;
-
   /// Whether or not the sound is on at all. This overrides both music
   /// and sound.
   bool get soundIsOn => _soundIsOn;
