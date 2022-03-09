@@ -38,6 +38,9 @@ final platformSupportsAds = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 final platformSupportsGameServices =
     !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 
+/// Returns `true` if the platform supports in-app purchases.
+final platformSupportsInAppPurchases = platformSupportsAds;
+
 /// Checks if [flavor] is defined.
 ///
 /// In Debug mode, throws an error if it isn't.

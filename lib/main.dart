@@ -64,12 +64,22 @@ void main() {
     GamesServices.signIn();
   }
 
+  InAppPurchaseNotifier inAppPurchaseNotifier;
+  if (platformSupportsInAppPurchases) {
+    // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
+    // as possible in order not to miss any updates.
+    inAppPurchaseNotifier = InAppPurchaseNotifier(InAppPurchase.instance)
+      ..subscribe(InAppPurchase.instance.purchaseStream)
+      ..restorePurchases();
+  } else {
+    inAppPurchaseNotifier = InAppPurchaseNotifier(null);
+  }
+
   _log.info('Starting game in $flavor');
   runApp(
     MyApp(
       playerProgressPersistentStore: MemoryOnlyPlayerProgressPersistentStore(),
-      inAppPurchaseNotifier:
-          InAppPurchaseNotifier(InAppPurchase.instance.purchaseStream),
+      inAppPurchaseNotifier: inAppPurchaseNotifier,
     ),
   );
 }

@@ -9,26 +9,30 @@ import 'package:tictactoe/src/snack_bar/snack_bar.dart';
 class InAppPurchaseNotifier extends ChangeNotifier {
   static final Logger _log = Logger('InAppPurchases');
 
-  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  StreamSubscription<List<PurchaseDetails>>? _subscription;
+
+  InAppPurchase? inAppPurchaseInstance;
 
   AdRemovalPurchase _adRemoval = AdRemovalPurchase.notStarted();
 
   AdRemovalPurchase get adRemoval => _adRemoval;
 
-  /// Creates a new in-app purchase [ChangeNotifier], which subscribes
-  /// to the provided [purchaseStream].
+  InAppPurchaseNotifier(this.inAppPurchaseInstance);
+
+  /// Subscribes to the provided [purchaseStream].
   ///
   /// In production, you'll want to call this with:
   ///
-  ///     final purchases =
-  ///         InAppPurchaseNotifier(InAppPurchase.instance.purchaseStream);
+  /// ```
+  /// inAppPurchaseNotifier.subscribe(InAppPurchase.instance.purchaseStream);
+  /// ```
   ///
   /// In testing, you can of course provide a mock stream.
-  InAppPurchaseNotifier(Stream<List<PurchaseDetails>> purchaseStream) {
+  void subscribe(Stream<List<PurchaseDetails>> purchaseStream) {
     _subscription = purchaseStream.listen((purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
-      _subscription.cancel();
+      _subscription?.cancel();
     }, onError: (error) {
       _log.severe('Error occurred on the purchaseStream: $error');
     });
@@ -36,13 +40,24 @@ class InAppPurchaseNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
-    _subscription.cancel();
+    _subscription?.cancel();
     super.dispose();
+  }
+
+  void restorePurchases() {
+    inAppPurchaseInstance?.restorePurchases();
   }
 
   Future<void> _listenToPurchaseUpdated(
       List<PurchaseDetails> purchaseDetailsList) async {
     for (var purchaseDetails in purchaseDetailsList) {
+      _log.info(() => 'New PurchaseDetails instance received: '
+          'productID=${purchaseDetails.productID}, '
+          'status=${purchaseDetails.status}, '
+          'purchaseID=${purchaseDetails.purchaseID}, '
+          'error=${purchaseDetails.error}, '
+          'pendingCompletePurchase=${purchaseDetails.pendingCompletePurchase}');
+
       if (purchaseDetails.productID != AdRemovalPurchase.productId) {
         _log.severe("The handling of the product with id "
             "'${purchaseDetails.productID}' is not implemented.");
@@ -75,7 +90,7 @@ class InAppPurchaseNotifier extends ChangeNotifier {
         }
         if (purchaseDetails.pendingCompletePurchase) {
           // Confirm purchase back to the store.
-          await InAppPurchase.instance.completePurchase(purchaseDetails);
+          await inAppPurchaseInstance?.completePurchase(purchaseDetails);
         }
       }
     }
@@ -99,13 +114,19 @@ class InAppPurchaseNotifier extends ChangeNotifier {
   }
 
   Future<void> buy() async {
-    if (!await InAppPurchase.instance.isAvailable()) {
+    if (inAppPurchaseInstance == null) {
+      _reportError('Trying to use in-app purchases on a platform that '
+          "doesn't support them.");
+      return;
+    }
+
+    if (!await inAppPurchaseInstance!.isAvailable()) {
       _reportError('InAppPurchase.instance not available');
       return;
     }
 
     _log.info('Querying the store with queryProductDetails()');
-    final response = await InAppPurchase.instance
+    final response = await inAppPurchaseInstance!
         .queryProductDetails({AdRemovalPurchase.productId});
 
     if (response.error != null) {
@@ -126,7 +147,7 @@ class InAppPurchaseNotifier extends ChangeNotifier {
 
     _log.info('Making the purchase');
     final purchaseParam = PurchaseParam(productDetails: productDetails);
-    final success = await InAppPurchase.instance
+    final success = await inAppPurchaseInstance!
         .buyNonConsumable(purchaseParam: purchaseParam);
     _log.info('buyNonConsumable() request was sent with success: $success');
     // The result of the purchase will be reported in the purchaseStream,
