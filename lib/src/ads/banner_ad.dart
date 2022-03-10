@@ -74,6 +74,8 @@ class _MyBannerAdState extends State<MyBannerAd> {
     super.dispose();
   }
 
+  static const useAnchoredAdaptiveSize = false;
+
   /// Load (another) ad, disposing of the current ad if there is one.
   Future<void> _loadAd() async {
     _log.info('_loadAd() called.');
@@ -90,13 +92,21 @@ class _MyBannerAdState extends State<MyBannerAd> {
       _adLoadingState = _LoadingState.loading;
     });
 
-    final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-            MediaQuery.of(context).size.width.truncate());
+    AdSize size;
 
-    if (size == null) {
-      _log.warning('Unable to get height of anchored banner.');
-      return;
+    if (useAnchoredAdaptiveSize) {
+      final AnchoredAdaptiveBannerAdSize? adaptiveSize =
+          await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+              MediaQuery.of(context).size.width.truncate());
+
+      if (adaptiveSize == null) {
+        _log.warning('Unable to get height of anchored banner.');
+        size = AdSize.banner;
+      } else {
+        size = adaptiveSize;
+      }
+    } else {
+      size = AdSize.mediumRectangle;
     }
 
     assert(Platform.isAndroid || Platform.isIOS,
