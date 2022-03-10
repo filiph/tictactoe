@@ -34,25 +34,25 @@ class SettingsScreen extends StatelessWidget {
             _gap,
             _SettingsLine(
               'Sound FX',
-              settings.soundsOn ? Icons.volume_up : Icons.volume_off,
+              Icon(settings.soundsOn ? Icons.volume_up : Icons.volume_off),
               onSelected: () => settings.toggleSoundsOn(),
             ),
             _SettingsLine(
               'Music',
-              settings.musicOn ? Icons.music_note : Icons.music_off,
+              Icon(settings.musicOn ? Icons.music_note : Icons.music_off),
               onSelected: () => settings.toggleMusicOn(),
             ),
             if (platformSupportsInAppPurchases)
               Consumer<InAppPurchaseNotifier>(
                   builder: (context, inAppPurchase, child) {
-                IconData icon;
+                Widget icon;
                 VoidCallback? callback;
                 if (inAppPurchase.adRemoval.active) {
-                  icon = Icons.check;
+                  icon = Icon(Icons.check);
                 } else if (inAppPurchase.adRemoval.pending) {
-                  icon = Icons.hourglass_top;
+                  icon = CircularProgressIndicator();
                 } else {
-                  icon = Icons.ad_units;
+                  icon = Icon(Icons.ad_units);
                   callback = () {
                     inAppPurchase.buy();
                   };
@@ -65,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
               }),
             _SettingsLine(
               'Reset game',
-              Icons.restart_alt,
+              Icon(Icons.restart_alt),
               onSelected: () {
                 context.read<PlayerProgress>().reset();
 
@@ -93,7 +93,7 @@ class SettingsScreen extends StatelessWidget {
 class _SettingsLine extends StatelessWidget {
   final String title;
 
-  final IconData icon;
+  final Widget icon;
 
   final VoidCallback? onSelected;
 
@@ -112,19 +112,8 @@ class _SettingsLine extends StatelessWidget {
             )),
         Spacer(),
         IconButton(
-          icon: Icon(icon),
-          onPressed: () {
-            if (onSelected != null) {
-              onSelected!();
-              return;
-            }
-
-            final messenger = ScaffoldMessenger.of(context);
-            messenger.clearSnackBars();
-            messenger.showSnackBar(
-              SnackBar(content: Text('Not implemented yet.')),
-            );
-          },
+          icon: icon,
+          onPressed: onSelected,
         ),
       ],
     );

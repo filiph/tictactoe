@@ -66,6 +66,8 @@ class InAppPurchaseNotifier extends ChangeNotifier {
       if (purchaseDetails.productID != AdRemovalPurchase.productId) {
         _log.severe("The handling of the product with id "
             "'${purchaseDetails.productID}' is not implemented.");
+        _adRemoval = AdRemovalPurchase.notStarted();
+        notifyListeners();
         continue;
       }
 
@@ -129,6 +131,9 @@ class InAppPurchaseNotifier extends ChangeNotifier {
       _reportError('InAppPurchase.instance not available');
       return;
     }
+
+    _adRemoval = AdRemovalPurchase.pending();
+    notifyListeners();
 
     _log.info('Querying the store with queryProductDetails()');
     final response = await inAppPurchaseInstance!
