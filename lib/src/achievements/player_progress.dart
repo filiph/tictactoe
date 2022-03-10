@@ -2,38 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
+import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/score.dart';
-
-class MemoryOnlyPlayerProgressPersistentStore
-    implements PlayerProgressPersistentStore {
-  int level = 0;
-
-  List<Score> highestScores = [];
-
-  @override
-  Future<int> getHighestLevelReached() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    return level;
-  }
-
-  @override
-  Future<void> saveHighestLevelReached(int level) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    this.level = level;
-  }
-
-  @override
-  Future<List<Score>> getHighestScores() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    return highestScores;
-  }
-
-  @override
-  Future<void> saveHighestScores(List<Score> scores) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    highestScores = scores;
-  }
-}
 
 class PlayerProgress extends ChangeNotifier {
   final PlayerProgressPersistentStore _store;
@@ -54,14 +24,17 @@ class PlayerProgress extends ChangeNotifier {
     if (level > _highestLevelReached) {
       _highestLevelReached = level;
       notifyListeners();
+    } else if (level < _highestLevelReached) {
+      _store.saveHighestLevelReached(_highestLevelReached);
     }
   }
 
-  reset() {
+  void reset() {
     _highestLevelReached = 0;
     _highestScores = [];
     notifyListeners();
-    unawaited(_store.saveHighestLevelReached(_highestLevelReached));
+    _store.saveHighestLevelReached(_highestLevelReached);
+    _store.saveHighestScores(_highestScores);
   }
 
   void addScore(Score score) {
@@ -71,6 +44,7 @@ class PlayerProgress extends ChangeNotifier {
       _highestScores.removeLast();
     }
     notifyListeners();
+    _store.saveHighestScores(_highestScores);
   }
 
   static const maxHighestScoresPerPlayer = 10;
@@ -83,14 +57,4 @@ class PlayerProgress extends ChangeNotifier {
       unawaited(_store.saveHighestLevelReached(level));
     }
   }
-}
-
-abstract class PlayerProgressPersistentStore {
-  Future<int> getHighestLevelReached();
-
-  Future<void> saveHighestLevelReached(int level);
-
-  Future<List<Score>> getHighestScores();
-
-  Future<void> saveHighestScores(List<Score> scores);
 }

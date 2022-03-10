@@ -8,6 +8,8 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/achievements_screen.dart';
+import 'package:tictactoe/src/achievements/persistence/local_storage_player_progress_persistence.dart';
+import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
@@ -81,7 +83,7 @@ void main() {
   runApp(
     MyApp(
       settingsPersistence: LocalStorageSettingsPersistence(),
-      playerProgressPersistentStore: MemoryOnlyPlayerProgressPersistentStore(),
+      playerProgressPersistentStore: LocalStoragePlayerProgressPersistence(),
       inAppPurchaseNotifier: inAppPurchaseNotifier,
     ),
   );
