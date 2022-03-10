@@ -34,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
             _gap,
             _SettingsLine(
               'Sound FX',
-              Icon(settings.soundsOn ? Icons.volume_up : Icons.volume_off),
+              Icon(settings.soundsOn ? Icons.graphic_eq : Icons.volume_off),
               onSelected: () => settings.toggleSoundsOn(),
             ),
             _SettingsLine(
