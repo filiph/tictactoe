@@ -64,7 +64,7 @@ void main() {
     GamesServices.signIn();
   }
 
-  InAppPurchaseNotifier inAppPurchaseNotifier;
+  InAppPurchaseNotifier? inAppPurchaseNotifier;
   if (platformSupportsInAppPurchases) {
     inAppPurchaseNotifier = InAppPurchaseNotifier(InAppPurchase.instance)
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
@@ -72,8 +72,6 @@ void main() {
       ..subscribe(InAppPurchase.instance.purchaseStream)
       // Ask the store what the player has bought already.
       ..restorePurchases();
-  } else {
-    inAppPurchaseNotifier = InAppPurchaseNotifier(null);
   }
 
   _log.info('Starting game in $flavor');
@@ -125,7 +123,7 @@ class MyApp extends StatelessWidget {
 
   final PlayerProgressPersistentStore playerProgressPersistentStore;
 
-  final InAppPurchaseNotifier inAppPurchaseNotifier;
+  final InAppPurchaseNotifier? inAppPurchaseNotifier;
 
   const MyApp({
     required this.playerProgressPersistentStore,
@@ -145,7 +143,8 @@ class MyApp extends StatelessWidget {
               return progress;
             },
           ),
-          ChangeNotifierProvider.value(value: inAppPurchaseNotifier),
+          ChangeNotifierProvider<InAppPurchaseNotifier?>.value(
+              value: inAppPurchaseNotifier),
           ChangeNotifierProxyProvider<AudioSystem, Settings>(
             lazy: false,
             create: (context) => Settings(),
