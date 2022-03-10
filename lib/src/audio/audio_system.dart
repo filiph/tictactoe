@@ -10,8 +10,6 @@ import 'package:tictactoe/src/audio/songs.dart';
 class AudioSystem extends ChangeNotifier {
   static final _log = Logger('AudioSystem');
 
-  bool _isOn = false;
-
   late AudioCache _musicCache;
 
   late AudioCache _sfxCache;
@@ -57,14 +55,6 @@ class AudioSystem extends ChangeNotifier {
     _musicPlayer.onPlayerCompletion.listen(_changeSong);
   }
 
-  bool get isOn => _isOn;
-
-  set isOn(bool value) {
-    if (value == _isOn) return;
-    _isOn = value;
-    notifyListeners();
-  }
-
   @override
   void dispose() {
     _musicPlayer.dispose();
@@ -75,9 +65,7 @@ class AudioSystem extends ChangeNotifier {
   }
 
   void resumeAfterAppPaused() {
-    if (_isOn) {
-      resumeMusic();
-    }
+    resumeMusic();
   }
 
   void startMusic() {
@@ -85,12 +73,18 @@ class AudioSystem extends ChangeNotifier {
     _musicCache.play(_playlist.first.filename);
   }
 
-  void resumeMusic() {
+  void resumeMusic() async {
     _log.info('Resuming music');
     switch (_musicPlayer.state) {
       case PlayerState.PAUSED:
         _log.info('Calling _musicPlayer.resume()');
-        _musicPlayer.resume();
+        try {
+          await _musicPlayer.resume();
+        } catch (e) {
+          // Sometimes, resuming fails with an "Unexpected" error.
+          _log.severe(e);
+          _musicCache.play(_playlist.first.filename);
+        }
         break;
       case PlayerState.STOPPED:
         _log.info("resumeMusic() called when music is stopped. "

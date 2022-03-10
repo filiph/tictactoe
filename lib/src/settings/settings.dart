@@ -29,7 +29,7 @@ class Settings extends ChangeNotifier {
       return;
     }
     _audioSystem = audioSystem;
-    if (!muted) {
+    if (!_muted && _musicOn) {
       _audioSystem!.startMusic();
     }
   }
