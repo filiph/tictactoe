@@ -10,6 +10,7 @@ import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/achievements_screen.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
@@ -139,7 +140,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AudioSystemWrapper(
+    return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -151,14 +152,19 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<InAppPurchaseNotifier?>.value(
               value: inAppPurchaseNotifier),
-          ChangeNotifierProxyProvider<AudioSystem, Settings>(
+          ChangeNotifierProvider<AudioSystem>(
+            create: (context) => AudioSystem()..initialize(),
+          ),
+          ChangeNotifierProxyProvider2<AudioSystem,
+              ValueNotifier<AppLifecycleState>, Settings>(
             lazy: false,
             create: (context) => Settings(
               persistence: settingsPersistence,
             )..loadStateFromPersistence(),
-            update: (context, audioSystem, settings) {
+            update: (context, audioSystem, lifecycleNotifier, settings) {
               if (settings == null) throw ArgumentError.notNull();
               settings.attachAudioSystem(audioSystem);
+              settings.attachLifecycleNotifier(lifecycleNotifier);
               return settings;
             },
           ),

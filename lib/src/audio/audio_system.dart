@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart' hide Logger;
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 import 'package:tictactoe/src/audio/songs.dart';
 
 class AudioSystem extends ChangeNotifier {
@@ -57,15 +56,12 @@ class AudioSystem extends ChangeNotifier {
 
   @override
   void dispose() {
+    stopAllSound();
     _musicPlayer.dispose();
     for (final player in _sfxPlayers) {
       player.dispose();
     }
     super.dispose();
-  }
-
-  void resumeAfterAppPaused() {
-    resumeMusic();
   }
 
   void startMusic() {
@@ -105,12 +101,10 @@ class AudioSystem extends ChangeNotifier {
     }
   }
 
-  void stopForAppPaused() {
-    mute();
-  }
-
-  void mute() {
-    _musicPlayer.pause();
+  void stopAllSound() {
+    if (_musicPlayer.state == PlayerState.PLAYING) {
+      _musicPlayer.pause();
+    }
     for (final player in _sfxPlayers) {
       player.stop();
     }
@@ -145,69 +139,9 @@ class AudioSystem extends ChangeNotifier {
 
   void stopMusic() {
     _log.info('Stopping music');
-    _musicPlayer.pause();
-  }
-}
-
-class AudioSystemWrapper extends StatefulWidget {
-  final Widget child;
-
-  const AudioSystemWrapper({required this.child, Key? key}) : super(key: key);
-
-  @override
-  _AudioSystemWrapperState createState() => _AudioSystemWrapperState();
-}
-
-class _AudioSystemWrapperState extends State<AudioSystemWrapper>
-    with WidgetsBindingObserver {
-  static final _log = Logger('AudioSystemWrapper');
-
-  late AudioSystem _audioSystem;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AudioSystem>.value(
-      value: _audioSystem,
-      child: widget.child,
-    );
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _log.info('didChangeAppLifecycleState: $state');
-    switch (state) {
-      case AppLifecycleState.paused:
-        _audioSystem.stopForAppPaused();
-        break;
-      case AppLifecycleState.resumed:
-        _audioSystem.resumeAfterAppPaused();
-        break;
-      case AppLifecycleState.detached:
-        _audioSystem.stopForAppPaused();
-        break;
-      case AppLifecycleState.inactive:
-        // No need to react to this state change.
-        break;
+    if (_musicPlayer.state == PlayerState.PLAYING) {
+      _musicPlayer.pause();
     }
-  }
-
-  @override
-  void dispose() {
-    _audioSystem.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _audioSystem = AudioSystem();
-    _log.info('AudioSystem created');
-
-    _audioSystem.initialize();
-
-    WidgetsBinding.instance!.addObserver(this);
-    _log.info('Subscribed to app lifecycle updates');
   }
 }
 

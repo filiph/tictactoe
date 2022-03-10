@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
@@ -45,7 +47,7 @@ class Settings extends ChangeNotifier {
       _persistence.getMusicOn().then((value) => _musicOn = value),
     ]);
     if (_muted) {
-      _audioSystem?.mute();
+      _audioSystem?.stopAllSound();
     } else {
       if (_musicOn) {
         _audioSystem?.resumeMusic();
@@ -70,7 +72,7 @@ class Settings extends ChangeNotifier {
   void toggleMuted() {
     _muted = !_muted;
     if (_muted) {
-      _audioSystem?.mute();
+      _audioSystem?.stopAllSound();
     } else {
       if (_musicOn) {
         _audioSystem?.resumeMusic();
@@ -84,5 +86,39 @@ class Settings extends ChangeNotifier {
     _soundsOn = !_soundsOn;
     notifyListeners();
     _persistence.saveSoundsOn(_soundsOn);
+  }
+
+  ValueNotifier<AppLifecycleState>? _lifecycleNotifier;
+
+  void attachLifecycleNotifier(
+      ValueNotifier<AppLifecycleState> lifecycleNotifier) {
+    if (_lifecycleNotifier != null) {
+      _lifecycleNotifier!.removeListener(_handleAppLifecycle);
+    }
+    _lifecycleNotifier = lifecycleNotifier;
+    _lifecycleNotifier?.addListener(_handleAppLifecycle);
+  }
+
+  @override
+  void dispose() {
+    _lifecycleNotifier?.removeListener(_handleAppLifecycle);
+    super.dispose();
+  }
+
+  void _handleAppLifecycle() {
+    switch (_lifecycleNotifier!.value) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        _audioSystem?.stopAllSound();
+        break;
+      case AppLifecycleState.resumed:
+        if (!_muted && _musicOn) {
+          _audioSystem?.resumeMusic();
+        }
+        break;
+      case AppLifecycleState.inactive:
+        // No need to react to this state change.
+        break;
+    }
   }
 }
