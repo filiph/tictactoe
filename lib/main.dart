@@ -66,10 +66,11 @@ void main() {
 
   InAppPurchaseNotifier inAppPurchaseNotifier;
   if (platformSupportsInAppPurchases) {
-    // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
-    // as possible in order not to miss any updates.
     inAppPurchaseNotifier = InAppPurchaseNotifier(InAppPurchase.instance)
+      // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
+      // as possible in order not to miss any updates.
       ..subscribe(InAppPurchase.instance.purchaseStream)
+      // Ask the store what the player has bought already.
       ..restorePurchases();
   } else {
     inAppPurchaseNotifier = InAppPurchaseNotifier(null);

@@ -44,6 +44,12 @@ Code is organized in a loose and shallow feature-first fashion.
 In `lib/src`, you'll therefore find directories such as `ads`, `ai`, `audio`
 or `main_menu`. Nothing fancy, but usable.
 
+The state management approach is intentionally low-level. That way, it's easy to
+take this project and run with it, without having to learn new paradigms, or having
+to remember to run `flutter pub run build_runner watch`. You are,
+of course, encouraged to use whatever paradigm, helper package or code generation
+scheme to build on top of this project.
+
 
 ### Flavors
 
@@ -56,7 +62,7 @@ stays the same, the compiled Dart code will differ.
 In particular, we need a 'lite' version of the game and a 'full' version.
 The lite version is primarily used for the web demo, and doesn't include ads
 and some of the content. But nothing stops us from creating another flavor
-for, say, premium versions of the game.
+for, say, premium versions of the game (no ads by default).
 
 Flavor is defined using environment variables. This approach is
 [described here](https://itnext.io/flutter-1-17-no-more-flavors-no-more-ios-schemas-command-argument-that-solves-everything-8b145ed4285d),
