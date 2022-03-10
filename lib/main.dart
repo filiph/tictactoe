@@ -16,6 +16,8 @@ import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/main_menu/main_menu_screen.dart';
 import 'package:tictactoe/src/play_session/play_session_screen.dart';
+import 'package:tictactoe/src/settings/persistence/local_storage_settings_persistence.dart';
+import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/settings/settings_screen.dart';
 import 'package:tictactoe/src/snack_bar/snack_bar.dart';
@@ -77,6 +79,7 @@ void main() {
   _log.info('Starting game in $flavor');
   runApp(
     MyApp(
+      settingsPersistence: LocalStorageSettingsPersistence(),
       playerProgressPersistentStore: MemoryOnlyPlayerProgressPersistentStore(),
       inAppPurchaseNotifier: inAppPurchaseNotifier,
     ),
@@ -123,10 +126,13 @@ class MyApp extends StatelessWidget {
 
   final PlayerProgressPersistentStore playerProgressPersistentStore;
 
+  final SettingsPersistence settingsPersistence;
+
   final InAppPurchaseNotifier? inAppPurchaseNotifier;
 
   const MyApp({
     required this.playerProgressPersistentStore,
+    required this.settingsPersistence,
     required this.inAppPurchaseNotifier,
     Key? key,
   }) : super(key: key);
@@ -147,7 +153,9 @@ class MyApp extends StatelessWidget {
               value: inAppPurchaseNotifier),
           ChangeNotifierProxyProvider<AudioSystem, Settings>(
             lazy: false,
-            create: (context) => Settings(),
+            create: (context) => Settings(
+              persistence: settingsPersistence,
+            )..loadStateFromPersistence(),
             update: (context, audioSystem, settings) {
               if (settings == null) throw ArgumentError.notNull();
               settings.attachAudioSystem(audioSystem);

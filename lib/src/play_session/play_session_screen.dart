@@ -10,6 +10,7 @@ import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
+import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
@@ -155,8 +156,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       _duringCelebration = true;
     });
 
-    final audioSystem = context.read<AudioSystem>();
-    audioSystem.playSfx(SfxType.congrats);
+    final settings = context.read<Settings>();
+    if (!settings.muted && settings.soundsOn) {
+      final audioSystem = context.read<AudioSystem>();
+      audioSystem.playSfx(SfxType.congrats);
+    }
 
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
+import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
@@ -14,6 +15,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<Settings>();
+
     return Scaffold(
       body: ResponsiveScreen(
         squarishMainArea: ListView(
@@ -29,20 +32,35 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             _gap,
-            _SettingsLine('Sound FX', Icons.volume_off),
-            _SettingsLine('Music', Icons.music_off),
+            _SettingsLine(
+              'Sound FX',
+              settings.soundsOn ? Icons.volume_up : Icons.volume_off,
+              onSelected: () => settings.toggleSoundsOn(),
+            ),
+            _SettingsLine(
+              'Music',
+              settings.musicOn ? Icons.music_note : Icons.music_off,
+              onSelected: () => settings.toggleMusicOn(),
+            ),
             if (platformSupportsInAppPurchases)
               Consumer<InAppPurchaseNotifier>(
                   builder: (context, inAppPurchase, child) {
+                IconData icon;
+                VoidCallback? callback;
+                if (inAppPurchase.adRemoval.active) {
+                  icon = Icons.check;
+                } else if (inAppPurchase.adRemoval.pending) {
+                  icon = Icons.hourglass_top;
+                } else {
+                  icon = Icons.ad_units;
+                  callback = () {
+                    inAppPurchase.buy();
+                  };
+                }
                 return _SettingsLine(
                   'Remove ads',
-                  inAppPurchase.adRemoval.active ? Icons.check : Icons.ad_units,
-                  onSelected: (inAppPurchase.adRemoval.active ||
-                          inAppPurchase.adRemoval.pending)
-                      ? null
-                      : () {
-                          inAppPurchase.buy();
-                        },
+                  icon,
+                  onSelected: callback,
                 );
               }),
             _SettingsLine(

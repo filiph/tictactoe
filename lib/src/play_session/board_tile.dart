@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
+import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/colors.dart';
 
 class BoardTile extends StatefulWidget {
@@ -58,8 +59,11 @@ class _BoardTileState extends State<BoardTile>
       _controller.forward();
 
       // Also, play sound.
-      final audioSystem = context.read<AudioSystem>();
-      audioSystem.playSfx(owner == Side.x ? SfxType.drawX : SfxType.drawO);
+      final settings = context.read<Settings>();
+      if (!settings.muted && settings.musicOn) {
+        final audioSystem = context.read<AudioSystem>();
+        audioSystem.playSfx(owner == Side.x ? SfxType.drawX : SfxType.drawO);
+      }
     }
 
     _previousOwner = owner;

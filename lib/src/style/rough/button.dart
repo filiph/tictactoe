@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/colors.dart';
 
 class RoughButton extends StatelessWidget {
@@ -17,8 +18,12 @@ class RoughButton extends StatelessWidget {
   void _handleTap(BuildContext context) {
     assert(onTap != null, "Don't call _handleTap when onTap is null");
 
-    final audioSystem = context.read<AudioSystem>();
-    audioSystem.playSfx(SfxType.buttonTap);
+    final settings = context.read<Settings>();
+    if (!settings.muted && settings.soundsOn) {
+      final audioSystem = context.read<AudioSystem>();
+      audioSystem.playSfx(SfxType.buttonTap);
+    }
+
     onTap!();
   }
 

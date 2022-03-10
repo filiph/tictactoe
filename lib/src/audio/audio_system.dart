@@ -148,6 +148,11 @@ class AudioSystem extends ChangeNotifier {
     _log.info(() => 'Playing ${_playlist.first} now.');
     _musicCache.play(_playlist.first.filename);
   }
+
+  void stopMusic() {
+    _log.info('Stopping music');
+    _musicPlayer.pause();
+  }
 }
 
 class AudioSystemWrapper extends StatefulWidget {

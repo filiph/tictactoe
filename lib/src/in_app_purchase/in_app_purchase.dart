@@ -44,8 +44,13 @@ class InAppPurchaseNotifier extends ChangeNotifier {
     super.dispose();
   }
 
-  void restorePurchases() {
-    inAppPurchaseInstance?.restorePurchases();
+  Future<void> restorePurchases() async {
+    if (!await inAppPurchaseInstance!.isAvailable()) {
+      _reportError('InAppPurchase.instance not available');
+      return;
+    }
+
+    await inAppPurchaseInstance?.restorePurchases();
   }
 
   Future<void> _listenToPurchaseUpdated(

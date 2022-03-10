@@ -70,24 +70,24 @@ class MainMenuScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 32),
               child: Selector<Settings, bool>(
-                selector: (context, settings) => settings.soundIsOn,
-                builder: (context, soundIsOn, child) {
+                selector: (context, settings) => settings.muted,
+                builder: (context, muted, child) {
                   IconData icon;
-                  if (soundIsOn) {
-                    icon = (defaultTargetPlatform == TargetPlatform.iOS ||
-                            defaultTargetPlatform == TargetPlatform.macOS)
-                        ? CupertinoIcons.volume_up
-                        : Icons.volume_up;
-                  } else {
+                  if (muted) {
                     icon = (defaultTargetPlatform == TargetPlatform.iOS ||
                             defaultTargetPlatform == TargetPlatform.macOS)
                         ? CupertinoIcons.volume_off
                         : Icons.volume_off;
+                  } else {
+                    icon = (defaultTargetPlatform == TargetPlatform.iOS ||
+                            defaultTargetPlatform == TargetPlatform.macOS)
+                        ? CupertinoIcons.volume_up
+                        : Icons.volume_up;
                   }
 
                   return IconButton(
                     onPressed: () {
-                      context.read<Settings>().toggleSound();
+                      context.read<Settings>().toggleMuted();
                     },
                     icon: Icon(icon),
                   );
