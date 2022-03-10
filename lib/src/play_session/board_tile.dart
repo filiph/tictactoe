@@ -60,7 +60,7 @@ class _BoardTileState extends State<BoardTile>
 
       // Also, play sound.
       final settings = context.read<Settings>();
-      if (!settings.muted && settings.musicOn) {
+      if (!settings.muted && settings.soundsOn) {
         final audioSystem = context.read<AudioSystem>();
         audioSystem.playSfx(owner == Side.x ? SfxType.drawX : SfxType.drawO);
       }
