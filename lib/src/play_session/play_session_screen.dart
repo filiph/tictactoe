@@ -62,24 +62,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         child: Scaffold(
           body: Stack(
             children: [
-              SizedBox.expand(
-                child: Ink(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.alphaBlend(Color(0x80FFFFFF), palette.light),
-                      Color.alphaBlend(Color(0xF8FFFFFF), palette.darkPen),
-                    ],
-                  )),
-                ),
-              ),
               Builder(builder: (context) {
                 final textStyle = DefaultTextStyle.of(context).style.copyWith(
                       fontFamily: 'Permanent Marker',
                       fontSize: 24,
-                      color: palette.darkPen,
+                      color: palette.redPen,
                     );
 
                 return _ResponsivePlaySessionScreen(
@@ -112,7 +99,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           children: [
                             Icon(
                               Icons.refresh,
-                              size: 32,
+                              size: 64,
                               // color: palette.darkPen,
                             ),
                             Text(
@@ -140,7 +127,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     onPressed: () {
                       GoRouter.of(context).push('/settings');
                     },
-                    tooltip: 'Back',
+                    tooltip: 'Settings',
                   ),
                 );
               }),
@@ -322,14 +309,11 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                   child: mainBoardArea,
                 ),
               ),
-              Expanded(
-                flex: 100 - (mainAreaProminence * 100).round(),
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: padding,
-                    child: restartButtonArea,
-                  ),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: padding,
+                  child: restartButtonArea,
                 ),
               ),
             ],
@@ -367,7 +351,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: SafeArea(
                   left: false,
                   child: Column(
