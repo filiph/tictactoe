@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:games_services/games_services.dart' hide Score;
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -49,14 +50,10 @@ void main() {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Blocked on a profile/release mode bug:
-  //     https://github.com/flutter/flutter/issues/98973
-  //
-  // _log.info('Going full screen');
-  // SystemChrome.setEnabledSystemUIMode(
-  //   SystemUiMode.manual,
-  //   overlays: [SystemUiOverlay.top],
-  // );
+  _log.info('Going full screen');
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.edgeToEdge,
+  );
 
   if (platformSupportsAds) {
     /// Prepare the google_mobile_ads plugin so that the first ad loads
