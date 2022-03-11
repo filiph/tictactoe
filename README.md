@@ -90,3 +90,10 @@ To build the app for iOS (and open Xcode when finished):
 To build the app for Android (and open the folder with the bundle when finished):
 
     fvm flutter build appbundle --dart-define flavor=full && open build/app/outputs/bundle/release
+
+
+### Icon
+
+Updating the launcher icon:
+
+    fvm flutter pub run flutter_launcher_icons:main
