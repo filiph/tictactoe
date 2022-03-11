@@ -312,7 +312,11 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 5),
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            top: 5,
+                          ),
                           child: _buildVersusText(context, TextAlign.center),
                         ),
                       ),
