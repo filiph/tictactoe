@@ -55,7 +55,12 @@ class LevelSelectionScreen extends StatelessWidget {
                               : null,
                       child: Stack(
                         children: [
-                          Image.asset('assets/images/circle1.png'),
+                          SizedBox.expand(
+                            child: Image.asset(
+                              'assets/images/box.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                           Center(
                               child: Text(
                             '#${level.number}',
