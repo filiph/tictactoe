@@ -4,7 +4,7 @@ description: A sample mobile game built in Flutter.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.5.6+15
+version: 1.5.8+17
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -45,7 +45,8 @@ flutter:
         - asset: assets/Permanent_Marker/PermanentMarker-Regular.ttf
 
 flutter_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
-  remove_alpha_ios: true
-  image_path: "assets/images/icon.png"
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icon-adaptive-foreground.png"
