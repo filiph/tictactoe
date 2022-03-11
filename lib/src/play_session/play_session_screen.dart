@@ -121,6 +121,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     width: 45,
                     child: InkResponse(
                       onTap: () {
+                        final settings = context.read<Settings>();
+                        if (!settings.muted && settings.soundsOn) {
+                          final audioSystem = context.read<AudioSystem>();
+                          audioSystem.playSfx(SfxType.buttonTap);
+                        }
+
                         GoRouter.of(context).pop();
                       },
                       child: Tooltip(
@@ -133,6 +139,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     width: 45,
                     child: InkResponse(
                       onTap: () {
+                        final settings = context.read<Settings>();
+                        if (!settings.muted && settings.soundsOn) {
+                          final audioSystem = context.read<AudioSystem>();
+                          audioSystem.playSfx(SfxType.buttonTap);
+                        }
+
                         GoRouter.of(context).push('/settings');
                       },
                       child: Tooltip(
