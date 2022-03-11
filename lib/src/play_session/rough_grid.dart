@@ -13,6 +13,7 @@ class RoughGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final lineColor = palette.inkFullOpacity.withOpacity(0.8);
 
     return Stack(
       fit: StackFit.expand,
@@ -30,7 +31,7 @@ class RoughGrid extends StatelessWidget {
               painter: _RoughGridPainter(
                 width,
                 height,
-                lineColor: palette.ink,
+                lineColor: lineColor,
                 paintOnly: Axis.horizontal,
               ),
             ),
@@ -75,7 +76,7 @@ class RoughGrid extends StatelessWidget {
               painter: _RoughGridPainter(
                 width,
                 height,
-                lineColor: palette.ink,
+                lineColor: lineColor,
                 paintOnly: Axis.vertical,
               ),
             ),
@@ -115,8 +116,7 @@ class _RoughGridPainter extends CustomPainter {
   final Axis? paintOnly;
 
   late final Paint pathPaint = Paint()
-    ..colorFilter = ColorFilter.mode(lineColor, BlendMode.srcIn)
-    ..strokeCap = StrokeCap.round;
+    ..colorFilter = ColorFilter.mode(lineColor, BlendMode.srcIn);
 
   final Random _random = Random();
 
@@ -132,7 +132,7 @@ class _RoughGridPainter extends CustomPainter {
     const padding = 10.0;
     const maxCrossDisplacement = 1.5;
 
-    const gridLineThicknessRatio = 0.07;
+    const gridLineThicknessRatio = 0.1;
     final lineThickness =
         size.longestSide / max(width, height) * gridLineThicknessRatio;
 
@@ -209,7 +209,7 @@ class _RoughGridPainter extends CustomPainter {
     final strandOffsets = List.generate(brushCount, (index) {
       var angle = _random.nextDouble() * 2 * pi;
       return Offset.fromDirection(
-          angle, _random.nextDouble() * maxLineThickness / 2);
+          angle, _random.nextDouble() * maxLineThickness / 3);
     });
 
     var straightPoint = start;
@@ -226,6 +226,12 @@ class _RoughGridPainter extends CustomPainter {
 
       final fuzziness = Offset.fromDirection(angle, maxCrossAxisDisplacement);
       final nextFuzzyPoint = straightPoint + straightSegment + fuzziness;
+
+      if (i == 0 || nextStraightPoint == end) {
+        paint.strokeCap = StrokeCap.round;
+      } else {
+        paint.strokeCap = StrokeCap.butt;
+      }
 
       // Drawing individual "strands" makes the line more natural.
       for (final strandOffset in strandOffsets) {
