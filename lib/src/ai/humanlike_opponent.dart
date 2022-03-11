@@ -33,8 +33,12 @@ class HumanlikeOpponent extends AiOpponent {
   /// the "best play" (computer) analysis.
   final int humanlikePlayCount;
 
+  @override
+  final String name;
+
   HumanlikeOpponent(
     BoardSetting setting, {
+    required this.name,
     this.humanlikePlayCount = 2,
     this.bestPlayCount = 5,
     this.stubbornness = 0.05,

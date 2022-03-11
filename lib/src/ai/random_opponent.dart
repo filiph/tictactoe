@@ -11,6 +11,9 @@ class RandomOpponent extends AiOpponent {
   static final Random _random = Random();
 
   @override
+  final String name = 'Random';
+
+  @override
   Tile chooseNextMove(BoardState state) {
     final options = <Tile>[];
     for (var x = 0; x < setting.m; x++) {

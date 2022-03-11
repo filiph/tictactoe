@@ -11,4 +11,6 @@ abstract class AiOpponent {
   ///
   /// Calling this function when [state] has no open tiles will throw.
   Tile chooseNextMove(BoardState state);
+
+  String get name;
 }

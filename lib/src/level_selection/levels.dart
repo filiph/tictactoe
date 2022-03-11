@@ -9,7 +9,10 @@ final gameLevels = [
     message: 'Defeat a naive AI at tic tac toe!',
     setting: BoardSetting(3, 3, 3),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(setting),
+    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(
+      setting,
+      name: 'Blobfish',
+    ),
   ),
   GameLevel(
     number: 2,
@@ -18,6 +21,7 @@ final gameLevels = [
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Chicken',
       humanlikePlayCount: 2,
       bestPlayCount: 5,
     ),
@@ -29,6 +33,7 @@ final gameLevels = [
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Sparklemuffin',
       humanlikePlayCount: 5,
       bestPlayCount: 3,
     ),
@@ -38,7 +43,10 @@ final gameLevels = [
     message: 'Defeat a naive AI at miniature gomoku!',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(setting),
+    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(
+      setting,
+      name: 'Puffbird',
+    ),
   ),
   GameLevel(
     number: 5,
@@ -47,6 +55,7 @@ final gameLevels = [
     aiDifficulty: 3,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Gecko',
       humanlikePlayCount: 2,
       bestPlayCount: 10,
       stubbornness: 0.1,
@@ -59,6 +68,7 @@ final gameLevels = [
     aiDifficulty: 3,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Wobbegong',
       humanlikePlayCount: 4,
       bestPlayCount: 6,
       stubbornness: 0.1,
@@ -71,6 +81,7 @@ final gameLevels = [
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Boops',
       humanlikePlayCount: 3,
       bestPlayCount: 5,
     ),
@@ -82,6 +93,7 @@ final gameLevels = [
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Fossa',
       humanlikePlayCount: 4,
       bestPlayCount: 5,
     ),
@@ -93,6 +105,7 @@ final gameLevels = [
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
+      name: 'Tiger',
       humanlikePlayCount: 10,
       bestPlayCount: 1,
     ),

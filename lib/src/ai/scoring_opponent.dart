@@ -21,7 +21,10 @@ class ScoringOpponent extends AiOpponent {
   /// own tiles.
   List<int> get _aiScoring => const [2, 30, 100, 500, 10000, 0];
 
-  ScoringOpponent(BoardSetting setting) : super(setting) {
+  @override
+  final String name;
+
+  ScoringOpponent(BoardSetting setting, {required this.name}) : super(setting) {
     assert(
         setting.k <= _playerScoring.length + 1,
         'Scoring opponent does not support games '
@@ -80,7 +83,8 @@ class ScoringOpponent extends AiOpponent {
 
 /// A scoring opponent that just cares about attacking.
 class AttackOnlyScoringOpponent extends ScoringOpponent {
-  AttackOnlyScoringOpponent(BoardSetting setting) : super(setting);
+  AttackOnlyScoringOpponent(BoardSetting setting, {required String name})
+      : super(setting, name: name);
 
   @override
   List<int> get _playerScoring => const [1, 1, 20, 90, 8000, 0];

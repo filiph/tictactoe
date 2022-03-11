@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart' as games_services;
 import 'package:go_router/go_router.dart';
@@ -6,13 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/ai/ai_opponent.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
 import 'package:tictactoe/src/settings/settings.dart';
-import 'package:tictactoe/src/style/responsive_screen.dart';
-import 'package:tictactoe/src/style/rough/button.dart';
+import 'package:tictactoe/src/style/colors.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final GameLevel level;
@@ -34,16 +35,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   late DateTime _startOfPlay;
 
+  late final AiOpponent opponent;
+
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<Palette>();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (context) {
-            final opponent =
-                widget.level.aiOpponentBuilder(widget.level.setting);
-            _log.info('$opponent enters');
-
             final state = BoardState.clean(
               widget.level.setting,
               opponent,
@@ -62,53 +63,87 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           body: Stack(
             children: [
               SizedBox.expand(
-                child: Opacity(
-                  opacity: 0.2,
-                  child: Image.asset(
-                    'assets/images/background.jpg',
-                    fit: BoxFit.cover,
-                  ),
+                child: Ink(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.alphaBlend(Color(0x80FFFFFF), palette.light),
+                      Color.alphaBlend(Color(0xF8FFFFFF), palette.darkPen),
+                    ],
+                  )),
                 ),
               ),
-              ResponsiveScreen(
-                topMessageArea: Text(
-                  widget.level.message,
-                  key: Key('level message'),
-                  style:
-                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-                squarishMainArea: Center(
-                  child: Board(
-                    key: Key('main board'),
-                    setting: widget.level.setting,
+              Builder(builder: (context) {
+                final textStyle = DefaultTextStyle.of(context).style.copyWith(
+                      fontFamily: 'Permanent Marker',
+                      fontSize: 24,
+                      color: palette.darkPen,
+                    );
+
+                return _ResponsivePlaySessionScreen(
+                  playerName: TextSpan(
+                    text: 'Player',
+                    style: textStyle,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
                   ),
-                ),
-                rectangularMenuArea: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child: Builder(builder: (context) {
-                        return RoughButton(
-                          onTap: () {
-                            context.read<BoardState>().clearBoard();
-                            _startOfPlay = DateTime.now();
-                          },
-                          child: const Text('Restart'),
-                        );
-                      }),
+                  opponentName: TextSpan(
+                    text: opponent.name,
+                    style: textStyle,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
+                  ),
+                  mainBoardArea: Center(
+                    child: Board(
+                      key: Key('main board'),
+                      setting: widget.level.setting,
                     ),
-                    Expanded(
-                      child: RoughButton(
+                  ),
+                  restartButtonArea: Builder(
+                    builder: (context) {
+                      return InkResponse(
                         onTap: () {
-                          GoRouter.of(context).pop();
+                          context.read<BoardState>().clearBoard();
+                          _startOfPlay = DateTime.now();
                         },
-                        child: const Text('Back'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.refresh,
+                              size: 32,
+                              // color: palette.darkPen,
+                            ),
+                            Text(
+                              'Restart',
+                              style: TextStyle(
+                                fontFamily: 'Permanent Marker',
+                                fontSize: 16,
+                                // color: palette.darkPen,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  backButtonArea: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      GoRouter.of(context).pop();
+                    },
+                    tooltip: 'Back',
+                  ),
+                  settingsButtonArea: IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: () {
+                      GoRouter.of(context).push('/settings');
+                    },
+                    tooltip: 'Back',
+                  ),
+                );
+              }),
               SizedBox.expand(
                 child: Visibility(
                   visible: _duringCelebration,
@@ -130,6 +165,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   void initState() {
     super.initState();
+
+    opponent = widget.level.aiOpponentBuilder(widget.level.setting);
+    _log.info('$opponent enters the fray');
+
     _startOfPlay = DateTime.now();
   }
 
@@ -178,5 +217,179 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     }
 
     GoRouter.of(context).go('/play/won', extra: score);
+  }
+}
+
+class _ResponsivePlaySessionScreen extends StatelessWidget {
+  /// This is the "hero" of the screen. It's more or less square, and will
+  /// be placed in the visual "center" of the screen.
+  final Widget mainBoardArea;
+
+  final Widget backButtonArea;
+
+  final Widget settingsButtonArea;
+
+  final Widget restartButtonArea;
+
+  final TextSpan playerName;
+
+  final TextSpan opponentName;
+
+  /// How much bigger should the [mainBoardArea] be compared to the other
+  /// elements.
+  final double mainAreaProminence;
+
+  const _ResponsivePlaySessionScreen({
+    required this.mainBoardArea,
+    required this.backButtonArea,
+    required this.settingsButtonArea,
+    required this.restartButtonArea,
+    required this.playerName,
+    required this.opponentName,
+    this.mainAreaProminence = 0.8,
+    Key? key,
+  }) : super(key: key);
+
+  Widget _buildVersusText(BuildContext context, TextAlign textAlign) {
+    String versusText;
+    switch (textAlign) {
+      case TextAlign.start:
+      case TextAlign.left:
+      case TextAlign.right:
+      case TextAlign.end:
+        versusText = '\nversus\n';
+        break;
+      case TextAlign.center:
+      case TextAlign.justify:
+        versusText = ' versus ';
+        break;
+    }
+
+    return RichText(
+        textAlign: textAlign,
+        text: TextSpan(
+          children: [
+            playerName,
+            TextSpan(
+              text: versusText,
+              style: DefaultTextStyle.of(context)
+                  .style
+                  .copyWith(fontFamily: 'Permanent Marker', fontSize: 18),
+            ),
+            opponentName,
+          ],
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // This widget wants to fill the whole screen.
+        final size = constraints.biggest;
+        final padding = EdgeInsets.all(size.shortestSide / 30);
+
+        if (size.height >= size.width) {
+          // "Portrait" / "mobile" mode.
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: padding,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      backButtonArea,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: _buildVersusText(context, TextAlign.center),
+                        ),
+                      ),
+                      settingsButtonArea,
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: (mainAreaProminence * 100).round(),
+                child: SafeArea(
+                  top: false,
+                  bottom: false,
+                  minimum: padding,
+                  child: mainBoardArea,
+                ),
+              ),
+              Expanded(
+                flex: 100 - (mainAreaProminence * 100).round(),
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: padding,
+                    child: restartButtonArea,
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          // "Landscape" / "tablet" mode.
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 3,
+                child: SafeArea(
+                  right: false,
+                  child: Padding(
+                    padding: padding,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        backButtonArea,
+                        Expanded(
+                          child: _buildVersusText(context, TextAlign.start),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 7,
+                child: SafeArea(
+                  left: false,
+                  right: false,
+                  minimum: padding,
+                  child: mainBoardArea,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: SafeArea(
+                  left: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: padding,
+                        child: settingsButtonArea,
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: padding,
+                        child: restartButtonArea,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
   }
 }

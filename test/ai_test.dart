@@ -13,7 +13,7 @@ void main() {
 
     setUp(() {
       setting = BoardSetting(5, 5, 4);
-      opponent = AttackOnlyScoringOpponent(setting);
+      opponent = AttackOnlyScoringOpponent(setting, name: 'Test');
     });
 
     test('tries to stop a 4 too late', () {
@@ -40,6 +40,7 @@ void main() {
       setting = BoardSetting(5, 5, 4);
       opponent = HumanlikeOpponent(
         setting,
+        name: 'Test',
         humanlikePlayCount: 1,
         bestPlayCount: 5,
       );
