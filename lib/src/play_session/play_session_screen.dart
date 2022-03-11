@@ -92,16 +92,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     builder: (context) {
                       return InkResponse(
                         onTap: () {
+                          final settings = context.read<Settings>();
+                          if (!settings.muted && settings.soundsOn) {
+                            final audioSystem = context.read<AudioSystem>();
+                            audioSystem.playSfx(SfxType.buttonTap);
+                          }
+
                           context.read<BoardState>().clearBoard();
                           _startOfPlay = DateTime.now();
                         },
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.refresh,
-                              size: 64,
-                              // color: palette.darkPen,
-                            ),
+                            Image.asset('assets/images/restart.png'),
                             Text(
                               'Restart',
                               style: TextStyle(
@@ -115,19 +117,29 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       );
                     },
                   ),
-                  backButtonArea: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      GoRouter.of(context).pop();
-                    },
-                    tooltip: 'Back',
+                  backButtonArea: SizedBox(
+                    width: 45,
+                    child: InkResponse(
+                      onTap: () {
+                        GoRouter.of(context).pop();
+                      },
+                      child: Tooltip(
+                        message: 'Back',
+                        child: Image.asset('assets/images/back.png'),
+                      ),
+                    ),
                   ),
-                  settingsButtonArea: IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      GoRouter.of(context).push('/settings');
-                    },
-                    tooltip: 'Settings',
+                  settingsButtonArea: SizedBox(
+                    width: 45,
+                    child: InkResponse(
+                      onTap: () {
+                        GoRouter.of(context).push('/settings');
+                      },
+                      child: Tooltip(
+                        message: 'Settings',
+                        child: Image.asset('assets/images/settings.png'),
+                      ),
+                    ),
                   ),
                 );
               }),

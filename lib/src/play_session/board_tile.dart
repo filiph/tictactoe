@@ -127,10 +127,7 @@ class _BoardTileState extends State<BoardTile>
           state.take(widget.tile);
         }
       },
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: representation,
-      ),
+      child: representation,
     );
   }
 }
