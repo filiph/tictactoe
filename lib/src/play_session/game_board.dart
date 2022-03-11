@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tictactoe/src/game_internals/board_setting.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
 import 'package:tictactoe/src/play_session/board_tile.dart';
-import 'package:tictactoe/src/style/rough/grid.dart';
+import 'package:tictactoe/src/play_session/rough_grid.dart';
 
 class Board extends StatefulWidget {
   final VoidCallback? onPlayerWon;
