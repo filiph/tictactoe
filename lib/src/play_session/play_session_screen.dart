@@ -117,40 +117,34 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       );
                     },
                   ),
-                  backButtonArea: SizedBox(
-                    width: 45,
-                    child: InkResponse(
-                      onTap: () {
-                        final settings = context.read<Settings>();
-                        if (!settings.muted && settings.soundsOn) {
-                          final audioSystem = context.read<AudioSystem>();
-                          audioSystem.playSfx(SfxType.buttonTap);
-                        }
+                  backButtonArea: InkResponse(
+                    onTap: () {
+                      final settings = context.read<Settings>();
+                      if (!settings.muted && settings.soundsOn) {
+                        final audioSystem = context.read<AudioSystem>();
+                        audioSystem.playSfx(SfxType.buttonTap);
+                      }
 
-                        GoRouter.of(context).pop();
-                      },
-                      child: Tooltip(
-                        message: 'Back',
-                        child: Image.asset('assets/images/back.png'),
-                      ),
+                      GoRouter.of(context).pop();
+                    },
+                    child: Tooltip(
+                      message: 'Back',
+                      child: Image.asset('assets/images/back.png'),
                     ),
                   ),
-                  settingsButtonArea: SizedBox(
-                    width: 45,
-                    child: InkResponse(
-                      onTap: () {
-                        final settings = context.read<Settings>();
-                        if (!settings.muted && settings.soundsOn) {
-                          final audioSystem = context.read<AudioSystem>();
-                          audioSystem.playSfx(SfxType.buttonTap);
-                        }
+                  settingsButtonArea: InkResponse(
+                    onTap: () {
+                      final settings = context.read<Settings>();
+                      if (!settings.muted && settings.soundsOn) {
+                        final audioSystem = context.read<AudioSystem>();
+                        audioSystem.playSfx(SfxType.buttonTap);
+                      }
 
-                        GoRouter.of(context).push('/settings');
-                      },
-                      child: Tooltip(
-                        message: 'Settings',
-                        child: Image.asset('assets/images/settings.png'),
-                      ),
+                      GoRouter.of(context).push('/settings');
+                    },
+                    child: Tooltip(
+                      message: 'Settings',
+                      child: Image.asset('assets/images/settings.png'),
                     ),
                   ),
                 );
@@ -312,14 +306,20 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      backButtonArea,
+                      SizedBox(
+                        width: 45,
+                        child: backButtonArea,
+                      ),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: _buildVersusText(context, TextAlign.center),
                         ),
                       ),
-                      settingsButtonArea,
+                      SizedBox(
+                        width: 45,
+                        child: settingsButtonArea,
+                      ),
                     ],
                   ),
                 ),
