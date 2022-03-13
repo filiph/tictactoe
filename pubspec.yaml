@@ -4,7 +4,7 @@ description: A sample mobile game built in Flutter.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.5.10+19
+version: 1.5.11+20
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
