@@ -26,6 +26,7 @@ import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/settings/settings_screen.dart';
 import 'package:tictactoe/src/snack_bar/snack_bar.dart';
 import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/ink_transition.dart';
 import 'package:tictactoe/src/win_game/win_game_screen.dart';
 
 void main() {
@@ -91,25 +92,27 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) => const MainMenuScreen(),
+          pageBuilder: (context, state) =>
+              const InkTransitionPage(child: MainMenuScreen()),
           routes: [
             GoRoute(
                 path: 'play',
-                builder: (context, state) => const LevelSelectionScreen(),
+                pageBuilder: (context, state) =>
+                    const InkTransitionPage(child: LevelSelectionScreen()),
                 routes: [
                   GoRoute(
                     path: 'session/:level',
-                    builder: (context, state) {
+                    pageBuilder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
-                      return PlaySessionScreen(level);
+                      return InkTransitionPage(child: PlaySessionScreen(level));
                     },
                   ),
                   GoRoute(
                     path: 'won',
-                    builder: (context, state) =>
-                        WinGameScreen(score: state.extra! as Score),
+                    pageBuilder: (context, state) => InkTransitionPage(
+                        child: WinGameScreen(score: state.extra! as Score)),
                   )
                 ]),
             GoRoute(
