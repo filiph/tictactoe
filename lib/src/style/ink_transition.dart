@@ -89,7 +89,7 @@ class _InkRevealState extends State<_InkReveal> {
           image: AssetImage('assets/images/scribble_sprites.png'),
           frameWidth: 250,
           frameHeight: 541,
-          frameCount: 5,
+          frameCount: 12,
           animation: widget.animation,
           color: widget.color,
           flipHorizontally: widget.flipHorizontally,
