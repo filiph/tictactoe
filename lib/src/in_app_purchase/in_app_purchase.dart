@@ -71,16 +71,13 @@ class InAppPurchaseNotifier extends ChangeNotifier {
         continue;
       }
 
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        _adRemoval = AdRemovalPurchase.pending();
-        notifyListeners();
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          _log.severe('Error with purchase: ${purchaseDetails.error}');
-          _adRemoval = AdRemovalPurchase.error(purchaseDetails.error!);
+      switch (purchaseDetails.status) {
+        case PurchaseStatus.pending:
+          _adRemoval = AdRemovalPurchase.pending();
           notifyListeners();
-        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
+          break;
+        case PurchaseStatus.purchased:
+        case PurchaseStatus.restored:
           bool valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
             _adRemoval = AdRemovalPurchase.active();
@@ -94,11 +91,21 @@ class InAppPurchaseNotifier extends ChangeNotifier {
                 StateError('Purchase could not be verified'));
             notifyListeners();
           }
-        }
-        if (purchaseDetails.pendingCompletePurchase) {
-          // Confirm purchase back to the store.
-          await inAppPurchaseInstance?.completePurchase(purchaseDetails);
-        }
+          break;
+        case PurchaseStatus.error:
+          _log.severe('Error with purchase: ${purchaseDetails.error}');
+          _adRemoval = AdRemovalPurchase.error(purchaseDetails.error!);
+          notifyListeners();
+          break;
+        case PurchaseStatus.canceled:
+          _adRemoval = AdRemovalPurchase.notStarted();
+          notifyListeners();
+          break;
+      }
+
+      if (purchaseDetails.pendingCompletePurchase) {
+        // Confirm purchase back to the store.
+        await inAppPurchaseInstance?.completePurchase(purchaseDetails);
       }
     }
   }
