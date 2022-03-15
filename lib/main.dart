@@ -93,8 +93,7 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
           path: '/',
-          pageBuilder: (context, state) =>
-              const InkTransitionPage(child: MainMenuScreen()),
+          builder: (context, state) => MainMenuScreen(key: Key('main menu')),
           routes: [
             GoRoute(
                 path: 'play',
