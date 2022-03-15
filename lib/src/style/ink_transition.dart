@@ -94,9 +94,9 @@ class _InkRevealState extends State<_InkReveal> {
           color: widget.color,
           flipHorizontally: widget.flipHorizontally,
         ),
-        Visibility(
-          visible: _finished,
-          maintainState: true,
+        AnimatedOpacity(
+          opacity: _finished ? 1 : 0,
+          duration: const Duration(milliseconds: 300),
           child: widget.child,
         ),
       ],

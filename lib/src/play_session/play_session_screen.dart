@@ -17,6 +17,7 @@ import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
 import 'package:tictactoe/src/settings/settings.dart';
+import 'package:tictactoe/src/style/delayed_appear.dart';
 import 'package:tictactoe/src/style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
@@ -88,68 +89,80 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
                   ),
                   mainBoardArea: Center(
-                    child: Board(
-                      key: Key('main board'),
-                      setting: widget.level.setting,
+                    child: DelayedAppear(
+                      ms: ScreenDelays.fourth,
+                      delayStateCreation: true,
+                      child: Board(
+                        key: Key('main board'),
+                        setting: widget.level.setting,
+                      ),
                     ),
                   ),
                   restartButtonArea: Builder(
                     builder: (context) {
-                      return InkResponse(
-                        onTap: () {
-                          final settings = context.read<Settings>();
-                          if (!settings.muted && settings.soundsOn) {
-                            final audioSystem = context.read<AudioSystem>();
-                            audioSystem.playSfx(SfxType.buttonTap);
-                          }
+                      return DelayedAppear(
+                        ms: ScreenDelays.fourth,
+                        child: InkResponse(
+                          onTap: () {
+                            final settings = context.read<Settings>();
+                            if (!settings.muted && settings.soundsOn) {
+                              final audioSystem = context.read<AudioSystem>();
+                              audioSystem.playSfx(SfxType.buttonTap);
+                            }
 
-                          context.read<BoardState>().clearBoard();
-                          _startOfPlay = DateTime.now();
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset('assets/images/restart.png'),
-                            Text(
-                              'Restart',
-                              style: TextStyle(
-                                fontFamily: 'Permanent Marker',
-                                fontSize: 16,
-                                // color: palette.darkPen,
+                            context.read<BoardState>().clearBoard();
+                            _startOfPlay = DateTime.now();
+                          },
+                          child: Column(
+                            children: [
+                              Image.asset('assets/images/restart.png'),
+                              Text(
+                                'Restart',
+                                style: TextStyle(
+                                  fontFamily: 'Permanent Marker',
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
                   ),
-                  backButtonArea: InkResponse(
-                    onTap: () {
-                      final settings = context.read<Settings>();
-                      if (!settings.muted && settings.soundsOn) {
-                        final audioSystem = context.read<AudioSystem>();
-                        audioSystem.playSfx(SfxType.buttonTap);
-                      }
+                  backButtonArea: DelayedAppear(
+                    ms: ScreenDelays.first,
+                    child: InkResponse(
+                      onTap: () {
+                        final settings = context.read<Settings>();
+                        if (!settings.muted && settings.soundsOn) {
+                          final audioSystem = context.read<AudioSystem>();
+                          audioSystem.playSfx(SfxType.buttonTap);
+                        }
 
-                      GoRouter.of(context).pop();
-                    },
-                    child: Tooltip(
-                      message: 'Back',
-                      child: Image.asset('assets/images/back.png'),
+                        GoRouter.of(context).pop();
+                      },
+                      child: Tooltip(
+                        message: 'Back',
+                        child: Image.asset('assets/images/back.png'),
+                      ),
                     ),
                   ),
-                  settingsButtonArea: InkResponse(
-                    onTap: () {
-                      final settings = context.read<Settings>();
-                      if (!settings.muted && settings.soundsOn) {
-                        final audioSystem = context.read<AudioSystem>();
-                        audioSystem.playSfx(SfxType.buttonTap);
-                      }
+                  settingsButtonArea: DelayedAppear(
+                    ms: ScreenDelays.third,
+                    child: InkResponse(
+                      onTap: () {
+                        final settings = context.read<Settings>();
+                        if (!settings.muted && settings.soundsOn) {
+                          final audioSystem = context.read<AudioSystem>();
+                          audioSystem.playSfx(SfxType.buttonTap);
+                        }
 
-                      GoRouter.of(context).push('/settings');
-                    },
-                    child: Tooltip(
-                      message: 'Settings',
-                      child: Image.asset('assets/images/settings.png'),
+                        GoRouter.of(context).push('/settings');
+                      },
+                      child: Tooltip(
+                        message: 'Settings',
+                        child: Image.asset('assets/images/settings.png'),
+                      ),
                     ),
                   ),
                 );
@@ -295,20 +308,23 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
         break;
     }
 
-    return RichText(
-        textAlign: textAlign,
-        text: TextSpan(
-          children: [
-            playerName,
-            TextSpan(
-              text: versusText,
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(fontFamily: 'Permanent Marker', fontSize: 18),
-            ),
-            opponentName,
-          ],
-        ));
+    return DelayedAppear(
+      ms: ScreenDelays.second,
+      child: RichText(
+          textAlign: textAlign,
+          text: TextSpan(
+            children: [
+              playerName,
+              TextSpan(
+                text: versusText,
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(fontFamily: 'Permanent Marker', fontSize: 18),
+              ),
+              opponentName,
+            ],
+          )),
+    );
   }
 
   @override

@@ -13,17 +13,14 @@ class RoughGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    final lineColor = palette.inkFullOpacity.withOpacity(0.8);
+    final lineColor = palette.ink;
 
     return Stack(
       fit: StackFit.expand,
       children: [
         // First, "draw" (reveal) the horizontal lines
         TweenAnimationBuilder(
-          // The tween start's with a negative number to achieve
-          // a bit of delay before drawing. This is quite dirty, so maybe
-          // optimize later?
-          tween: Tween<double>(begin: -0.5, end: 1),
+          tween: Tween<double>(begin: 0, end: 1),
           duration: const Duration(milliseconds: 900),
           curve: Curves.easeOutCubic,
           child: RepaintBoundary(
@@ -66,7 +63,9 @@ class RoughGrid extends StatelessWidget {
         ),
         // Same as above, but for vertical lines.
         TweenAnimationBuilder(
-          // Wait even longer before starting.
+          // The tween start's with a negative number to achieve
+          // a bit of delay before drawing. This is quite dirty, so maybe
+          // optimize later?
           tween: Tween<double>(begin: -1, end: 1),
           // Take longer to draw.
           duration: const Duration(milliseconds: 1200),
