@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/sprite.dart';
 
 class InkTransitionPage<T> extends CustomTransitionPage<T> {
   const InkTransitionPage({
@@ -18,7 +19,7 @@ class InkTransitionPage<T> extends CustomTransitionPage<T> {
           name: name,
           arguments: arguments,
           restorationId: restorationId,
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 700),
         );
 
   static Widget _inkTransition(
@@ -26,44 +27,27 @@ class InkTransitionPage<T> extends CustomTransitionPage<T> {
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
+    final palette = context.watch<Palette>();
+
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
         if (!animation.isCompleted) {
-          return _InkScribble(animation);
+          return AnimatedSprite(
+            image: AssetImage('assets/images/scribble_sprites.png'),
+            frameWidth: 250,
+            frameHeight: 541,
+            frameCount: 5,
+            animation: animation,
+            color: palette.background,
+          );
         }
-        return child!;
+        return Container(
+          color: palette.background,
+          child: child!,
+        );
       },
       child: child,
-    );
-  }
-}
-
-class _InkScribble extends AnimatedWidget {
-  const _InkScribble(Listenable listenable) : super(listenable: listenable);
-
-  Animation<double> get _progress => listenable as Animation<double>;
-
-  @override
-  Widget build(BuildContext context) {
-    const max = 15;
-    final palette = context.watch<Palette>();
-    final current = (_progress.value * max).round();
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        for (var i = 0; i <= max; i++)
-          Visibility(
-            key: ValueKey(i),
-            visible: i == current,
-            child: Image.asset(
-              'assets/images/ink${i.toString().padLeft(2, '0')}.png',
-              fit: BoxFit.cover,
-              color: palette.background,
-            ),
-          )
-      ],
     );
   }
 }
