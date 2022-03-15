@@ -13,6 +13,7 @@ import 'package:tictactoe/src/achievements/persistence/local_storage_player_prog
 import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
@@ -111,8 +112,17 @@ class MyApp extends StatelessWidget {
                   ),
                   GoRoute(
                     path: 'won',
-                    pageBuilder: (context, state) => InkTransitionPage(
-                        child: WinGameScreen(score: state.extra! as Score)),
+                    pageBuilder: (context, state) {
+                      final map = state.extra! as Map<String, dynamic>;
+                      final score = map['score'] as Score;
+                      final preloadedAd =
+                          map['preloaded_ad'] as PreloadedBannerAd?;
+
+                      return InkTransitionPage(
+                        child: WinGameScreen(
+                            score: score, preloadedAd: preloadedAd),
+                      );
+                    },
                   )
                 ]),
             GoRoute(

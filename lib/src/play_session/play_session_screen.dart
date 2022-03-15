@@ -1,15 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart' as games_services;
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 import 'package:tictactoe/src/ai/ai_opponent.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
 import 'package:tictactoe/src/settings/settings.dart';
@@ -175,6 +179,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _log.info('$opponent enters the fray');
 
     _startOfPlay = DateTime.now();
+
+    final adsRemoved =
+        context.read<InAppPurchaseNotifier?>()?.adRemoval.active ?? false;
+    if (!adsRemoved &&
+        // Since this is a compile-time constant, the web version
+        // won't even import the code for ad serving. Tree shaking ftw.
+        !kIsWeb &&
+        platformSupportsAds) {
+      _preloadedAd = PreloadedBannerAd(size: AdSize.mediumRectangle);
+      Future<void>.delayed(const Duration(seconds: 1))
+          .then((_) => _preloadedAd!.load());
+    }
   }
 
   void _aiOpponentWon() {
@@ -195,6 +211,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     /// Let the player see the board just after winning for a bit.
     await Future.delayed(_preCelebrationDuration);
+    if (!mounted) return;
 
     setState(() {
       _duringCelebration = true;
@@ -208,6 +225,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);
+    if (!mounted) return;
 
     if (platformSupportsGameServices) {
       if (await games_services.GamesServices.isSignedIn) {
@@ -220,9 +238,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         ));
       }
     }
+    if (!mounted) return;
 
-    GoRouter.of(context).go('/play/won', extra: score);
+    GoRouter.of(context).go('/play/won', extra: {
+      'score': score,
+      'preloaded_ad': _preloadedAd,
+    });
   }
+
+  PreloadedBannerAd? _preloadedAd;
 }
 
 class _ResponsivePlaySessionScreen extends StatelessWidget {

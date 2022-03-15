@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
+import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 
 /// Displays a banner ad that conforms to the widget's size in the layout,
 /// and reloads the ad when the user changes orientation.
@@ -22,7 +23,14 @@ import 'package:logging/logging.dart';
 /// namely the `anchored_adaptive_example.dart` file:
 /// https://github.com/googleads/googleads-mobile-flutter/blob/main/packages/google_mobile_ads/example/lib/anchored_adaptive_example.dart
 class MyBannerAd extends StatefulWidget {
-  const MyBannerAd({Key? key}) : super(key: key);
+  /// An optional preloaded ad so that the widget immediately has something
+  /// to show.
+  final PreloadedBannerAd? preloadedAd;
+
+  const MyBannerAd({
+    this.preloadedAd,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MyBannerAdState createState() => _MyBannerAdState();
@@ -58,6 +66,22 @@ class _MyBannerAdState extends State<MyBannerAd> {
         return SizedBox();
       },
     );
+  }
+
+  @override
+  void initState() async {
+    super.initState();
+    if (widget.preloadedAd != null) {
+      _log.info("A preloaded banner was supplied. Using it.");
+      // It's possible that the banner is still loading (even though it started
+      // preloading at the start of the previous screen.
+      _adLoadingState = _LoadingState.loading;
+      final ad = await widget.preloadedAd!.ready;
+      setState(() {
+        _bannerAd = ad;
+        _adLoadingState = _LoadingState.loaded;
+      });
+    }
   }
 
   @override
@@ -121,22 +145,27 @@ class _MyBannerAdState extends State<MyBannerAd> {
           : 'ca-app-pub-3940256099942544/2934735716',
       size: size,
       request: AdRequest(),
-      listener: BannerAdListener(onAdLoaded: (Ad ad) {
-        _log.info(() => 'Ad loaded: ${ad.responseInfo}');
-        setState(() {
-          // When the ad is loaded, get the ad size and use it to set
-          // the height of the ad container.
-          _bannerAd = ad as BannerAd;
-          _adLoadingState = _LoadingState.loaded;
-        });
-      }, onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        _log.warning('Banner failedToLoad: $error');
-        ad.dispose();
-      }, onAdImpression: (Ad ad) {
-        _log.info('Ad impression registered');
-      }, onAdClicked: (Ad ad) {
-        _log.info('Ad click registered');
-      }),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          _log.info(() => 'Ad loaded: ${ad.responseInfo}');
+          setState(() {
+            // When the ad is loaded, get the ad size and use it to set
+            // the height of the ad container.
+            _bannerAd = ad as BannerAd;
+            _adLoadingState = _LoadingState.loaded;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          _log.warning('Banner failedToLoad: $error');
+          ad.dispose();
+        },
+        onAdImpression: (Ad ad) {
+          _log.info('Ad impression registered');
+        },
+        onAdClicked: (Ad ad) {
+          _log.info('Ad click registered');
+        },
+      ),
     );
     return _bannerAd!.load();
   }

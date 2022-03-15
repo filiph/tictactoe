@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/ads/banner_ad.dart';
+import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/style/colors.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
@@ -13,7 +14,13 @@ import 'package:tictactoe/src/style/rough/button.dart';
 class WinGameScreen extends StatelessWidget {
   final Score score;
 
-  const WinGameScreen({Key? key, required this.score}) : super(key: key);
+  final PreloadedBannerAd? preloadedAd;
+
+  const WinGameScreen({
+    Key? key,
+    required this.score,
+    this.preloadedAd,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,9 @@ class WinGameScreen extends StatelessWidget {
                   aspectRatio: 16 / 9,
                   child: Container(
                     color: palette.light,
-                    child: Center(child: MyBannerAd()),
+                    child: Center(
+                      child: MyBannerAd(preloadedAd: preloadedAd),
+                    ),
                   ),
                 ),
               ),
