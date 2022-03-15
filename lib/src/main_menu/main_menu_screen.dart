@@ -18,7 +18,7 @@ class MainMenuScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
 
     return Scaffold(
-      backgroundColor: palette.background,
+      backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
         mainAreaProminence: 0.45,
         squarishMainArea: Center(

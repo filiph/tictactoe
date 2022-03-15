@@ -6,7 +6,6 @@ import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
-import 'package:tictactoe/src/style/warning_banner.dart';
 
 class LevelSelectionScreen extends StatelessWidget {
   const LevelSelectionScreen({Key? key}) : super(key: key);
@@ -17,10 +16,8 @@ class LevelSelectionScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
 
     return Scaffold(
+      backgroundColor: palette.backgroundLevelSelection,
       body: ResponsiveScreen(
-        topMessageArea: Center(
-          child: WarningBanner('Only the first 3~5 levels really work.'),
-        ),
         squarishMainArea: SingleChildScrollView(
           child: Wrap(
             alignment: WrapAlignment.center,

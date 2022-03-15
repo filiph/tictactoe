@@ -99,8 +99,9 @@ class MyApp extends StatelessWidget {
           routes: [
             GoRoute(
                 path: 'play',
-                pageBuilder: (context, state) => const InkTransitionPage(
+                pageBuilder: (context, state) => buildTransition(
                       child: LevelSelectionScreen(key: Key('level selection')),
+                      color: context.watch<Palette>().backgroundLevelSelection,
                     ),
                 routes: [
                   GoRoute(
@@ -109,9 +110,13 @@ class MyApp extends StatelessWidget {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
-                      return InkTransitionPage(
-                        child:
-                            PlaySessionScreen(level, key: Key('play session')),
+                      return buildTransition(
+                        child: PlaySessionScreen(
+                          level,
+                          key: Key('play session'),
+                        ),
+                        color: context.watch<Palette>().backgroundPlaySession,
+                        flipHorizontally: true,
                       );
                     },
                   ),
@@ -123,12 +128,14 @@ class MyApp extends StatelessWidget {
                       final preloadedAd =
                           map['preloaded_ad'] as PreloadedBannerAd?;
 
-                      return InkTransitionPage(
+                      return buildTransition(
                         child: WinGameScreen(
                           score: score,
                           preloadedAd: preloadedAd,
                           key: Key('win game'),
                         ),
+                        color: context.watch<Palette>().backgroundPlaySession,
+                        flipHorizontally: true,
                       );
                     },
                   )
@@ -202,7 +209,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,
-                background: palette.background,
+                background: palette.backgroundMain,
               ),
               textTheme: TextTheme(
                 bodyText2: TextStyle(

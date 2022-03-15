@@ -17,7 +17,7 @@ class WarningBanner extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           message,
-          style: TextStyle(color: palette.background),
+          style: TextStyle(color: palette.backgroundMain),
           textAlign: TextAlign.center,
         ),
       ),

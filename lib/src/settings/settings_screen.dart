@@ -5,6 +5,7 @@ import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/settings/settings.dart';
+import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
@@ -16,8 +17,10 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<Settings>();
+    final palette = context.watch<Palette>();
 
     return Scaffold(
+      backgroundColor: palette.backgroundSettings,
       body: ResponsiveScreen(
         squarishMainArea: ListView(
           children: [

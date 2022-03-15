@@ -44,7 +44,7 @@ class RoughButton extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Permanent Marker',
               fontSize: 32,
-              color: onTap != null ? palette.background : palette.ink,
+              color: onTap != null ? palette.backgroundMain : palette.ink,
             ),
             child: child,
           ),

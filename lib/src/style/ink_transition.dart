@@ -2,40 +2,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
-import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/sprite.dart';
 
-class InkTransitionPage<T> extends CustomTransitionPage<T> {
-  const InkTransitionPage({
-    required Widget child,
-    String? name,
-    Object? arguments,
-    String? restorationId,
-    LocalKey? key,
-  }) : super(
-          child: child,
-          transitionsBuilder: _inkTransition,
-          key: key,
-          name: name,
-          arguments: arguments,
-          restorationId: restorationId,
-          transitionDuration: const Duration(milliseconds: 700),
-        );
-
-  static Widget _inkTransition(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    final palette = context.watch<Palette>();
-
-    return _InkReveal(
-      animation: animation,
-      color: palette.background,
-      child: child,
-    );
-  }
+CustomTransitionPage<T> buildTransition<T>({
+  required Widget child,
+  required Color color,
+  bool flipHorizontally = false,
+  String? name,
+  Object? arguments,
+  String? restorationId,
+  LocalKey? key,
+}) {
+  return CustomTransitionPage<T>(
+    child: child,
+    transitionsBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation, Widget child) {
+      return _InkReveal(
+        animation: animation,
+        color: color,
+        child: child,
+        flipHorizontally: flipHorizontally,
+      );
+    },
+    key: key,
+    name: name,
+    arguments: arguments,
+    restorationId: restorationId,
+    transitionDuration: const Duration(milliseconds: 700),
+  );
 }
 
 class _InkReveal extends StatefulWidget {
@@ -45,10 +39,13 @@ class _InkReveal extends StatefulWidget {
 
   final Color color;
 
+  final bool flipHorizontally;
+
   const _InkReveal({
     required this.child,
     required this.animation,
     required this.color,
+    this.flipHorizontally = false,
     Key? key,
   }) : super(key: key);
 
@@ -95,6 +92,7 @@ class _InkRevealState extends State<_InkReveal> {
           frameCount: 5,
           animation: widget.animation,
           color: widget.color,
+          flipHorizontally: widget.flipHorizontally,
         ),
         Visibility(
           visible: _finished,

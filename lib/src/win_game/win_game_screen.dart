@@ -7,6 +7,7 @@ import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/ads/banner_ad.dart';
 import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
+import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
@@ -25,10 +26,12 @@ class WinGameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final adsRemoved =
         context.watch<InAppPurchaseNotifier?>()?.adRemoval.active ?? false;
+    final palette = context.watch<Palette>();
 
     const gap = SizedBox(height: 10);
 
     return Scaffold(
+      backgroundColor: palette.backgroundPlaySession,
       body: ResponsiveScreen(
         squarishMainArea: Column(
           mainAxisAlignment: MainAxisAlignment.center,

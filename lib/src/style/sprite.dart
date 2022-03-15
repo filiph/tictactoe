@@ -29,6 +29,7 @@ class AnimatedSprite extends AnimatedWidget {
   final int frameCount;
 
   final Color? color;
+  final bool flipHorizontally;
 
   const AnimatedSprite({
     required this.image,
@@ -37,6 +38,7 @@ class AnimatedSprite extends AnimatedWidget {
     required Animation<double> animation,
     required this.frameHeight,
     this.frameStart = 0,
+    this.flipHorizontally = false,
     this.color,
     Key? key,
   }) : super(key: key, listenable: animation);
@@ -50,6 +52,7 @@ class AnimatedSprite extends AnimatedWidget {
       frameHeight: frameHeight,
       frame: frameStart + (animation.value * frameCount).floor(),
       color: color,
+      flipHorizontally: flipHorizontally,
     );
   }
 }
@@ -61,12 +64,14 @@ class Sprite extends StatefulWidget {
   final int frame;
 
   final Color? color;
+  final bool flipHorizontally;
 
   const Sprite({
     required this.image,
     required this.frameWidth,
     required this.frameHeight,
     this.color,
+    this.flipHorizontally = false,
     this.frame = 0,
     Key? key,
   }) : super(key: key);
@@ -80,10 +85,11 @@ class _SpritePainter extends CustomPainter {
   final ui.Rect rect;
 
   final Color? color;
+  final bool flipHorizontally;
 
   final Paint _paint = Paint();
 
-  _SpritePainter(this.image, this.rect, this.color) {
+  _SpritePainter(this.image, this.rect, this.color, this.flipHorizontally) {
     if (color != null) {
       _paint.colorFilter = ui.ColorFilter.mode(color!, BlendMode.srcIn);
     }
@@ -91,6 +97,12 @@ class _SpritePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (flipHorizontally) {
+      final double dx = -(size.width / 2.0);
+      canvas.translate(-dx, 0.0);
+      canvas.scale(-1.0, 1.0);
+      canvas.translate(dx, 0.0);
+    }
     canvas.drawImageRect(image, rect,
         ui.Rect.fromLTWH(0.0, 0.0, size.width, size.height), _paint);
   }
@@ -120,7 +132,9 @@ class _SpriteState extends State<Sprite> {
     int row = (frame / cols).floor();
     ui.Rect rect = ui.Rect.fromLTWH(
         col * frameW * 1.0, row * frameH * 1.0, frameW * 1.0, frameH * 1.0);
-    return CustomPaint(painter: _SpritePainter(img, rect, widget.color));
+    return CustomPaint(
+        painter:
+            _SpritePainter(img, rect, widget.color, widget.flipHorizontally));
   }
 
   @override
