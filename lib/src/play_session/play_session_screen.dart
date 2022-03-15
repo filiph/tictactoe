@@ -92,6 +92,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     child: DelayedAppear(
                       ms: ScreenDelays.fourth,
                       delayStateCreation: true,
+                      onDelayFinished: () {
+                        final settings = context.read<Settings>();
+                        if (!settings.muted && settings.soundsOn) {
+                          final audioSystem = context.read<AudioSystem>();
+                          audioSystem.playSfx(SfxType.drawGrid);
+                        }
+                      },
                       child: Board(
                         key: Key('main board'),
                         setting: widget.level.setting,

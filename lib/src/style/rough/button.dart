@@ -17,6 +17,8 @@ class RoughButton extends StatelessWidget {
 
   final double fontSize;
 
+  final SfxType soundEffect;
+
   const RoughButton({
     Key? key,
     required this.child,
@@ -24,6 +26,7 @@ class RoughButton extends StatelessWidget {
     this.color,
     this.fontSize = 32,
     this.drawRectangle = false,
+    this.soundEffect = SfxType.buttonTap,
   }) : super(key: key);
 
   void _handleTap(BuildContext context) {
@@ -32,7 +35,7 @@ class RoughButton extends StatelessWidget {
     final settings = context.read<Settings>();
     if (!settings.muted && settings.soundsOn) {
       final audioSystem = context.read<AudioSystem>();
-      audioSystem.playSfx(SfxType.buttonTap);
+      audioSystem.playSfx(soundEffect);
     }
 
     onTap!();

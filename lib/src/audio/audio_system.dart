@@ -150,6 +150,8 @@ enum SfxType {
   drawO,
   buttonTap,
   congrats,
+  erase,
+  drawGrid,
 }
 
 List<String> _soundTypeToFilename(SfxType type) {
@@ -183,7 +185,15 @@ List<String> _soundTypeToFilename(SfxType type) {
         'yay1.mp3',
         'wehee1.mp3',
         'oo1.mp3',
-        'ehehee1.mp3',
+      ];
+    case SfxType.erase:
+      return [
+        'fwfwfwfwfw1.mp3',
+        'fwfwfwfw1.mp3',
+      ];
+    case SfxType.drawGrid:
+      return [
+        'swishswish1.mp3',
       ];
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
+import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/style/delayed_appear.dart';
 import 'package:tictactoe/src/style/palette.dart';
@@ -50,12 +51,13 @@ class LevelSelectionScreen extends StatelessWidget {
                     aspectRatio: 1,
                     child: DelayedAppear(
                       ms: ScreenDelays.second + i * 70,
-                      child: InkResponse(
+                      child: RoughButton(
                         onTap: playerProgress.highestLevelReached >=
                                 gameLevels[i].number - 1
                             ? () => GoRouter.of(context)
                                 .go('/play/session/${gameLevels[i].number}')
                             : null,
+                        soundEffect: SfxType.erase,
                         child: Stack(
                           children: [
                             SizedBox.expand(

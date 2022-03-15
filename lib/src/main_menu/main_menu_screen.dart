@@ -5,6 +5,7 @@ import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
+import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
@@ -53,6 +54,7 @@ class MainMenuScreen extends StatelessWidget {
                 drawRectangle: true,
                 color: palette.redPen,
                 fontSize: 42,
+                soundEffect: SfxType.erase,
               ),
             ),
             if (platformSupportsGameServices) ...[

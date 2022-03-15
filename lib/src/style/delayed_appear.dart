@@ -15,10 +15,13 @@ class DelayedAppear extends StatefulWidget {
 
   final bool delayStateCreation;
 
+  final VoidCallback? onDelayFinished;
+
   DelayedAppear({
     required this.child,
     required int ms,
     this.delayStateCreation = false,
+    this.onDelayFinished,
     Key? key,
   })  : delay = Duration(milliseconds: ms),
         super(key: key);
@@ -61,6 +64,7 @@ class _DelayedAppearState extends State<DelayedAppear>
       setState(() {
         _delayFinished = true;
         _fadeController.forward();
+        widget.onDelayFinished?.call();
       });
     });
 
