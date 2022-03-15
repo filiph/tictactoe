@@ -17,7 +17,7 @@ import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
 import 'package:tictactoe/src/settings/settings.dart';
-import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final GameLevel level;

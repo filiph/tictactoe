@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/sprite.dart';
 
 class InkTransitionPage<T> extends CustomTransitionPage<T> {

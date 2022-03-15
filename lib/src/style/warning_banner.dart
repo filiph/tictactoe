@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/palette.dart';
 
 class WarningBanner extends StatelessWidget {
   final String message;

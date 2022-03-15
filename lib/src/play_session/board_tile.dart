@@ -7,7 +7,7 @@ import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
 import 'package:tictactoe/src/settings/settings.dart';
-import 'package:tictactoe/src/style/colors.dart';
+import 'package:tictactoe/src/style/palette.dart';
 
 class BoardTile extends StatefulWidget {
   const BoardTile(this.tile, {Key? key}) : super(key: key);
