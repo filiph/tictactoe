@@ -13,4 +13,5 @@ class Palette {
   final backgroundPlaySession = const Color(0xffffebb5);
   final background4 = const Color(0xffffd7ff);
   final backgroundSettings = const Color(0xffbfc8e3);
+  final trueWhite = const Color(0xffffffff);
 }

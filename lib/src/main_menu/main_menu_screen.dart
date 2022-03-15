@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
@@ -43,19 +44,34 @@ class MainMenuScreen extends StatelessWidget {
             ],
             gap,
             Expanded(
+              flex: 2,
               child: RoughButton(
                 onTap: () {
                   GoRouter.of(context).go('/play');
                 },
                 child: const Text('Play'),
+                drawRectangle: true,
+                color: palette.redPen,
+                fontSize: 42,
               ),
             ),
-            Expanded(
-              child: RoughButton(
-                onTap: () => GoRouter.of(context).go('/achievements'),
-                child: const Text('Achievements'),
+            if (platformSupportsGameServices) ...[
+              Expanded(
+                child: RoughButton(
+                  onTap: () => GamesServices.showAchievements(),
+                  child: const Text('Achievements'),
+                ),
               ),
-            ),
+              Expanded(
+                child: RoughButton(
+                  onTap: () => GamesServices.showLeaderboards(
+                    iOSLeaderboardID: "tictactoe.highest_score",
+                    androidLeaderboardID: "CgkIgZ29mawJEAIQAQ",
+                  ),
+                  child: const Text('Leaderboard'),
+                ),
+              ),
+            ],
             Expanded(
               child: RoughButton(
                 onTap: () => GoRouter.of(context).go('/settings'),
