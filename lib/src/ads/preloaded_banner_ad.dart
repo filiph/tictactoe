@@ -23,7 +23,7 @@ class PreloadedBannerAd {
 
   Future<BannerAd> get ready => _adCompleter.future;
 
-  Future<void> load() async {
+  Future<void> load() {
     assert(Platform.isAndroid || Platform.isIOS,
         'AdMob currently does not support ${Platform.operatingSystem}');
 
@@ -39,7 +39,7 @@ class PreloadedBannerAd {
       request: _adRequest,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          _log.info(() => 'Ad loaded: ${ad.responseInfo}');
+          _log.info(() => 'Ad loaded: ${_bannerAd.hashCode}');
           _adCompleter.complete(_bannerAd);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
@@ -55,6 +55,12 @@ class PreloadedBannerAd {
         },
       ),
     );
+
     return _bannerAd!.load();
   }
+
+  // void dispose() {
+  //   _log.info('preloaded banner ad being desposed');
+  //   _bannerAd?.dispose();
+  // }
 }

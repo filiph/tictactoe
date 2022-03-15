@@ -7,7 +7,6 @@ import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/ads/banner_ad.dart';
 import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
-import 'package:tictactoe/src/style/colors.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
@@ -24,7 +23,6 @@ class WinGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.watch<Palette>();
     final adsRemoved =
         context.watch<InAppPurchaseNotifier?>()?.adRemoval.active ?? false;
 
@@ -41,14 +39,8 @@ class WinGameScreen extends StatelessWidget {
                 !kIsWeb &&
                 platformSupportsAds) ...[
               Expanded(
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Container(
-                    color: palette.light,
-                    child: Center(
-                      child: MyBannerAd(preloadedAd: preloadedAd),
-                    ),
-                  ),
+                child: Center(
+                  child: MyBannerAd(preloadedAd: preloadedAd),
                 ),
               ),
             ],

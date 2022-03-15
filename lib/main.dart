@@ -57,10 +57,10 @@ void main() {
     SystemUiMode.edgeToEdge,
   );
 
-  if (platformSupportsAds) {
+  if (!kIsWeb && platformSupportsAds) {
     /// Prepare the google_mobile_ads plugin so that the first ad loads
-    /// immediately. This can be done later or with a delay if startup experience
-    /// suffers.
+    /// immediately. This can be done later or with a delay if startup
+    /// experience suffers.
     MobileAds.instance.initialize();
   }
 
@@ -73,9 +73,11 @@ void main() {
     inAppPurchaseNotifier = InAppPurchaseNotifier(InAppPurchase.instance)
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
       // as possible in order not to miss any updates.
-      ..subscribe(InAppPurchase.instance.purchaseStream)
-      // Ask the store what the player has bought already.
-      ..restorePurchases();
+      ..subscribe(InAppPurchase.instance.purchaseStream);
+    // Ask the store what the player has bought already.
+    inAppPurchaseNotifier.restorePurchases().then(
+        (_) => _log.info('In-app purchases restored'),
+        onError: (e) => _log.severe('Could not restore in-app purchases: $e'));
   }
 
   _log.info('Starting game in $flavor');
@@ -97,8 +99,9 @@ class MyApp extends StatelessWidget {
           routes: [
             GoRoute(
                 path: 'play',
-                pageBuilder: (context, state) =>
-                    const InkTransitionPage(child: LevelSelectionScreen()),
+                pageBuilder: (context, state) => const InkTransitionPage(
+                      child: LevelSelectionScreen(key: Key('level selection')),
+                    ),
                 routes: [
                   GoRoute(
                     path: 'session/:level',
@@ -106,7 +109,10 @@ class MyApp extends StatelessWidget {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
-                      return InkTransitionPage(child: PlaySessionScreen(level));
+                      return InkTransitionPage(
+                        child:
+                            PlaySessionScreen(level, key: Key('play session')),
+                      );
                     },
                   ),
                   GoRoute(
@@ -119,18 +125,23 @@ class MyApp extends StatelessWidget {
 
                       return InkTransitionPage(
                         child: WinGameScreen(
-                            score: score, preloadedAd: preloadedAd),
+                          score: score,
+                          preloadedAd: preloadedAd,
+                          key: Key('win game'),
+                        ),
                       );
                     },
                   )
                 ]),
             GoRoute(
               path: 'settings',
-              builder: (context, state) => const SettingsScreen(),
+              builder: (context, state) =>
+                  const SettingsScreen(key: Key('settings')),
             ),
             GoRoute(
               path: 'achievements',
-              builder: (context, state) => const AchievementsScreen(),
+              builder: (context, state) =>
+                  const AchievementsScreen(key: Key('achievements')),
             ),
           ]),
     ],

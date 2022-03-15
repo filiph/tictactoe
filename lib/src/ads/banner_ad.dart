@@ -25,6 +25,10 @@ import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 class MyBannerAd extends StatefulWidget {
   /// An optional preloaded ad so that the widget immediately has something
   /// to show.
+  ///
+  /// If you provide this, do _not_ dispose of the provided ad elsewhere.
+  /// [MyBannerAd] takes ownership of the provided ad, and will be responsible
+  /// for disposing of it.
   final PreloadedBannerAd? preloadedAd;
 
   const MyBannerAd({
@@ -50,7 +54,8 @@ class _MyBannerAdState extends State<MyBannerAd> {
         if (_currentOrientation == orientation &&
             _bannerAd != null &&
             _adLoadingState == _LoadingState.loaded) {
-          _log.info('We have everything we need. Showing the banner now.');
+          _log.info(() => 'We have everything we need. Showing the ad '
+              '${_bannerAd.hashCode} now.');
           return SizedBox(
             width: _bannerAd!.size.width.toDouble(),
             height: _bannerAd!.size.height.toDouble(),
@@ -69,31 +74,43 @@ class _MyBannerAdState extends State<MyBannerAd> {
   }
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     if (widget.preloadedAd != null) {
       _log.info("A preloaded banner was supplied. Using it.");
-      // It's possible that the banner is still loading (even though it started
-      // preloading at the start of the previous screen.
-      _adLoadingState = _LoadingState.loading;
-      final ad = await widget.preloadedAd!.ready;
-      setState(() {
-        _bannerAd = ad;
-        _adLoadingState = _LoadingState.loaded;
-      });
+      _showPreloadedAd(widget.preloadedAd!);
+    } else {
+      _loadAd();
     }
+  }
+
+  void _showPreloadedAd(PreloadedBannerAd ad) async {
+    // It's possible that the banner is still loading (even though it started
+    // preloading at the start of the previous screen).
+    _adLoadingState = _LoadingState.loading;
+    try {
+      _bannerAd = await ad.ready;
+    } on LoadAdError catch (error) {
+      _log.severe('Error when loading preloaded banner: $error');
+      _loadAd();
+      return;
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _adLoadingState = _LoadingState.loaded;
+    });
   }
 
   @override
   void didChangeDependencies() {
-    _log.fine('didChangeDependencies');
     super.didChangeDependencies();
     _currentOrientation = MediaQuery.of(context).orientation;
-    _loadAd();
   }
 
   @override
   void dispose() {
+    _log.info('disposing ad');
     _bannerAd?.dispose();
     super.dispose();
   }
@@ -102,6 +119,7 @@ class _MyBannerAdState extends State<MyBannerAd> {
 
   /// Load (another) ad, disposing of the current ad if there is one.
   Future<void> _loadAd() async {
+    if (!mounted) return;
     _log.info('_loadAd() called.');
     if (_adLoadingState == _LoadingState.loading ||
         _adLoadingState == _LoadingState.disposing) {
