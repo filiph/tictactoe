@@ -85,15 +85,16 @@ class MainMenuScreen extends StatelessWidget {
               child: Selector<Settings, bool>(
                 selector: (context, settings) => settings.muted,
                 builder: (context, muted, child) {
+                  final platform = Theme.of(context).platform;
                   IconData icon;
                   if (muted) {
-                    icon = (defaultTargetPlatform == TargetPlatform.iOS ||
-                            defaultTargetPlatform == TargetPlatform.macOS)
+                    icon = (platform == TargetPlatform.iOS ||
+                            platform == TargetPlatform.macOS)
                         ? CupertinoIcons.volume_off
                         : Icons.volume_off;
                   } else {
-                    icon = (defaultTargetPlatform == TargetPlatform.iOS ||
-                            defaultTargetPlatform == TargetPlatform.macOS)
+                    icon = (platform == TargetPlatform.iOS ||
+                            platform == TargetPlatform.macOS)
                         ? CupertinoIcons.volume_up
                         : Icons.volume_up;
                   }

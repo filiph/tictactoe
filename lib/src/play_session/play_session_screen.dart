@@ -209,8 +209,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         !kIsWeb &&
         platformSupportsAds) {
       _preloadedAd = PreloadedBannerAd(size: AdSize.mediumRectangle);
-      Future<void>.delayed(const Duration(seconds: 1))
-          .then((_) => _preloadedAd!.load());
+      Future<void>.delayed(const Duration(seconds: 1)).then((_) {
+        if (!mounted) return Future.value();
+        return _preloadedAd!.load(context);
+      });
     }
   }
 
