@@ -16,6 +16,7 @@ import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
+import 'package:tictactoe/src/settings/custom_name_dialog.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/delayed_appear.dart';
 import 'package:tictactoe/src/style/palette.dart';
@@ -74,13 +75,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       fontSize: 24,
                       color: palette.redPen,
                     );
+                final playerName =
+                    context.select((Settings settings) => settings.playerName);
 
                 return _ResponsivePlaySessionScreen(
                   playerName: TextSpan(
-                    text: 'Player',
+                    text: playerName,
                     style: textStyle,
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
+                      ..onTap = () => Navigator.of(context)
+                          .restorablePush(customNameDialogBuilder),
                   ),
                   opponentName: TextSpan(
                     text: opponent.name,

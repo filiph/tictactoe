@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
+import 'package:tictactoe/src/settings/custom_name_dialog.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
@@ -35,6 +36,9 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             _gap,
+            _NameChangeLine(
+              'Name',
+            ),
             _SettingsLine(
               'Sound FX',
               Icon(settings.soundsOn ? Icons.graphic_eq : Icons.volume_off),
@@ -67,8 +71,8 @@ class SettingsScreen extends StatelessWidget {
                 );
               }),
             _SettingsLine(
-              'Reset game',
-              Icon(Icons.restart_alt),
+              'Reset progress',
+              Icon(Icons.delete),
               onSelected: () {
                 context.read<PlayerProgress>().reset();
 
@@ -93,6 +97,44 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
+class _NameChangeLine extends StatelessWidget {
+  final String title;
+
+  const _NameChangeLine(this.title, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final name = context.select((Settings settings) => settings.playerName);
+
+    return InkResponse(
+      highlightShape: BoxShape.rectangle,
+      onTap: () =>
+          Navigator.of(context).restorablePush(customNameDialogBuilder),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(title,
+                style: TextStyle(
+                  fontFamily: 'Permanent Marker',
+                  fontSize: 30,
+                )),
+            Spacer(),
+            Text(
+              '‘$name’',
+              style: TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 30,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _SettingsLine extends StatelessWidget {
   final String title;
 
@@ -105,20 +147,24 @@ class _SettingsLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(title,
-            style: TextStyle(
-              fontFamily: 'Permanent Marker',
-              fontSize: 30,
-            )),
-        Spacer(),
-        IconButton(
-          icon: icon,
-          onPressed: onSelected,
+    return InkResponse(
+      highlightShape: BoxShape.rectangle,
+      onTap: onSelected,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(title,
+                style: TextStyle(
+                  fontFamily: 'Permanent Marker',
+                  fontSize: 30,
+                )),
+            Spacer(),
+            icon,
+          ],
         ),
-      ],
+      ),
     );
   }
 }
