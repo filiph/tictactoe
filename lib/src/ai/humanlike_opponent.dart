@@ -36,37 +36,43 @@ class HumanlikeOpponent extends AiOpponent {
   @override
   final String name;
 
+  /// Same as [playerScoring], but this time we're scoring the AI's
+  /// own tiles.
+  final List<int> aiScoring;
+
+  /// Scores corresponding to a given number of taken tiles.
+  ///
+  /// The default values are:
+  ///
+  ///     const [1, 20, 90, 400, 8000, 0]
+  ///
+  /// For example, if a run of `k` tiles has 3 player tiles in it,
+  /// it will be scored with `400`. If it has 0 player tiles in it,
+  /// it will be scored with `1`.
+  final List<int> playerScoring;
+
   HumanlikeOpponent(
     BoardSetting setting, {
     required this.name,
     this.humanlikePlayCount = 2,
     this.bestPlayCount = 5,
     this.stubbornness = 0.05,
+    this.playerScoring = const [1, 20, 90, 400, 8000, 0],
+    this.aiScoring = const [2, 30, 100, 500, 10000, 0],
   })  : assert(stubbornness <= 1),
         assert(stubbornness >= 0),
         assert(humanlikePlayCount >= 1),
         assert(bestPlayCount >= 1),
         super(setting) {
     assert(
-        setting.k <= _playerScoring.length + 1,
+        setting.k <= playerScoring.length + 1,
         'Scoring opponent does not support games '
         'with more than 5 in a row');
     assert(
-        setting.k <= _aiScoring.length + 1,
+        setting.k <= aiScoring.length + 1,
         'Scoring opponent does not support games '
         'with more than 5 in a row');
   }
-
-  /// Same as [_playerScoring], but this time we're scoring the AI's
-  /// own tiles.
-  List<int> get _aiScoring => const [2, 30, 100, 500, 10000, 0];
-
-  /// Scores corresponding to a given number of taken tiles.
-  ///
-  /// For example, if a run of `k` tiles has 3 player tiles in it,
-  /// it will be scored with `400`. If it has 0 player tiles in it,
-  /// it will be scored with `1`.
-  List<int> get _playerScoring => const [1, 20, 90, 400, 8000, 0];
 
   @override
   Tile chooseNextMove(BoardState state) {
@@ -127,7 +133,7 @@ class HumanlikeOpponent extends AiOpponent {
 
           if (aiTiles == 0) {
             // Any player tiles should score towards best play.
-            score.bestPlay += _playerScoring[playerTiles];
+            score.bestPlay += playerScoring[playerTiles];
             if (tile == line.first || tile == line.last) {
               if (playerTiles == setting.k - 1) {
                 score.humanlikePlay += 300;
@@ -139,7 +145,7 @@ class HumanlikeOpponent extends AiOpponent {
 
           if (playerTiles == 0) {
             // Any AI tiles should score towards best play.
-            score.bestPlay += _aiScoring[aiTiles];
+            score.bestPlay += aiScoring[aiTiles];
             if (tile == line.first || tile == line.last) {
               if (aiTiles == setting.k - 1) {
                 score.humanlikePlay += 100;
@@ -181,7 +187,7 @@ class HumanlikeOpponent extends AiOpponent {
 
     if (defaultBest) {
       _log.warning("We didn't find any tile that would be both in "
-          "best play percentile of $bestPlayCount and humalike play "
+          "best play percentile of $bestPlayCount and humanlike play "
           "percentile of $humanlikePlayCount. Chose $best.");
     }
 

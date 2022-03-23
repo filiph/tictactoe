@@ -1,5 +1,6 @@
 import 'package:tictactoe/src/ai/ai_opponent.dart';
 import 'package:tictactoe/src/ai/humanlike_opponent.dart';
+import 'package:tictactoe/src/ai/random_opponent.dart';
 import 'package:tictactoe/src/ai/scoring_opponent.dart';
 import 'package:tictactoe/src/game_internals/board_setting.dart';
 
@@ -9,7 +10,7 @@ final gameLevels = [
     message: 'Defeat a naive AI at tic tac toe!',
     setting: BoardSetting(3, 3, 3),
     aiDifficulty: 1,
-    aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(
+    aiOpponentBuilder: (setting) => RandomOpponent(
       setting,
       name: 'Blobfish',
     ),
@@ -22,8 +23,11 @@ final gameLevels = [
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Chicken',
-      humanlikePlayCount: 2,
+      humanlikePlayCount: 50,
       bestPlayCount: 5,
+      // Heavily defense-focused.
+      playerScoring: const [30, 100, 500, 10000, 100000, 0],
+      aiScoring: const [1, 1, 10, 90, 8000, 0],
     ),
   ),
   GameLevel(

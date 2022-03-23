@@ -6,12 +6,15 @@ import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
 
 class RandomOpponent extends AiOpponent {
-  const RandomOpponent(BoardSetting setting) : super(setting);
+  const RandomOpponent(
+    BoardSetting setting, {
+    required this.name,
+  }) : super(setting);
 
   static final Random _random = Random();
 
   @override
-  final String name = 'Random';
+  final String name;
 
   @override
   Tile chooseNextMove(BoardState state) {
