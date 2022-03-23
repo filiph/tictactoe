@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 

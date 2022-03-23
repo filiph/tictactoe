@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:tictactoe/src/ai/ai_opponent.dart';
 import 'package:tictactoe/src/game_internals/board_setting.dart';
