@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   static const _celebrationDuration = Duration(milliseconds: 2000);
 
   static const _preCelebrationDuration = Duration(milliseconds: 500);
+
+  final StreamController<void> _resetHint = StreamController.broadcast();
 
   bool _duringCelebration = false;
 
@@ -108,35 +112,17 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ),
                     ),
                   ),
-                  restartButtonArea: Builder(
-                    builder: (context) {
-                      return DelayedAppear(
-                        ms: ScreenDelays.fourth,
-                        child: InkResponse(
-                          onTap: () {
-                            final settings = context.read<Settings>();
-                            if (!settings.muted && settings.soundsOn) {
-                              final audioSystem = context.read<AudioSystem>();
-                              audioSystem.playSfx(SfxType.buttonTap);
-                            }
+                  restartButtonArea: _RestartButton(
+                    _resetHint.stream,
+                    onTap: () {
+                      final settings = context.read<Settings>();
+                      if (!settings.muted && settings.soundsOn) {
+                        final audioSystem = context.read<AudioSystem>();
+                        audioSystem.playSfx(SfxType.buttonTap);
+                      }
 
-                            context.read<BoardState>().clearBoard();
-                            _startOfPlay = DateTime.now();
-                          },
-                          child: Column(
-                            children: [
-                              Image.asset('assets/images/restart.png'),
-                              Text(
-                                'Restart',
-                                style: TextStyle(
-                                  fontFamily: 'Permanent Marker',
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      context.read<BoardState>().clearBoard();
+                      _startOfPlay = DateTime.now();
                     },
                   ),
                   backButtonArea: DelayedAppear(
@@ -211,6 +197,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         // won't even import the code for ad serving. Tree shaking ftw.
         !kIsWeb &&
         platformSupportsAds) {
+      // Preload the banner ad to be shown on the 'win' screen.
       _preloadedAd = PreloadedBannerAd(size: AdSize.mediumRectangle);
       Future<void>.delayed(const Duration(seconds: 1)).then((_) {
         if (!mounted) return Future.value();
@@ -221,6 +208,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   void _aiOpponentWon() {
     // Nothing to do. The board is locked.
+    _resetHint.add(null);
   }
 
   void _playerWon() async {
@@ -273,6 +261,93 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   PreloadedBannerAd? _preloadedAd;
+}
+
+class _RestartButton extends StatefulWidget {
+  final Stream<void> resetHint;
+
+  final VoidCallback onTap;
+
+  const _RestartButton(this.resetHint, {required this.onTap, Key? key})
+      : super(key: key);
+
+  @override
+  State<_RestartButton> createState() => _RestartButtonState();
+}
+
+class _RestartButtonState extends State<_RestartButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 1500),
+    vsync: this,
+  );
+
+  StreamSubscription? _subscription;
+
+  static final TweenSequence<double> _bump = TweenSequence([
+    // A bit of delay.
+    TweenSequenceItem(tween: Tween(begin: 1, end: 1), weight: 10),
+    // Enlarge.
+    TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 1.4)
+            .chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 1),
+    // Slowly go back to beginning.
+    TweenSequenceItem(
+        tween: Tween(begin: 1.4, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInCubic)),
+        weight: 3),
+  ]);
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = widget.resetHint.listen(_handleResetHint);
+  }
+
+  @override
+  void didUpdateWidget(covariant _RestartButton oldWidget) {
+    _subscription?.cancel();
+    _subscription = widget.resetHint.listen(_handleResetHint);
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DelayedAppear(
+      ms: ScreenDelays.fourth,
+      child: InkResponse(
+        onTap: widget.onTap,
+        child: Column(
+          children: [
+            ScaleTransition(
+              scale: _bump.animate(_controller),
+              child: Image.asset('assets/images/restart.png'),
+            ),
+            Text(
+              'Restart',
+              style: TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    ;
+  }
+
+  void _handleResetHint(void _) {
+    _controller.forward(from: 0);
+  }
 }
 
 class _ResponsivePlaySessionScreen extends StatelessWidget {
