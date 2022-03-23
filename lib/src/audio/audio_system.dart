@@ -33,7 +33,10 @@ class AudioSystem extends ChangeNotifier {
   /// play at the same time. A [polyphony] of `1` will always only play one
   /// sound (a new sound will stop the previous one). See discussion
   /// of [_sfxPlayers] to learn why this is the case.
-  AudioSystem({int polyphony = 3})
+  ///
+  /// Background music does not count into the [polyphony] limit. Music will
+  /// never be overridden by sound effects.
+  AudioSystem({int polyphony = 2})
       : assert(polyphony >= 1),
         _musicPlayer = AudioPlayer(playerId: 'musicPlayer'),
         _sfxPlayers = Iterable.generate(
@@ -113,11 +116,11 @@ class AudioSystem extends ChangeNotifier {
   final Random _random = Random();
 
   void playSfx(SfxType type) {
-    _log.info('Playing sound: $type');
+    _log.info(() => 'Playing sound: $type');
     final options = _soundTypeToFilename(type);
     final filename = options[_random.nextInt(options.length)];
-    _log.info('- Chosen filename: $filename');
-    _sfxCache.play(filename);
+    _log.info(() => '- Chosen filename: $filename');
+    _sfxCache.play(filename, volume: _soundTypeToVolume(type));
     _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
     _sfxCache.fixedPlayer = _sfxPlayers[_currentSfxPlayer];
   }
@@ -195,5 +198,20 @@ List<String> _soundTypeToFilename(SfxType type) {
       return [
         'swishswish1.mp3',
       ];
+  }
+}
+
+/// Allows control over loudness of different SFX types.
+double _soundTypeToVolume(SfxType type) {
+  switch (type) {
+    case SfxType.drawX:
+      return 0.4;
+    case SfxType.drawO:
+      return 0.2;
+    case SfxType.buttonTap:
+    case SfxType.congrats:
+    case SfxType.erase:
+    case SfxType.drawGrid:
+      return 1.0;
   }
 }
