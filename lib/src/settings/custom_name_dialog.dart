@@ -30,25 +30,32 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      title: Text('Change name'),
-      children: [
-        TextField(
-          autofocus: true,
-          maxLength: 12,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          textAlign: TextAlign.center,
-          textCapitalization: TextCapitalization.words,
-          textInputAction: TextInputAction.done,
-          onChanged: (value) {
-            context.read<Settings>().setPlayerName(value);
-          },
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('Close'),
-        ),
-      ],
+    return ScaleTransition(
+      scale: CurvedAnimation(
+        parent: widget.animation,
+        curve: Curves.easeOutCubic,
+      ),
+      child: SimpleDialog(
+        title: Text('Change name'),
+        children: [
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            maxLength: 12,
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            textAlign: TextAlign.center,
+            textCapitalization: TextCapitalization.words,
+            textInputAction: TextInputAction.done,
+            onChanged: (value) {
+              context.read<Settings>().setPlayerName(value);
+            },
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 
