@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
@@ -84,25 +83,11 @@ class MainMenuScreen extends StatelessWidget {
               child: Selector<Settings, bool>(
                 selector: (context, settings) => settings.muted,
                 builder: (context, muted, child) {
-                  final platform = Theme.of(context).platform;
-                  IconData icon;
-                  if (muted) {
-                    icon = (platform == TargetPlatform.iOS ||
-                            platform == TargetPlatform.macOS)
-                        ? CupertinoIcons.volume_off
-                        : Icons.volume_off;
-                  } else {
-                    icon = (platform == TargetPlatform.iOS ||
-                            platform == TargetPlatform.macOS)
-                        ? CupertinoIcons.volume_up
-                        : Icons.volume_up;
-                  }
-
                   return IconButton(
                     onPressed: () {
                       context.read<Settings>().toggleMuted();
                     },
-                    icon: Icon(icon),
+                    icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
                   );
                 },
               ),
