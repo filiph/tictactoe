@@ -53,7 +53,7 @@ class LevelSelectionScreen extends StatelessWidget {
                       ms: ScreenDelays.second + i * 70,
                       child: RoughButton(
                         onTap: playerProgress.highestLevelReached >=
-                                gameLevels[i].number - 1
+                                gameLevels[i].number - 2
                             ? () => GoRouter.of(context)
                                 .go('/play/session/${gameLevels[i].number}')
                             : null,
@@ -73,7 +73,10 @@ class LevelSelectionScreen extends StatelessWidget {
                                 color: playerProgress.highestLevelReached >=
                                         gameLevels[i].number - 1
                                     ? palette.redPen
-                                    : palette.ink.withOpacity(0.5),
+                                    : playerProgress.highestLevelReached ==
+                                            gameLevels[i].number - 2
+                                        ? palette.redPen.withOpacity(0.5)
+                                        : palette.ink.withOpacity(0.5),
                                 fontFamily: 'Permanent Marker',
                                 fontSize: 30,
                               ),
