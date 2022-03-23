@@ -57,6 +57,7 @@ class ResponsiveScreen extends StatelessWidget {
                 flex: 100 - (mainAreaProminence * 100).round(),
                 child: SafeArea(
                   top: false,
+                  maintainBottomViewPadding: true,
                   child: Padding(
                     padding: padding,
                     child: rectangularMenuArea,
@@ -74,6 +75,7 @@ class ResponsiveScreen extends StatelessWidget {
                 flex: 7,
                 child: SafeArea(
                   right: false,
+                  maintainBottomViewPadding: true,
                   minimum: padding,
                   child: squarishMainArea,
                 ),
@@ -85,6 +87,7 @@ class ResponsiveScreen extends StatelessWidget {
                     SafeArea(
                       bottom: false,
                       left: false,
+                      maintainBottomViewPadding: true,
                       child: Padding(
                         padding: padding,
                         child: topMessageArea,
@@ -94,6 +97,7 @@ class ResponsiveScreen extends StatelessWidget {
                       child: SafeArea(
                         top: false,
                         left: false,
+                        maintainBottomViewPadding: true,
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
