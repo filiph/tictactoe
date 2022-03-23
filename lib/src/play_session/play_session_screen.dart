@@ -18,6 +18,7 @@ import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
+import 'package:tictactoe/src/play_session/hint_snackbar.dart';
 import 'package:tictactoe/src/settings/custom_name_dialog.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/delayed_appear.dart';
@@ -123,6 +124,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
                       context.read<BoardState>().clearBoard();
                       _startOfPlay = DateTime.now();
+
+                      Future.delayed(const Duration(milliseconds: 1000))
+                          .then((_) {
+                        if (!mounted) return;
+                        showHintSnackbar(context);
+                      });
                     },
                   ),
                   backButtonArea: DelayedAppear(
@@ -207,7 +214,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   void _aiOpponentWon() {
-    // Nothing to do. The board is locked.
+    // "Pop" the reset button to remind the player what to do next.
     _resetHint.add(null);
   }
 
