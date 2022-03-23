@@ -3,17 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 
-Route<Object?> customNameDialogBuilder(
-    BuildContext context, Object? arguments) {
-  return RawDialogRoute(
-    pageBuilder: (
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-    ) {
-      return CustomNameDialog(animation: animation);
-    },
-  );
+void showCustomNameDialog(BuildContext context) {
+  showGeneralDialog(
+      context: context,
+      pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) =>
+          CustomNameDialog(animation: animation));
 }
 
 class CustomNameDialog extends StatefulWidget {
@@ -48,6 +46,10 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
             textInputAction: TextInputAction.done,
             onChanged: (value) {
               context.read<Settings>().setPlayerName(value);
+            },
+            onSubmitted: (value) {
+              // Player tapped 'Submit'/'Done' on their keyboard.
+              Navigator.pop(context);
             },
           ),
           TextButton(

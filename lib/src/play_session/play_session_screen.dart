@@ -83,8 +83,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     text: playerName,
                     style: textStyle,
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.of(context)
-                          .restorablePush(customNameDialogBuilder),
+                      ..onTap = () => showCustomNameDialog(context),
                   ),
                   opponentName: TextSpan(
                     text: opponent.name,
