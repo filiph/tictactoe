@@ -467,6 +467,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
               ),
               SafeArea(
                 top: false,
+                maintainBottomViewPadding: true,
                 child: Padding(
                   padding: padding,
                   child: restartButtonArea,
@@ -483,6 +484,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                 flex: 3,
                 child: SafeArea(
                   right: false,
+                  maintainBottomViewPadding: true,
                   child: Padding(
                     padding: padding,
                     child: Column(
@@ -502,6 +504,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                 child: SafeArea(
                   left: false,
                   right: false,
+                  maintainBottomViewPadding: true,
                   minimum: padding,
                   child: mainBoardArea,
                 ),
@@ -510,6 +513,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                 flex: 3,
                 child: SafeArea(
                   left: false,
+                  maintainBottomViewPadding: true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
