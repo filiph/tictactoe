@@ -224,7 +224,7 @@ class _RoughGridPainter extends CustomPainter {
       }
 
       final fuzziness = Offset.fromDirection(angle, maxCrossAxisDisplacement);
-      final nextFuzzyPoint = straightPoint + straightSegment + fuzziness;
+      final nextFuzzyPoint = nextStraightPoint + fuzziness;
 
       if (i == 0 || nextStraightPoint == end) {
         paint.strokeCap = StrokeCap.round;
