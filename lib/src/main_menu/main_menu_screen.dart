@@ -37,7 +37,7 @@ class MainMenuScreen extends StatelessWidget {
         ),
         rectangularMenuArea: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             if (flavor == Flavor.lite) ...[
               Text('‘Lite’ version (for the web)'),
             ],

@@ -96,13 +96,13 @@ final gameLevels = [
   ),
   GameLevel(
     number: 9,
-    setting: BoardSetting(10, 10, 5),
+    setting: BoardSetting(11, 11, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Tiger',
       humanlikePlayCount: 10,
-      bestPlayCount: 1,
+      bestPlayCount: 2,
     ),
   ),
 ];
