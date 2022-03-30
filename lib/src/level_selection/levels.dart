@@ -13,6 +13,8 @@ final gameLevels = [
       setting,
       name: 'Blobfish',
     ),
+    achievementIdIOS: 'first_win',
+    achievementIdAndroid: 'CgkIgZ29mawJEAIQAg',
   ),
   GameLevel(
     number: 2,
@@ -59,6 +61,8 @@ final gameLevels = [
       bestPlayCount: 12,
       stubbornness: 0.10,
     ),
+    achievementIdIOS: 'half_way',
+    achievementIdAndroid: 'CgkIgZ29mawJEAIQAw',
   ),
   GameLevel(
     number: 6,
@@ -104,6 +108,8 @@ final gameLevels = [
       humanlikePlayCount: 10,
       bestPlayCount: 2,
     ),
+    achievementIdIOS: 'finished',
+    achievementIdAndroid: 'CgkIgZ29mawJEAIQBA',
   ),
 ];
 
@@ -116,10 +122,17 @@ class GameLevel {
 
   final AiOpponent Function(BoardSetting) aiOpponentBuilder;
 
+  /// The achievement to unlock when the level is finished, if any.
+  final String? achievementIdIOS;
+
+  final String? achievementIdAndroid;
+
   const GameLevel({
     required this.number,
     required this.setting,
     required this.aiDifficulty,
     required this.aiOpponentBuilder,
+    this.achievementIdIOS,
+    this.achievementIdAndroid,
   });
 }

@@ -255,6 +255,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       audioSystem.playSfx(SfxType.congrats);
     }
 
+    /// Send achievements.
+    if (widget.level.achievementIdAndroid != null &&
+        platformSupportsGameServices &&
+        await games_services.GamesServices.isSignedIn) {
+      games_services.GamesServices.unlock(
+        achievement: games_services.Achievement(
+          androidID: widget.level.achievementIdAndroid!,
+          iOSID: widget.level.achievementIdIOS!,
+        ),
+      );
+    }
+
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);
     if (!mounted) return;
