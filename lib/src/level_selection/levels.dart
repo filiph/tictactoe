@@ -7,7 +7,6 @@ import 'package:tictactoe/src/game_internals/board_setting.dart';
 final gameLevels = [
   GameLevel(
     number: 1,
-    message: 'Defeat a naive AI at tic tac toe!',
     setting: BoardSetting(3, 3, 3),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => RandomOpponent(
@@ -17,7 +16,6 @@ final gameLevels = [
   ),
   GameLevel(
     number: 2,
-    message: 'Defeat a naive AI at four-in-a-row!',
     setting: BoardSetting(5, 5, 4),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
@@ -32,7 +30,6 @@ final gameLevels = [
   ),
   GameLevel(
     number: 3,
-    message: 'Defeat a naive AI at four-in-a-row!',
     setting: BoardSetting(6, 6, 4),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
@@ -44,7 +41,6 @@ final gameLevels = [
   ),
   GameLevel(
     number: 4,
-    message: 'Defeat a naive AI at miniature gomoku!',
     setting: BoardSetting(8, 8, 5),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(
@@ -54,34 +50,31 @@ final gameLevels = [
   ),
   GameLevel(
     number: 5,
-    message: 'Defeat an AI at miniature gomoku!',
+    setting: BoardSetting(9, 9, 5, aiStarts: true),
+    aiDifficulty: 1,
+    aiOpponentBuilder: (setting) => HumanlikeOpponent(
+      setting,
+      name: 'Gecko',
+      humanlikePlayCount: 3,
+      bestPlayCount: 12,
+      stubbornness: 0.10,
+    ),
+  ),
+  GameLevel(
+    number: 6,
     setting: BoardSetting(9, 9, 5),
     aiDifficulty: 3,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
-      name: 'Gecko',
+      name: 'Wobbegong',
       humanlikePlayCount: 2,
       bestPlayCount: 10,
       stubbornness: 0.1,
     ),
   ),
   GameLevel(
-    number: 6,
-    message: 'Defeat a stronger AI at miniature gomoku!',
-    setting: BoardSetting(9, 9, 5),
-    aiDifficulty: 3,
-    aiOpponentBuilder: (setting) => HumanlikeOpponent(
-      setting,
-      name: 'Wobbegong',
-      humanlikePlayCount: 4,
-      bestPlayCount: 6,
-      stubbornness: 0.1,
-    ),
-  ),
-  GameLevel(
     number: 7,
-    message: 'NOT IMPLEMENTED',
-    setting: BoardSetting(8, 8, 5),
+    setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -92,7 +85,6 @@ final gameLevels = [
   ),
   GameLevel(
     number: 8,
-    message: 'NOT IMPLEMENTED',
     setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
@@ -104,7 +96,6 @@ final gameLevels = [
   ),
   GameLevel(
     number: 9,
-    message: 'NOT IMPLEMENTED',
     setting: BoardSetting(10, 10, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
@@ -119,8 +110,6 @@ final gameLevels = [
 class GameLevel {
   final int number;
 
-  final String message;
-
   final BoardSetting setting;
 
   final int aiDifficulty;
@@ -129,7 +118,6 @@ class GameLevel {
 
   const GameLevel({
     required this.number,
-    required this.message,
     required this.setting,
     required this.aiDifficulty,
     required this.aiOpponentBuilder,

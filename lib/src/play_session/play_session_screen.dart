@@ -349,7 +349,6 @@ class _RestartButtonState extends State<_RestartButton>
         ),
       ),
     );
-    ;
   }
 
   void _handleResetHint(void _) {

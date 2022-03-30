@@ -19,9 +19,14 @@ class BoardSetting {
   /// Which side is the player taking?
   final Side playerSide;
 
-  Side get aiOpponentSide => playerSide == Side.x ? Side.o : Side.x;
+  /// If `true`, the board will start with an `aiOpponentSide` mark in
+  /// the center.
+  final bool aiStarts;
 
-  const BoardSetting(this.m, this.n, this.k, {this.playerSide = Side.x});
+  const BoardSetting(this.m, this.n, this.k,
+      {this.playerSide = Side.x, this.aiStarts = false});
+
+  Side get aiOpponentSide => playerSide == Side.x ? Side.o : Side.x;
 
   @override
   int get hashCode => Object.hash(m, n, k);

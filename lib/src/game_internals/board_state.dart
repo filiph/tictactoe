@@ -28,7 +28,8 @@ class BoardState extends ChangeNotifier {
   List<Tile>? _winningLine;
 
   BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
-      : this._(setting, {}, {}, aiOpponent, null, null);
+      : this._(setting, {}, _generateInitialOTaken(setting), aiOpponent, null,
+            null);
 
   @visibleForTesting
   BoardState.withExistingState({
@@ -77,6 +78,7 @@ class BoardState extends ChangeNotifier {
   void clearBoard() {
     _xTaken.clear();
     _oTaken.clear();
+    _oTaken.addAll(_generateInitialOTaken(setting));
     _winningLine?.clear();
     _latestXTile = null;
     _latestOTile = null;
@@ -268,6 +270,19 @@ class BoardState extends ChangeNotifier {
       _latestXTile = tile;
     } else if (side == Side.o) {
       _latestOTile = tile;
+    }
+  }
+
+  static Set<int> _generateInitialOTaken(BoardSetting setting) {
+    assert(setting.aiOpponentSide == Side.o, "Unimplemented: AI plays as X");
+
+    if (setting.aiStarts) {
+      final tile = Tile((setting.m / 2).floor(), (setting.n ~/ 2).floor());
+      return {
+        tile.toPointer(setting),
+      };
+    } else {
+      return {};
     }
   }
 }
