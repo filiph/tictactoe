@@ -19,7 +19,7 @@ class BoardState extends ChangeNotifier {
 
   Tile? _latestOTile;
 
-  bool _isLocked = false;
+  bool _isLocked = true;
 
   final ChangeNotifier playerWon = ChangeNotifier();
 
@@ -28,8 +28,7 @@ class BoardState extends ChangeNotifier {
   List<Tile>? _winningLine;
 
   BoardState.clean(BoardSetting setting, AiOpponent aiOpponent)
-      : this._(setting, {}, _generateInitialOTaken(setting), aiOpponent, null,
-            null);
+      : this._(setting, {}, {}, aiOpponent, null, null);
 
   @visibleForTesting
   BoardState.withExistingState({
@@ -78,10 +77,16 @@ class BoardState extends ChangeNotifier {
   void clearBoard() {
     _xTaken.clear();
     _oTaken.clear();
-    _oTaken.addAll(_generateInitialOTaken(setting));
     _winningLine?.clear();
     _latestXTile = null;
     _latestOTile = null;
+    _isLocked = true;
+
+    notifyListeners();
+  }
+
+  void initialize() {
+    _oTaken.addAll(_generateInitialOTaken());
     _isLocked = false;
 
     notifyListeners();
@@ -273,7 +278,7 @@ class BoardState extends ChangeNotifier {
     }
   }
 
-  static Set<int> _generateInitialOTaken(BoardSetting setting) {
+  Set<int> _generateInitialOTaken() {
     assert(setting.aiOpponentSide == Side.o, "Unimplemented: AI plays as X");
 
     if (setting.aiStarts) {

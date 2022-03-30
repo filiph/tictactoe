@@ -61,6 +61,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               opponent,
             );
 
+            Future.delayed(const Duration(milliseconds: 500)).then((_) {
+              if (!mounted) return;
+              state.initialize();
+            });
+
             state.playerWon.addListener(_playerWon);
             state.aiOpponentWon.addListener(_aiOpponentWon);
 
@@ -124,6 +129,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
                       context.read<BoardState>().clearBoard();
                       _startOfPlay = DateTime.now();
+
+                      Future.delayed(const Duration(milliseconds: 200))
+                          .then((_) {
+                        if (!mounted) return;
+                        context.read<BoardState>().initialize();
+                      });
 
                       Future.delayed(const Duration(milliseconds: 1000))
                           .then((_) {
