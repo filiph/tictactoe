@@ -57,19 +57,19 @@ class MainMenuScreen extends StatelessWidget {
             ),
             if (platformSupportsGameServices) ...[
               Expanded(
-                child: RoughButton(
+                child: _hideUntilGameServicesReady(RoughButton(
                   onTap: () => GamesServices.showAchievements(),
                   child: const Text('Achievements'),
-                ),
+                )),
               ),
               Expanded(
-                child: RoughButton(
+                child: _hideUntilGameServicesReady(RoughButton(
                   onTap: () => GamesServices.showLeaderboards(
                     iOSLeaderboardID: "tictactoe.highest_score",
                     androidLeaderboardID: "CgkIgZ29mawJEAIQAQ",
                   ),
                   child: const Text('Leaderboard'),
-                ),
+                )),
               ),
             ],
             Expanded(
@@ -96,6 +96,27 @@ class MainMenuScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// Prevents the game from showing game-services-related menu items
+  /// until we're sure the player is signed in.
+  ///
+  /// This normally happens immediately after game start, so players will not
+  /// see any flash. The exception is folks who decline to use Game Center
+  /// or Google Play Game Services, or who haven't yet set it up.
+  Widget _hideUntilGameServicesReady(Widget child) {
+    return FutureBuilder<bool>(
+      future: GamesServices.isSignedIn,
+      builder: (context, snapshot) {
+        return Visibility(
+          visible: snapshot.data ?? false,
+          maintainState: true,
+          maintainSize: true,
+          maintainAnimation: true,
+          child: child,
+        );
+      },
     );
   }
 }
