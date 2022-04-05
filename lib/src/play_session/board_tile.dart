@@ -176,6 +176,7 @@ class _SketchedX extends StatelessWidget {
       final crossStart = Image(
         image: resizeCrossStart,
         color: color,
+        fit: BoxFit.contain,
       );
       final resizeCrossEnd = ResizeImage(
         AssetImage(_endImageAssets[
@@ -185,6 +186,7 @@ class _SketchedX extends StatelessWidget {
       final crossEnd = Image(
         image: resizeCrossEnd,
         color: color,
+        fit: BoxFit.contain,
       );
 
       return Stack(
@@ -281,6 +283,7 @@ class _SketchedO extends StatelessWidget {
         final circle = Image(
           image: resizeImage,
           color: color,
+          fit: BoxFit.contain,
         );
 
         return AnimatedBuilder(
