@@ -40,6 +40,19 @@ To make it easier for everyone to play with the sample, it's currently
 
 ## Development
 
+To run the app in debug mode:
+
+    flutter run --dart-define=flavor=full
+
+In same cases, for example in my Android Studio, you have to explicitly ask
+for multidex support, so the above becomes:
+
+    flutter run --dart-define=flavor=full -Pmultidex-enabled=true
+
+But this shouldn't generally be needed.
+
+### Code organization
+
 Code is organized in a loose and shallow feature-first fashion.
 In `lib/src`, you'll therefore find directories such as `ads`, `ai`, `audio`
 or `main_menu`. Nothing fancy, but usable.
@@ -69,7 +82,7 @@ Flavor is defined using environment variables. This approach is
 for example.
 
 
-### Building
+### Building for production
 
 The following assumes using [FVM][]. Just remove `fvm` from the commands if you
 don't use FVM for Flutter version management.
