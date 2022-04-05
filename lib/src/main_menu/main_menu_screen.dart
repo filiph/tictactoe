@@ -93,6 +93,8 @@ class MainMenuScreen extends StatelessWidget {
               ),
             ),
             gap,
+            Text('Music by Mr Smith'),
+            gap,
           ],
         ),
       ),
