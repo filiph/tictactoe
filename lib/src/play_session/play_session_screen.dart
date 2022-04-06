@@ -11,7 +11,8 @@ import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/ai/ai_opponent.dart';
-import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/audio/audio_controller.dart';
+import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
@@ -105,8 +106,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       onDelayFinished: () {
                         final settings = context.read<Settings>();
                         if (!settings.muted && settings.soundsOn) {
-                          final audioSystem = context.read<AudioSystem>();
-                          audioSystem.playSfx(SfxType.drawGrid);
+                          final audioController =
+                              context.read<AudioController>();
+                          audioController.playSfx(SfxType.drawGrid);
                         }
                       },
                       child: Board(
@@ -120,8 +122,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     onTap: () {
                       final settings = context.read<Settings>();
                       if (!settings.muted && settings.soundsOn) {
-                        final audioSystem = context.read<AudioSystem>();
-                        audioSystem.playSfx(SfxType.buttonTap);
+                        final audioController = context.read<AudioController>();
+                        audioController.playSfx(SfxType.buttonTap);
                       }
 
                       context.read<BoardState>().clearBoard();
@@ -146,8 +148,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       onTap: () {
                         final settings = context.read<Settings>();
                         if (!settings.muted && settings.soundsOn) {
-                          final audioSystem = context.read<AudioSystem>();
-                          audioSystem.playSfx(SfxType.buttonTap);
+                          final audioController =
+                              context.read<AudioController>();
+                          audioController.playSfx(SfxType.buttonTap);
                         }
 
                         GoRouter.of(context).pop();
@@ -164,8 +167,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       onTap: () {
                         final settings = context.read<Settings>();
                         if (!settings.muted && settings.soundsOn) {
-                          final audioSystem = context.read<AudioSystem>();
-                          audioSystem.playSfx(SfxType.buttonTap);
+                          final audioController =
+                              context.read<AudioController>();
+                          audioController.playSfx(SfxType.buttonTap);
                         }
 
                         GoRouter.of(context).push('/settings');
@@ -236,8 +240,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     final settings = context.read<Settings>();
     if (!settings.muted && settings.soundsOn) {
-      final audioSystem = context.read<AudioSystem>();
-      audioSystem.playSfx(SfxType.congrats);
+      final audioController = context.read<AudioController>();
+      audioController.playSfx(SfxType.congrats);
     }
 
     /// Send achievements.

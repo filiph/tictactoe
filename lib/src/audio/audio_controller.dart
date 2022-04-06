@@ -5,8 +5,9 @@ import 'package:audioplayers/audioplayers.dart' hide Logger;
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:tictactoe/src/audio/songs.dart';
+import 'package:tictactoe/src/audio/sounds.dart';
 
-class AudioSystem extends ChangeNotifier {
+class AudioController extends ChangeNotifier {
   static final _log = Logger('AudioSystem');
 
   late AudioCache _musicCache;
@@ -36,7 +37,7 @@ class AudioSystem extends ChangeNotifier {
   ///
   /// Background music does not count into the [polyphony] limit. Music will
   /// never be overridden by sound effects.
-  AudioSystem({int polyphony = 2})
+  AudioController({int polyphony = 2})
       : assert(polyphony >= 1),
         _musicPlayer = AudioPlayer(playerId: 'musicPlayer'),
         _sfxPlayers = Iterable.generate(
@@ -117,10 +118,10 @@ class AudioSystem extends ChangeNotifier {
 
   void playSfx(SfxType type) {
     _log.info(() => 'Playing sound: $type');
-    final options = _soundTypeToFilename(type);
+    final options = soundTypeToFilename(type);
     final filename = options[_random.nextInt(options.length)];
     _log.info(() => '- Chosen filename: $filename');
-    _sfxCache.play(filename, volume: _soundTypeToVolume(type));
+    _sfxCache.play(filename, volume: soundTypeToVolume(type));
     _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
     _sfxCache.fixedPlayer = _sfxPlayers[_currentSfxPlayer];
   }
@@ -128,7 +129,7 @@ class AudioSystem extends ChangeNotifier {
   void initialize() async {
     _log.info('Preloading sound effects');
     await _sfxCache
-        .loadAll(SfxType.values.expand(_soundTypeToFilename).toList());
+        .loadAll(SfxType.values.expand(soundTypeToFilename).toList());
   }
 
   void _changeSong(void _) {
@@ -145,73 +146,5 @@ class AudioSystem extends ChangeNotifier {
     if (_musicPlayer.state == PlayerState.PLAYING) {
       _musicPlayer.pause();
     }
-  }
-}
-
-enum SfxType {
-  drawX,
-  drawO,
-  buttonTap,
-  congrats,
-  erase,
-  drawGrid,
-}
-
-List<String> _soundTypeToFilename(SfxType type) {
-  switch (type) {
-    case SfxType.drawX:
-      return [
-        'hash1.mp3',
-        'hash2.mp3',
-        'hash3.mp3',
-      ];
-    case SfxType.drawO:
-      return [
-        'wssh1.mp3',
-        'wssh2.mp3',
-        'dsht1.mp3',
-        'ws1.mp3',
-        'spsh1.mp3',
-        'hh1.mp3',
-        'hh2.mp3',
-        'kss1.mp3',
-      ];
-    case SfxType.buttonTap:
-      return [
-        'k1.mp3',
-        'k2.mp3',
-        'p1.mp3',
-        'p2.mp3',
-      ];
-    case SfxType.congrats:
-      return [
-        'yay1.mp3',
-        'wehee1.mp3',
-        'oo1.mp3',
-      ];
-    case SfxType.erase:
-      return [
-        'fwfwfwfwfw1.mp3',
-        'fwfwfwfw1.mp3',
-      ];
-    case SfxType.drawGrid:
-      return [
-        'swishswish1.mp3',
-      ];
-  }
-}
-
-/// Allows control over loudness of different SFX types.
-double _soundTypeToVolume(SfxType type) {
-  switch (type) {
-    case SfxType.drawX:
-      return 0.4;
-    case SfxType.drawO:
-      return 0.2;
-    case SfxType.buttonTap:
-    case SfxType.congrats:
-    case SfxType.erase:
-    case SfxType.drawGrid:
-      return 1.0;
   }
 }

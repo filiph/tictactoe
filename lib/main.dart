@@ -15,7 +15,7 @@ import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
-import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/audio/audio_controller.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
@@ -185,18 +185,18 @@ class MyApp extends StatelessWidget {
           Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController),
-          ChangeNotifierProvider<AudioSystem>(
-            create: (context) => AudioSystem()..initialize(),
+          ChangeNotifierProvider<AudioController>(
+            create: (context) => AudioController()..initialize(),
           ),
-          ChangeNotifierProxyProvider2<AudioSystem,
+          ChangeNotifierProxyProvider2<AudioController,
               ValueNotifier<AppLifecycleState>, Settings>(
             lazy: false,
             create: (context) => Settings(
               persistence: settingsPersistence,
             )..loadStateFromPersistence(),
-            update: (context, audioSystem, lifecycleNotifier, settings) {
+            update: (context, audioController, lifecycleNotifier, settings) {
               if (settings == null) throw ArgumentError.notNull();
-              settings.attachAudioSystem(audioSystem);
+              settings.attachAudioController(audioController);
               settings.attachLifecycleNotifier(lifecycleNotifier);
               return settings;
             },

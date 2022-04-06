@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/audio/audio_controller.dart';
+import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
 import 'package:tictactoe/src/settings/settings.dart';
@@ -61,8 +62,10 @@ class _BoardTileState extends State<BoardTile>
       // Also, play sound.
       final settings = context.read<Settings>();
       if (!settings.muted && settings.soundsOn) {
-        final audioSystem = context.read<AudioSystem>();
-        audioSystem.playSfx(owner == Side.x ? SfxType.drawX : SfxType.drawO);
+        final audioController = context.read<AudioController>();
+        audioController.playSfx(
+          owner == Side.x ? SfxType.drawX : SfxType.drawO,
+        );
       }
     }
 

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/audio/audio_controller.dart';
 import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
 
 class Settings extends ChangeNotifier {
@@ -9,7 +9,7 @@ class Settings extends ChangeNotifier {
 
   final SettingsPersistence _persistence;
 
-  AudioSystem? _audioSystem;
+  AudioController? _audioController;
 
   bool _soundsOn = false;
 
@@ -30,13 +30,13 @@ class Settings extends ChangeNotifier {
 
   bool get soundsOn => _soundsOn;
 
-  void attachAudioSystem(AudioSystem audioSystem) {
-    if (audioSystem == _audioSystem) {
+  void attachAudioController(AudioController audioController) {
+    if (audioController == _audioController) {
       return;
     }
-    _audioSystem = audioSystem;
+    _audioController = audioController;
     if (!_muted && _musicOn) {
-      _audioSystem!.startMusic();
+      _audioController!.startMusic();
     }
   }
 
@@ -52,10 +52,10 @@ class Settings extends ChangeNotifier {
       _persistence.getPlayerName().then((value) => _playerName = value),
     ]);
     if (_muted) {
-      _audioSystem?.stopAllSound();
+      _audioController?.stopAllSound();
     } else {
       if (_musicOn) {
-        _audioSystem?.resumeMusic();
+        _audioController?.resumeMusic();
       }
     }
     notifyListeners();
@@ -65,10 +65,10 @@ class Settings extends ChangeNotifier {
     _musicOn = !_musicOn;
     if (_musicOn) {
       if (!_muted) {
-        _audioSystem?.resumeMusic();
+        _audioController?.resumeMusic();
       }
     } else {
-      _audioSystem?.stopMusic();
+      _audioController?.stopMusic();
     }
     notifyListeners();
     _persistence.saveMusicOn(_musicOn);
@@ -83,10 +83,10 @@ class Settings extends ChangeNotifier {
   void toggleMuted() {
     _muted = !_muted;
     if (_muted) {
-      _audioSystem?.stopAllSound();
+      _audioController?.stopAllSound();
     } else {
       if (_musicOn) {
-        _audioSystem?.resumeMusic();
+        _audioController?.resumeMusic();
       }
     }
     notifyListeners();
@@ -120,11 +120,11 @@ class Settings extends ChangeNotifier {
     switch (_lifecycleNotifier!.value) {
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
-        _audioSystem?.stopAllSound();
+        _audioController?.stopAllSound();
         break;
       case AppLifecycleState.resumed:
         if (!_muted && _musicOn) {
-          _audioSystem?.resumeMusic();
+          _audioController?.resumeMusic();
         }
         break;
       case AppLifecycleState.inactive:

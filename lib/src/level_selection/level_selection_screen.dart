@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
-import 'package:tictactoe/src/audio/audio_system.dart';
+import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/style/delayed_appear.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
