@@ -70,14 +70,14 @@ void main() {
     GamesServices.signIn();
   }
 
-  InAppPurchaseNotifier? inAppPurchaseNotifier;
+  InAppPurchaseController? inAppPurchaseController;
   if (platformSupportsInAppPurchases) {
-    inAppPurchaseNotifier = InAppPurchaseNotifier(InAppPurchase.instance)
+    inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance)
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
       // as possible in order not to miss any updates.
       ..subscribe(InAppPurchase.instance.purchaseStream);
     // Ask the store what the player has bought already.
-    inAppPurchaseNotifier.restorePurchases().then(
+    inAppPurchaseController.restorePurchases().then(
         (_) => _log.info('In-app purchases restored'),
         onError: (e) => _log.severe('Could not restore in-app purchases: $e'));
   }
@@ -87,7 +87,7 @@ void main() {
     MyApp(
       settingsPersistence: LocalStorageSettingsPersistence(),
       playerProgressPersistentStore: LocalStoragePlayerProgressPersistence(),
-      inAppPurchaseNotifier: inAppPurchaseNotifier,
+      inAppPurchaseController: inAppPurchaseController,
       adsController: adsController,
     ),
   );
@@ -158,14 +158,14 @@ class MyApp extends StatelessWidget {
 
   final SettingsPersistence settingsPersistence;
 
-  final InAppPurchaseNotifier? inAppPurchaseNotifier;
+  final InAppPurchaseController? inAppPurchaseController;
 
   final AdsController? adsController;
 
   const MyApp({
     required this.playerProgressPersistentStore,
     required this.settingsPersistence,
-    required this.inAppPurchaseNotifier,
+    required this.inAppPurchaseController,
     required this.adsController,
     Key? key,
   }) : super(key: key);
@@ -183,8 +183,8 @@ class MyApp extends StatelessWidget {
             },
           ),
           Provider<AdsController?>.value(value: adsController),
-          ChangeNotifierProvider<InAppPurchaseNotifier?>.value(
-              value: inAppPurchaseNotifier),
+          ChangeNotifierProvider<InAppPurchaseController?>.value(
+              value: inAppPurchaseController),
           ChangeNotifierProvider<AudioSystem>(
             create: (context) => AudioSystem()..initialize(),
           ),

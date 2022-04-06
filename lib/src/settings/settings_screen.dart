@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
               onSelected: () => settings.toggleMusicOn(),
             ),
             if (platformSupportsInAppPurchases)
-              Consumer<InAppPurchaseNotifier>(
+              Consumer<InAppPurchaseController>(
                   builder: (context, inAppPurchase, child) {
                 Widget icon;
                 VoidCallback? callback;

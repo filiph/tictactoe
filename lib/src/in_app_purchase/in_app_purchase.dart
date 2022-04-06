@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:tictactoe/src/in_app_purchase/ad_removal.dart';
 import 'package:tictactoe/src/snack_bar/snack_bar.dart';
 
-class InAppPurchaseNotifier extends ChangeNotifier {
+class InAppPurchaseController extends ChangeNotifier {
   static final Logger _log = Logger('InAppPurchases');
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
@@ -17,7 +17,7 @@ class InAppPurchaseNotifier extends ChangeNotifier {
 
   AdRemovalPurchase get adRemoval => _adRemoval;
 
-  InAppPurchaseNotifier(this.inAppPurchaseInstance);
+  InAppPurchaseController(this.inAppPurchaseInstance);
 
   /// Subscribes to the provided [purchaseStream].
   ///

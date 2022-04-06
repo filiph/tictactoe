@@ -55,7 +55,7 @@ class AdsController {
 
   /// Checks whether ads have been removed (via an in-app purchase).
   ///
-  /// If [InAppPurchaseNotifier] isn't reachable
+  /// If [InAppPurchaseController] isn't reachable
   bool _adsRemoved(BuildContext context) =>
-      context.read<InAppPurchaseNotifier?>()?.adRemoval.active ?? false;
+      context.read<InAppPurchaseController?>()?.adRemoval.active ?? false;
 }

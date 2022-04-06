@@ -21,7 +21,7 @@ class WinGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final adsRemoved =
-        context.watch<InAppPurchaseNotifier?>()?.adRemoval.active ?? false;
+        context.watch<InAppPurchaseController?>()?.adRemoval.active ?? false;
     final palette = context.watch<Palette>();
 
     const gap = SizedBox(height: 10);
