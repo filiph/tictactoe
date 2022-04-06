@@ -13,7 +13,7 @@ import 'package:tictactoe/src/achievements/persistence/local_storage_player_prog
 import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
 import 'package:tictactoe/src/achievements/score.dart';
-import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
+import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
 import 'package:tictactoe/src/audio/audio_system.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
@@ -57,11 +57,13 @@ void main() {
     SystemUiMode.edgeToEdge,
   );
 
+  AdsController? adsController;
   if (!kIsWeb && platformSupportsAds) {
     /// Prepare the google_mobile_ads plugin so that the first ad loads
-    /// immediately. This can be done later or with a delay if startup
+    /// faster. This can be done later or with a delay if startup
     /// experience suffers.
-    MobileAds.instance.initialize();
+    adsController = AdsController(MobileAds.instance);
+    adsController.initialize();
   }
 
   if (platformSupportsGameServices) {
@@ -86,6 +88,7 @@ void main() {
       settingsPersistence: LocalStorageSettingsPersistence(),
       playerProgressPersistentStore: LocalStoragePlayerProgressPersistence(),
       inAppPurchaseNotifier: inAppPurchaseNotifier,
+      adsController: adsController,
     ),
   );
 }
@@ -125,13 +128,10 @@ class MyApp extends StatelessWidget {
                     pageBuilder: (context, state) {
                       final map = state.extra! as Map<String, dynamic>;
                       final score = map['score'] as Score;
-                      final preloadedAd =
-                          map['preloaded_ad'] as PreloadedBannerAd?;
 
                       return buildTransition(
                         child: WinGameScreen(
                           score: score,
-                          preloadedAd: preloadedAd,
                           key: Key('win game'),
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
@@ -160,10 +160,13 @@ class MyApp extends StatelessWidget {
 
   final InAppPurchaseNotifier? inAppPurchaseNotifier;
 
+  final AdsController? adsController;
+
   const MyApp({
     required this.playerProgressPersistentStore,
     required this.settingsPersistence,
     required this.inAppPurchaseNotifier,
+    required this.adsController,
     Key? key,
   }) : super(key: key);
 
@@ -179,6 +182,7 @@ class MyApp extends StatelessWidget {
               return progress;
             },
           ),
+          Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseNotifier?>.value(
               value: inAppPurchaseNotifier),
           ChangeNotifierProvider<AudioSystem>(

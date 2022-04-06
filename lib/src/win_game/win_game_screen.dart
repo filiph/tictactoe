@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/achievements/score.dart';
-import 'package:tictactoe/src/ads/banner_ad.dart';
-import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
+import 'package:tictactoe/src/ads/banner_ad_widget.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
@@ -14,12 +13,9 @@ import 'package:tictactoe/src/style/rough/button.dart';
 class WinGameScreen extends StatelessWidget {
   final Score score;
 
-  final PreloadedBannerAd? preloadedAd;
-
   const WinGameScreen({
     Key? key,
     required this.score,
-    this.preloadedAd,
   }) : super(key: key);
 
   @override
@@ -43,7 +39,7 @@ class WinGameScreen extends StatelessWidget {
                 platformSupportsAds) ...[
               Expanded(
                 child: Center(
-                  child: MyBannerAd(preloadedAd: preloadedAd),
+                  child: BannerAdWidget(),
                 ),
               ),
             ],

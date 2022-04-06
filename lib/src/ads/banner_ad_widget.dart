@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
+import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 
 /// Displays a banner ad that conforms to the widget's size in the layout,
@@ -22,26 +24,15 @@ import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 /// This widget is adapted from pkg:google_mobile_ads's example code,
 /// namely the `anchored_adaptive_example.dart` file:
 /// https://github.com/googleads/googleads-mobile-flutter/blob/main/packages/google_mobile_ads/example/lib/anchored_adaptive_example.dart
-class MyBannerAd extends StatefulWidget {
-  /// An optional preloaded ad so that the widget immediately has something
-  /// to show.
-  ///
-  /// If you provide this, do _not_ dispose of the provided ad elsewhere.
-  /// [MyBannerAd] takes ownership of the provided ad, and will be responsible
-  /// for disposing of it.
-  final PreloadedBannerAd? preloadedAd;
-
-  const MyBannerAd({
-    this.preloadedAd,
-    Key? key,
-  }) : super(key: key);
+class BannerAdWidget extends StatefulWidget {
+  const BannerAdWidget({Key? key}) : super(key: key);
 
   @override
-  _MyBannerAdState createState() => _MyBannerAdState();
+  _BannerAdWidgetState createState() => _BannerAdWidgetState();
 }
 
-class _MyBannerAdState extends State<MyBannerAd> {
-  static final _log = Logger('MyBannerAd');
+class _BannerAdWidgetState extends State<BannerAdWidget> {
+  static final _log = Logger('BannerAdWidget');
 
   BannerAd? _bannerAd;
   _LoadingState _adLoadingState = _LoadingState.initial;
@@ -76,9 +67,12 @@ class _MyBannerAdState extends State<MyBannerAd> {
   @override
   void initState() {
     super.initState();
-    if (widget.preloadedAd != null) {
+
+    final adsController = context.read<AdsController>();
+    final ad = adsController.takePreloadedAd();
+    if (ad != null) {
       _log.info("A preloaded banner was supplied. Using it.");
-      _showPreloadedAd(widget.preloadedAd!);
+      _showPreloadedAd(ad);
     } else {
       _loadAd();
     }
