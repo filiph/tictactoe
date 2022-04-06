@@ -2,8 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 
-class LocalStoragePlayerProgressPersistence
-    extends PlayerProgressPersistentStore {
+class LocalStoragePlayerProgressPersistence extends PlayerProgressPersistence {
   final Future<SharedPreferences> instanceFuture =
       SharedPreferences.getInstance();
 

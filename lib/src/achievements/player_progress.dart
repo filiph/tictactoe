@@ -6,7 +6,7 @@ import 'package:tictactoe/src/achievements/persistence/player_progress_persisten
 import 'package:tictactoe/src/achievements/score.dart';
 
 class PlayerProgress extends ChangeNotifier {
-  final PlayerProgressPersistentStore _store;
+  final PlayerProgressPersistence _store;
 
   int _highestLevelReached = 0;
 

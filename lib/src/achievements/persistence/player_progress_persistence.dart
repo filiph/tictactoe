@@ -1,6 +1,6 @@
 import 'package:tictactoe/src/achievements/score.dart';
 
-abstract class PlayerProgressPersistentStore {
+abstract class PlayerProgressPersistence {
   Future<int> getHighestLevelReached();
 
   Future<void> saveHighestLevelReached(int level);

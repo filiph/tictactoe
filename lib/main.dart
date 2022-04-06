@@ -84,7 +84,7 @@ void main() {
   runApp(
     MyApp(
       settingsPersistence: LocalStorageSettingsPersistence(),
-      playerProgressPersistentStore: LocalStoragePlayerProgressPersistence(),
+      playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
       inAppPurchaseController: inAppPurchaseController,
       adsController: adsController,
     ),
@@ -152,7 +152,7 @@ class MyApp extends StatelessWidget {
     ],
   );
 
-  final PlayerProgressPersistentStore playerProgressPersistentStore;
+  final PlayerProgressPersistence playerProgressPersistence;
 
   final SettingsPersistence settingsPersistence;
 
@@ -161,7 +161,7 @@ class MyApp extends StatelessWidget {
   final AdsController? adsController;
 
   const MyApp({
-    required this.playerProgressPersistentStore,
+    required this.playerProgressPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
@@ -175,7 +175,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
             create: (context) {
-              var progress = PlayerProgress(playerProgressPersistentStore);
+              var progress = PlayerProgress(playerProgressPersistence);
               progress.getLatestFromStore();
               return progress;
             },

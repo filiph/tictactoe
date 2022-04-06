@@ -1,8 +1,7 @@
 import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/score.dart';
 
-class MemoryOnlyPlayerProgressPersistentStore
-    implements PlayerProgressPersistentStore {
+class MemoryOnlyPlayerProgressPersistence implements PlayerProgressPersistence {
   int level = 0;
 
   List<Score> highestScores = [];
