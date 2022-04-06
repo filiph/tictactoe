@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:games_services/games_services.dart' hide Score;
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -11,6 +10,7 @@ import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
 import 'package:tictactoe/src/audio/audio_controller.dart';
+import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/games_services/score.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
@@ -43,6 +43,7 @@ void main() {
   final flavorIsDefined = checkFlavorDefined();
 
   if (!flavorIsDefined) {
+    // Show a red screen so it's easier to know what went wrong.
     runApp(MaterialApp(
       home: ErrorWidget(StateError('Game was built with undefined flavor')),
     ));
@@ -65,8 +66,11 @@ void main() {
     adsController.initialize();
   }
 
-  if (platformSupportsGameServices) {
-    GamesServices.signIn();
+  GamesServicesController? gamesServicesController;
+  if (platformSupportsGamesServices) {
+    gamesServicesController = GamesServicesController()
+      // Attempts to log the player in.
+      ..initialize();
   }
 
   InAppPurchaseController? inAppPurchaseController;
@@ -86,9 +90,12 @@ void main() {
       playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
       inAppPurchaseController: inAppPurchaseController,
       adsController: adsController,
+      gamesServicesController: gamesServicesController,
     ),
   );
 }
+
+Logger _log = Logger('main.dart');
 
 class MyApp extends StatelessWidget {
   static final _router = GoRouter(
@@ -150,6 +157,8 @@ class MyApp extends StatelessWidget {
 
   final SettingsPersistence settingsPersistence;
 
+  final GamesServicesController? gamesServicesController;
+
   final InAppPurchaseController? inAppPurchaseController;
 
   final AdsController? adsController;
@@ -159,6 +168,7 @@ class MyApp extends StatelessWidget {
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
+    required this.gamesServicesController,
     Key? key,
   }) : super(key: key);
 
@@ -174,6 +184,8 @@ class MyApp extends StatelessWidget {
               return progress;
             },
           ),
+          Provider<GamesServicesController?>.value(
+              value: gamesServicesController),
           Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController),
@@ -222,5 +234,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-Logger _log = Logger('main.dart');

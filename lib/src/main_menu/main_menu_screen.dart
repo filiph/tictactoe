@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/audio/sounds.dart';
+import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
@@ -15,7 +15,9 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const gap = SizedBox(height: 20);
+
     final palette = context.watch<Palette>();
+    final gamesServicesController = context.watch<GamesServicesController>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -55,21 +57,24 @@ class MainMenuScreen extends StatelessWidget {
                 soundEffect: SfxType.erase,
               ),
             ),
-            if (platformSupportsGameServices) ...[
+            if (platformSupportsGamesServices) ...[
               Expanded(
-                child: _hideUntilGameServicesReady(RoughButton(
-                  onTap: () => GamesServices.showAchievements(),
-                  child: const Text('Achievements'),
-                )),
+                child: _hideUntilReady(
+                  ready: gamesServicesController.signedIn,
+                  child: RoughButton(
+                    onTap: () => gamesServicesController.showAchievements(),
+                    child: const Text('Achievements'),
+                  ),
+                ),
               ),
               Expanded(
-                child: _hideUntilGameServicesReady(RoughButton(
-                  onTap: () => GamesServices.showLeaderboards(
-                    iOSLeaderboardID: "tictactoe.highest_score",
-                    androidLeaderboardID: "CgkIgZ29mawJEAIQAQ",
+                child: _hideUntilReady(
+                  ready: gamesServicesController.signedIn,
+                  child: RoughButton(
+                    onTap: () => gamesServicesController.showLeaderboard(),
+                    child: const Text('Leaderboard'),
                   ),
-                  child: const Text('Leaderboard'),
-                )),
+                ),
               ),
             ],
             Expanded(
@@ -107,10 +112,12 @@ class MainMenuScreen extends StatelessWidget {
   /// This normally happens immediately after game start, so players will not
   /// see any flash. The exception is folks who decline to use Game Center
   /// or Google Play Game Services, or who haven't yet set it up.
-  Widget _hideUntilGameServicesReady(Widget child) {
+  Widget _hideUntilReady({required Widget child, required Future<bool> ready}) {
     return FutureBuilder<bool>(
-      future: GamesServices.isSignedIn,
+      future: ready,
       builder: (context, snapshot) {
+        // Use Visibility here so that we have the space for the buttons
+        // ready.
         return Visibility(
           visible: snapshot.data ?? false,
           maintainState: true,

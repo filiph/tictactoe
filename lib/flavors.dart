@@ -35,7 +35,7 @@ final platformSupportsAds = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 
 /// Returns `true` if the platform supports game services (Games Center,
 /// Google Play Games).
-final platformSupportsGameServices =
+final platformSupportsGamesServices =
     !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 
 /// Returns `true` if the platform supports in-app purchases.

@@ -2,16 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:games_services/games_services.dart' as games_services;
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
-import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/ai/ai_opponent.dart';
 import 'package:tictactoe/src/audio/audio_controller.dart';
 import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
+import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/games_services/score.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
@@ -228,9 +227,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     final playerProgress = context.read<PlayerProgress>();
     playerProgress.setLevelReached(widget.level.number);
-    playerProgress.addScore(score);
 
-    /// Let the player see the board just after winning for a bit.
+    // Let the player see the board just after winning for a bit.
     await Future.delayed(_preCelebrationDuration);
     if (!mounted) return;
 
@@ -244,33 +242,22 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       audioController.playSfx(SfxType.congrats);
     }
 
-    /// Send achievements.
-    if (widget.level.achievementIdAndroid != null &&
-        platformSupportsGameServices &&
-        await games_services.GamesServices.isSignedIn) {
-      games_services.GamesServices.unlock(
-        achievement: games_services.Achievement(
-          androidID: widget.level.achievementIdAndroid!,
-          iOSID: widget.level.achievementIdIOS!,
-        ),
-      );
+    final gamesServicesController = context.watch<GamesServicesController?>();
+    if (gamesServicesController != null) {
+      // Award achievement.
+      if (widget.level.awardsAchievement) {
+        gamesServicesController.awardAchievement(
+          android: widget.level.achievementIdAndroid!,
+          iOS: widget.level.achievementIdIOS!,
+        );
+      }
+
+      // Send score to leaderboard.
+      gamesServicesController.submitLeaderboardScore(score);
     }
 
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);
-    if (!mounted) return;
-
-    if (platformSupportsGameServices) {
-      if (await games_services.GamesServices.isSignedIn) {
-        _log.info('Submitting $score to leaderboard.');
-        games_services.GamesServices.submitScore(
-            score: games_services.Score(
-          iOSLeaderboardID: "tictactoe.highest_score",
-          androidLeaderboardID: "CgkIgZ29mawJEAIQAQ",
-          value: score.score,
-        ));
-      }
-    }
     if (!mounted) return;
 
     GoRouter.of(context).go('/play/won', extra: {'score': score});
