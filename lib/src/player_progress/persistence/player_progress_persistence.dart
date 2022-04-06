@@ -1,4 +1,4 @@
-import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/games_services/score.dart';
 
 abstract class PlayerProgressPersistence {
   Future<int> getHighestLevelReached();

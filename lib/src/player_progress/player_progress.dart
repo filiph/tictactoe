@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
-import 'package:tictactoe/src/achievements/score.dart';
+import 'package:tictactoe/src/games_services/score.dart';
+import 'package:tictactoe/src/player_progress/persistence/player_progress_persistence.dart';
 
 class PlayerProgress extends ChangeNotifier {
   final PlayerProgressPersistence _store;
