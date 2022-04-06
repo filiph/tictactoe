@@ -45,7 +45,7 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.done,
             onChanged: (value) {
-              context.read<Settings>().setPlayerName(value);
+              context.read<SettingsController>().setPlayerName(value);
             },
             onSubmitted: (value) {
               // Player tapped 'Submit'/'Done' on their keyboard.
@@ -63,7 +63,7 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
 
   @override
   void didChangeDependencies() {
-    _controller.text = context.read<Settings>().playerName;
+    _controller.text = context.read<SettingsController>().playerName;
     super.didChangeDependencies();
   }
 

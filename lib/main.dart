@@ -189,9 +189,9 @@ class MyApp extends StatelessWidget {
             create: (context) => AudioController()..initialize(),
           ),
           ChangeNotifierProxyProvider2<AudioController,
-              ValueNotifier<AppLifecycleState>, Settings>(
+              ValueNotifier<AppLifecycleState>, SettingsController>(
             lazy: false,
-            create: (context) => Settings(
+            create: (context) => SettingsController(
               persistence: settingsPersistence,
             )..loadStateFromPersistence(),
             update: (context, audioController, lifecycleNotifier, settings) {

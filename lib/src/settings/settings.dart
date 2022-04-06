@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:tictactoe/src/audio/audio_controller.dart';
 import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
 
-class Settings extends ChangeNotifier {
+class SettingsController extends ChangeNotifier {
   bool _muted = false;
 
   final SettingsPersistence _persistence;
@@ -15,7 +15,7 @@ class Settings extends ChangeNotifier {
 
   bool _musicOn = false;
 
-  Settings({required SettingsPersistence persistence})
+  SettingsController({required SettingsPersistence persistence})
       : _persistence = persistence;
 
   bool get musicOn => _musicOn;

@@ -17,7 +17,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.watch<Settings>();
+    final settings = context.watch<SettingsController>();
     final palette = context.watch<Palette>();
 
     return Scaffold(
@@ -104,7 +104,8 @@ class _NameChangeLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = context.select((Settings settings) => settings.playerName);
+    final name =
+        context.select((SettingsController settings) => settings.playerName);
 
     return InkResponse(
       highlightShape: BoxShape.rectangle,

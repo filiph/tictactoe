@@ -83,8 +83,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       fontSize: 24,
                       color: palette.redPen,
                     );
-                final playerName =
-                    context.select((Settings settings) => settings.playerName);
+                final playerName = context.select(
+                    (SettingsController settings) => settings.playerName);
 
                 return _ResponsivePlaySessionScreen(
                   playerName: TextSpan(
@@ -104,7 +104,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ms: ScreenDelays.fourth,
                       delayStateCreation: true,
                       onDelayFinished: () {
-                        final settings = context.read<Settings>();
+                        final settings = context.read<SettingsController>();
                         if (!settings.muted && settings.soundsOn) {
                           final audioController =
                               context.read<AudioController>();
@@ -120,7 +120,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   restartButtonArea: _RestartButton(
                     _resetHint.stream,
                     onTap: () {
-                      final settings = context.read<Settings>();
+                      final settings = context.read<SettingsController>();
                       if (!settings.muted && settings.soundsOn) {
                         final audioController = context.read<AudioController>();
                         audioController.playSfx(SfxType.buttonTap);
@@ -146,7 +146,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ms: ScreenDelays.first,
                     child: InkResponse(
                       onTap: () {
-                        final settings = context.read<Settings>();
+                        final settings = context.read<SettingsController>();
                         if (!settings.muted && settings.soundsOn) {
                           final audioController =
                               context.read<AudioController>();
@@ -165,7 +165,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ms: ScreenDelays.third,
                     child: InkResponse(
                       onTap: () {
-                        final settings = context.read<Settings>();
+                        final settings = context.read<SettingsController>();
                         if (!settings.muted && settings.soundsOn) {
                           final audioController =
                               context.read<AudioController>();
@@ -238,7 +238,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       _duringCelebration = true;
     });
 
-    final settings = context.read<Settings>();
+    final settings = context.read<SettingsController>();
     if (!settings.muted && settings.soundsOn) {
       final audioController = context.read<AudioController>();
       audioController.playSfx(SfxType.congrats);

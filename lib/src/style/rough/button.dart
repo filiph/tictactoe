@@ -33,7 +33,7 @@ class RoughButton extends StatelessWidget {
   void _handleTap(BuildContext context) {
     assert(onTap != null, "Don't call _handleTap when onTap is null");
 
-    final settings = context.read<Settings>();
+    final settings = context.read<SettingsController>();
     if (!settings.muted && settings.soundsOn) {
       final audioController = context.read<AudioController>();
       audioController.playSfx(soundEffect);

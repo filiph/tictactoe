@@ -60,7 +60,7 @@ class _BoardTileState extends State<BoardTile>
       _controller.forward();
 
       // Also, play sound.
-      final settings = context.read<Settings>();
+      final settings = context.read<SettingsController>();
       if (!settings.muted && settings.soundsOn) {
         final audioController = context.read<AudioController>();
         audioController.playSfx(
