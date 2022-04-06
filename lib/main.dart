@@ -8,7 +8,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
-import 'package:tictactoe/src/achievements/achievements_screen.dart';
 import 'package:tictactoe/src/achievements/persistence/local_storage_player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/persistence/player_progress_persistence.dart';
 import 'package:tictactoe/src/achievements/player_progress.dart';
@@ -142,11 +141,6 @@ class MyApp extends StatelessWidget {
               path: 'settings',
               builder: (context, state) =>
                   const SettingsScreen(key: Key('settings')),
-            ),
-            GoRoute(
-              path: 'achievements',
-              builder: (context, state) =>
-                  const AchievementsScreen(key: Key('achievements')),
             ),
           ]),
     ],
