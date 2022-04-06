@@ -17,7 +17,7 @@ class MainMenuScreen extends StatelessWidget {
     const gap = SizedBox(height: 20);
 
     final palette = context.watch<Palette>();
-    final gamesServicesController = context.watch<GamesServicesController>();
+    final gamesServicesController = context.watch<GamesServicesController?>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -44,44 +44,35 @@ class MainMenuScreen extends StatelessWidget {
               Text('‘Lite’ version (for the web)'),
             ],
             gap,
-            Expanded(
-              flex: 2,
-              child: RoughButton(
-                onTap: () {
-                  GoRouter.of(context).go('/play');
-                },
-                child: const Text('Play'),
-                drawRectangle: true,
-                color: palette.redPen,
-                fontSize: 42,
-                soundEffect: SfxType.erase,
-              ),
+            RoughButton(
+              onTap: () {
+                GoRouter.of(context).go('/play');
+              },
+              child: const Text('Play'),
+              drawRectangle: true,
+              color: palette.redPen,
+              fontSize: 42,
+              soundEffect: SfxType.erase,
             ),
-            if (platformSupportsGamesServices) ...[
-              Expanded(
-                child: _hideUntilReady(
-                  ready: gamesServicesController.signedIn,
-                  child: RoughButton(
-                    onTap: () => gamesServicesController.showAchievements(),
-                    child: const Text('Achievements'),
-                  ),
+            if (gamesServicesController != null) ...[
+              _hideUntilReady(
+                ready: gamesServicesController.signedIn,
+                child: RoughButton(
+                  onTap: () => gamesServicesController.showAchievements(),
+                  child: const Text('Achievements'),
                 ),
               ),
-              Expanded(
-                child: _hideUntilReady(
-                  ready: gamesServicesController.signedIn,
-                  child: RoughButton(
-                    onTap: () => gamesServicesController.showLeaderboard(),
-                    child: const Text('Leaderboard'),
-                  ),
+              _hideUntilReady(
+                ready: gamesServicesController.signedIn,
+                child: RoughButton(
+                  onTap: () => gamesServicesController.showLeaderboard(),
+                  child: const Text('Leaderboard'),
                 ),
               ),
             ],
-            Expanded(
-              child: RoughButton(
-                onTap: () => GoRouter.of(context).go('/settings'),
-                child: const Text('Settings'),
-              ),
+            RoughButton(
+              onTap: () => GoRouter.of(context).go('/settings'),
+              child: const Text('Settings'),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 32),

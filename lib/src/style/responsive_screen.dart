@@ -53,15 +53,12 @@ class ResponsiveScreen extends StatelessWidget {
                   child: squarishMainArea,
                 ),
               ),
-              Expanded(
-                flex: 100 - (mainAreaProminence * 100).round(),
-                child: SafeArea(
-                  top: false,
-                  maintainBottomViewPadding: true,
-                  child: Padding(
-                    padding: padding,
-                    child: rectangularMenuArea,
-                  ),
+              SafeArea(
+                top: false,
+                maintainBottomViewPadding: true,
+                child: Padding(
+                  padding: padding,
+                  child: rectangularMenuArea,
                 ),
               ),
             ],
