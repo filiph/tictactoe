@@ -75,11 +75,9 @@ void main() {
     inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance)
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
       // as possible in order not to miss any updates.
-      ..subscribe(InAppPurchase.instance.purchaseStream);
+      ..subscribe();
     // Ask the store what the player has bought already.
-    inAppPurchaseController.restorePurchases().then(
-        (_) => _log.info('In-app purchases restored'),
-        onError: (e) => _log.severe('Could not restore in-app purchases: $e'));
+    inAppPurchaseController.restorePurchases();
   }
 
   _log.info('Starting game in $flavor');

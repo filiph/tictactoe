@@ -11,7 +11,7 @@ class InAppPurchaseController extends ChangeNotifier {
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
-  InAppPurchase? inAppPurchaseInstance;
+  InAppPurchase inAppPurchaseInstance;
 
   AdRemovalPurchase _adRemoval = AdRemovalPurchase.notStarted();
 
@@ -28,8 +28,9 @@ class InAppPurchaseController extends ChangeNotifier {
   /// ```
   ///
   /// In testing, you can of course provide a mock stream.
-  void subscribe(Stream<List<PurchaseDetails>> purchaseStream) {
-    _subscription = purchaseStream.listen((purchaseDetailsList) {
+  void subscribe() {
+    _subscription =
+        inAppPurchaseInstance.purchaseStream.listen((purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
       _subscription?.cancel();
@@ -45,12 +46,17 @@ class InAppPurchaseController extends ChangeNotifier {
   }
 
   Future<void> restorePurchases() async {
-    if (!await inAppPurchaseInstance!.isAvailable()) {
+    if (!await inAppPurchaseInstance.isAvailable()) {
       _reportError('InAppPurchase.instance not available');
       return;
     }
 
-    await inAppPurchaseInstance?.restorePurchases();
+    try {
+      await inAppPurchaseInstance.restorePurchases();
+    } catch (e) {
+      _log.severe('Could not restore in-app purchases: $e');
+    }
+    _log.info('In-app purchases restored');
   }
 
   Future<void> _listenToPurchaseUpdated(
@@ -105,7 +111,7 @@ class InAppPurchaseController extends ChangeNotifier {
 
       if (purchaseDetails.pendingCompletePurchase) {
         // Confirm purchase back to the store.
-        await inAppPurchaseInstance?.completePurchase(purchaseDetails);
+        await inAppPurchaseInstance.completePurchase(purchaseDetails);
       }
     }
   }
@@ -128,13 +134,7 @@ class InAppPurchaseController extends ChangeNotifier {
   }
 
   Future<void> buy() async {
-    if (inAppPurchaseInstance == null) {
-      _reportError('Trying to use in-app purchases on a platform that '
-          "doesn't support them.");
-      return;
-    }
-
-    if (!await inAppPurchaseInstance!.isAvailable()) {
+    if (!await inAppPurchaseInstance.isAvailable()) {
       _reportError('InAppPurchase.instance not available');
       return;
     }
@@ -143,7 +143,7 @@ class InAppPurchaseController extends ChangeNotifier {
     notifyListeners();
 
     _log.info('Querying the store with queryProductDetails()');
-    final response = await inAppPurchaseInstance!
+    final response = await inAppPurchaseInstance
         .queryProductDetails({AdRemovalPurchase.productId});
 
     if (response.error != null) {
@@ -164,8 +164,8 @@ class InAppPurchaseController extends ChangeNotifier {
 
     _log.info('Making the purchase');
     final purchaseParam = PurchaseParam(productDetails: productDetails);
-    final success = await inAppPurchaseInstance!
-        .buyNonConsumable(purchaseParam: purchaseParam);
+    final success = await inAppPurchaseInstance.buyNonConsumable(
+        purchaseParam: purchaseParam);
     _log.info('buyNonConsumable() request was sent with success: $success');
     // The result of the purchase will be reported in the purchaseStream,
     // which is handled in [_listenToPurchaseUpdated].
