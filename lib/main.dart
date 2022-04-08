@@ -24,9 +24,9 @@ import 'package:tictactoe/src/settings/persistence/local_storage_settings_persis
 import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
 import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/settings/settings_screen.dart';
-import 'package:tictactoe/src/snack_bar/snack_bar.dart';
 import 'package:tictactoe/src/style/ink_transition.dart';
 import 'package:tictactoe/src/style/palette.dart';
+import 'package:tictactoe/src/style/snack_bar.dart';
 import 'package:tictactoe/src/win_game/win_game_screen.dart';
 
 void main() {

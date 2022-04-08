@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:tictactoe/src/in_app_purchase/ad_removal.dart';
-import 'package:tictactoe/src/snack_bar/snack_bar.dart';
+import 'package:tictactoe/src/style/snack_bar.dart';
 
 class InAppPurchaseController extends ChangeNotifier {
   static final Logger _log = Logger('InAppPurchases');

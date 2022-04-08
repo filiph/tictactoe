@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
-import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 
 class AdsController {
   final MobileAds _instance;
@@ -25,11 +23,7 @@ class AdsController {
   ///
   /// The work doesn't start immediately so that calling this doesn't have
   /// adverse effects (jank) during start of a new screen.
-  void preloadAd(BuildContext context) {
-    if (_adsRemoved(context)) {
-      return;
-    }
-
+  void preloadAd() {
     final adUnitId = defaultTargetPlatform == TargetPlatform.android
         ? 'ca-app-pub-3940256099942544/6300978111'
         : 'ca-app-pub-3940256099942544/2934735716';
@@ -52,10 +46,4 @@ class AdsController {
     _preloadedAd = null;
     return ad;
   }
-
-  /// Checks whether ads have been removed (via an in-app purchase).
-  ///
-  /// If [InAppPurchaseController] isn't reachable
-  bool _adsRemoved(BuildContext context) =>
-      context.read<InAppPurchaseController?>()?.adRemoval.active ?? false;
 }

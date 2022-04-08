@@ -12,6 +12,7 @@ import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/games_services/score.dart';
+import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/level_selection/levels.dart';
 import 'package:tictactoe/src/play_session/game_board.dart';
 import 'package:tictactoe/src/play_session/hint_snackbar.dart';
@@ -198,8 +199,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     _startOfPlay = DateTime.now();
 
-    final adsController = context.read<AdsController?>();
-    adsController?.preloadAd(context);
+    final adsRemoved =
+        context.read<InAppPurchaseController?>()?.adRemoval.active ?? false;
+    if (!adsRemoved) {
+      final adsController = context.read<AdsController?>();
+      adsController?.preloadAd();
+    }
   }
 
   void _aiOpponentWon() {
