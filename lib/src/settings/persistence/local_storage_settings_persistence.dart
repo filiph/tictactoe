@@ -36,7 +36,7 @@ class LocalStorageSettingsPersistence extends SettingsPersistence {
   }
 
   @override
-  Future<void> saveMute(bool value) async {
+  Future<void> saveMuted(bool value) async {
     final prefs = await instanceFuture;
     await prefs.setBool('mute', value);
   }

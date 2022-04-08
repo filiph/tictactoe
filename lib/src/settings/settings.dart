@@ -42,7 +42,7 @@ class SettingsController {
 
   void toggleMuted() {
     muted.value = !muted.value;
-    _persistence.saveMute(muted.value);
+    _persistence.saveMuted(muted.value);
   }
 
   void toggleSoundsOn() {

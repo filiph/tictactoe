@@ -9,7 +9,7 @@ abstract class SettingsPersistence {
 
   Future<void> saveMusicOn(bool value);
 
-  Future<void> saveMute(bool value);
+  Future<void> saveMuted(bool value);
 
   Future<void> savePlayerName(String value);
 
