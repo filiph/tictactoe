@@ -45,8 +45,8 @@ class RoughGrid extends StatelessWidget {
                 // "bottom-slightly-right-of-center". This achieves the
                 // quick "drawing" of the lines.
                 return LinearGradient(
-                  begin: Alignment(-0.1, -1),
-                  end: Alignment(0.1, 1),
+                  begin: const Alignment(-0.1, -1),
+                  end: const Alignment(0.1, 1),
                   colors: [
                     Colors.black,
                     Colors.white.withOpacity(0),
@@ -85,8 +85,8 @@ class RoughGrid extends StatelessWidget {
               blendMode: BlendMode.dstIn,
               shaderCallback: (Rect bounds) {
                 return LinearGradient(
-                  begin: Alignment(-1, -0.1),
-                  end: Alignment(1, 0.1),
+                  begin: const Alignment(-1, -0.1),
+                  end: const Alignment(1, 0.1),
                   colors: [
                     Colors.black,
                     Colors.white.withOpacity(0),
@@ -192,10 +192,10 @@ class _RoughGridPainter extends CustomPainter {
     final Offset straightSegment;
     final Offset end;
     if (direction == Axis.horizontal) {
-      straightSegment = Offset(segmentLength, 0);
+      straightSegment = const Offset(segmentLength, 0);
       end = start + Offset(length, 0);
     } else {
-      straightSegment = Offset(0, segmentLength);
+      straightSegment = const Offset(0, segmentLength);
       end = start + Offset(0, length);
     }
 

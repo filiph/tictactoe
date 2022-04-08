@@ -7,7 +7,7 @@ import 'package:tictactoe/src/game_internals/board_setting.dart';
 final gameLevels = [
   GameLevel(
     number: 1,
-    setting: BoardSetting(3, 3, 3),
+    setting: const BoardSetting(3, 3, 3),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => RandomOpponent(
       setting,
@@ -18,7 +18,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 2,
-    setting: BoardSetting(5, 5, 4),
+    setting: const BoardSetting(5, 5, 4),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -32,7 +32,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 3,
-    setting: BoardSetting(6, 6, 4),
+    setting: const BoardSetting(6, 6, 4),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -43,7 +43,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 4,
-    setting: BoardSetting(8, 8, 5),
+    setting: const BoardSetting(8, 8, 5),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(
       setting,
@@ -52,7 +52,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 5,
-    setting: BoardSetting(9, 9, 5, aiStarts: true),
+    setting: const BoardSetting(9, 9, 5, aiStarts: true),
     aiDifficulty: 1,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -66,7 +66,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 6,
-    setting: BoardSetting(9, 9, 5),
+    setting: const BoardSetting(9, 9, 5),
     aiDifficulty: 3,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -78,7 +78,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 7,
-    setting: BoardSetting(10, 10, 5),
+    setting: const BoardSetting(10, 10, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -89,7 +89,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 8,
-    setting: BoardSetting(10, 10, 5),
+    setting: const BoardSetting(10, 10, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
@@ -100,7 +100,7 @@ final gameLevels = [
   ),
   GameLevel(
     number: 9,
-    setting: BoardSetting(11, 11, 5),
+    setting: const BoardSetting(11, 11, 5),
     aiDifficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,

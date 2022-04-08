@@ -22,8 +22,8 @@ class LevelSelectionScreen extends StatelessWidget {
           children: [
             DelayedAppear(
               ms: ScreenDelays.first,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
                 child: Center(
                   child: Text(
                     'Select level',
@@ -33,7 +33,7 @@ class LevelSelectionScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             // This is the grid of numbers.
             Expanded(
               child: Center(

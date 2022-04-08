@@ -13,7 +13,7 @@ class InAppPurchaseController extends ChangeNotifier {
 
   InAppPurchase inAppPurchaseInstance;
 
-  AdRemovalPurchase _adRemoval = AdRemovalPurchase.notStarted();
+  AdRemovalPurchase _adRemoval = const AdRemovalPurchase.notStarted();
 
   AdRemovalPurchase get adRemoval => _adRemoval;
 
@@ -72,21 +72,21 @@ class InAppPurchaseController extends ChangeNotifier {
       if (purchaseDetails.productID != AdRemovalPurchase.productId) {
         _log.severe("The handling of the product with id "
             "'${purchaseDetails.productID}' is not implemented.");
-        _adRemoval = AdRemovalPurchase.notStarted();
+        _adRemoval = const AdRemovalPurchase.notStarted();
         notifyListeners();
         continue;
       }
 
       switch (purchaseDetails.status) {
         case PurchaseStatus.pending:
-          _adRemoval = AdRemovalPurchase.pending();
+          _adRemoval = const AdRemovalPurchase.pending();
           notifyListeners();
           break;
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
           bool valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
-            _adRemoval = AdRemovalPurchase.active();
+            _adRemoval = const AdRemovalPurchase.active();
             if (purchaseDetails.status == PurchaseStatus.purchased) {
               showSnackBar('Thank you for your support!');
             }
@@ -104,7 +104,7 @@ class InAppPurchaseController extends ChangeNotifier {
           notifyListeners();
           break;
         case PurchaseStatus.canceled:
-          _adRemoval = AdRemovalPurchase.notStarted();
+          _adRemoval = const AdRemovalPurchase.notStarted();
           notifyListeners();
           break;
       }
@@ -139,7 +139,7 @@ class InAppPurchaseController extends ChangeNotifier {
       return;
     }
 
-    _adRemoval = AdRemovalPurchase.pending();
+    _adRemoval = const AdRemovalPurchase.pending();
     notifyListeners();
 
     _log.info('Querying the store with queryProductDetails()');

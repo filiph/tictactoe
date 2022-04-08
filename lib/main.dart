@@ -69,7 +69,7 @@ void main() {
   GamesServicesController? gamesServicesController;
   if (platformSupportsGamesServices) {
     gamesServicesController = GamesServicesController()
-      // Attempts to log the player in.
+      // Attempt to log the player in.
       ..initialize();
   }
 
@@ -102,12 +102,14 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) => MainMenuScreen(key: Key('main menu')),
+          builder: (context, state) =>
+              const MainMenuScreen(key: Key('main menu')),
           routes: [
             GoRoute(
                 path: 'play',
                 pageBuilder: (context, state) => buildTransition(
-                      child: LevelSelectionScreen(key: Key('level selection')),
+                      child: const LevelSelectionScreen(
+                          key: Key('level selection')),
                       color: context.watch<Palette>().backgroundLevelSelection,
                     ),
                 routes: [
@@ -120,7 +122,7 @@ class MyApp extends StatelessWidget {
                       return buildTransition(
                         child: PlaySessionScreen(
                           level,
-                          key: Key('play session'),
+                          key: const Key('play session'),
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                         flipHorizontally: true,
@@ -136,7 +138,7 @@ class MyApp extends StatelessWidget {
                       return buildTransition(
                         child: WinGameScreen(
                           score: score,
-                          key: Key('win game'),
+                          key: const Key('win game'),
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                         flipHorizontally: true,

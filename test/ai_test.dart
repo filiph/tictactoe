@@ -12,7 +12,7 @@ void main() {
     late AiOpponent opponent;
 
     setUp(() {
-      setting = BoardSetting(5, 5, 4);
+      setting = const BoardSetting(5, 5, 4);
       opponent = AttackOnlyScoringOpponent(setting, name: 'Test');
     });
 
@@ -28,7 +28,7 @@ void main() {
       );
 
       final tile = opponent.chooseNextMove(state);
-      expect(tile, anyOf(Tile(0, 4), Tile(4, 0)));
+      expect(tile, anyOf(const Tile(0, 4), const Tile(4, 0)));
     });
   });
 
@@ -37,7 +37,7 @@ void main() {
     late AiOpponent opponent;
 
     setUp(() {
-      setting = BoardSetting(5, 5, 4);
+      setting = const BoardSetting(5, 5, 4);
       opponent = HumanlikeOpponent(
         setting,
         name: 'Test',
@@ -58,7 +58,7 @@ void main() {
       );
 
       final tile = opponent.chooseNextMove(state);
-      expect(tile, Tile(0, 4));
+      expect(tile, const Tile(0, 4));
 
       final state2 = makeBoard(
         setting,
@@ -71,7 +71,7 @@ void main() {
       );
 
       final tile2 = opponent.chooseNextMove(state2);
-      expect(tile2, Tile(4, 0));
+      expect(tile2, const Tile(4, 0));
     });
   });
 }

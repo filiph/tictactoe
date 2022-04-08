@@ -111,7 +111,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         }
                       },
                       child: Board(
-                        key: Key('main board'),
+                        key: const Key('main board'),
                         setting: widget.level.setting,
                       ),
                     ),
@@ -332,7 +332,7 @@ class _RestartButtonState extends State<_RestartButton>
               scale: _bump.animate(_controller),
               child: Image.asset('assets/images/restart.png'),
             ),
-            Text(
+            const Text(
               'Restart',
               style: TextStyle(
                 fontFamily: 'Permanent Marker',
@@ -521,7 +521,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
                         padding: padding,
                         child: settingsButtonArea,
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Padding(
                         padding: padding,
                         child: restartButtonArea,

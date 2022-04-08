@@ -22,7 +22,7 @@ class PreloadedBannerAd {
     required this.size,
     required this.adUnitId,
     AdRequest? adRequest,
-  }) : _adRequest = adRequest ?? AdRequest();
+  }) : _adRequest = adRequest ?? const AdRequest();
 
   Future<BannerAd> get ready => _adCompleter.future;
 

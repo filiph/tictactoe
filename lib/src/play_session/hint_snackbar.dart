@@ -32,7 +32,7 @@ void showHintSnackbar(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: text,
-      margin: EdgeInsets.only(bottom: 30, left: 24, right: 24),
+      margin: const EdgeInsets.only(bottom: 30, left: 24, right: 24),
       behavior: SnackBarBehavior.floating,
       duration: duration,
       backgroundColor: palette.backgroundLevelSelection,

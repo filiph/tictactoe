@@ -96,7 +96,7 @@ class _BoardTileState extends State<BoardTile>
         CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
     switch (owner) {
       case Side.none:
-        representation = SizedBox.expand();
+        representation = const SizedBox.expand();
         break;
       case Side.x:
         representation = _SketchedX(
@@ -296,7 +296,7 @@ class _SketchedO extends StatelessWidget {
               blendMode: BlendMode.dstIn,
               shaderCallback: (bounds) {
                 return SweepGradient(
-                  transform: GradientRotation(-110 / 180 * math.pi),
+                  transform: const GradientRotation(-110 / 180 * math.pi),
                   colors: [
                     Colors.black,
                     Colors.white.withOpacity(0),

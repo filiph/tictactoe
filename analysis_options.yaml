@@ -2,5 +2,5 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    prefer_const_constructors: false  # Annoying in early development.
-    prefer_const_literals_to_create_immutables: false  # Annoying in early development.
+    # Example on how to turn off lints.
+    # prefer_const_constructors: false  # Annoying in early development.

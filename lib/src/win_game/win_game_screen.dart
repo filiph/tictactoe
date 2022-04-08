@@ -37,14 +37,14 @@ class WinGameScreen extends StatelessWidget {
                 // won't even import the code for ad serving. Tree shaking ftw.
                 !kIsWeb &&
                 platformSupportsAds) ...[
-              Expanded(
+              const Expanded(
                 child: Center(
                   child: BannerAdWidget(),
                 ),
               ),
             ],
             gap,
-            Center(
+            const Center(
               child: Text(
                 'You won!',
                 style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
@@ -55,14 +55,15 @@ class WinGameScreen extends StatelessWidget {
               child: Text(
                 'Score: ${score.score}\n'
                 'Time: ${score.formattedTime}',
-                style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 20),
+                style: const TextStyle(
+                    fontFamily: 'Permanent Marker', fontSize: 20),
               ),
             ),
             gap,
             Center(
               child: TextButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('NOT IMPLEMENTED YET, but this could use '
                         'Firebase / Google Cloud to save the finished game '
                         'board as a picture, so that the share is interesting'),
@@ -70,7 +71,7 @@ class WinGameScreen extends StatelessWidget {
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.share),
                     SizedBox(width: 10),
                     Text('Share'),

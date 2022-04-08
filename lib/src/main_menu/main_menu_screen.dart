@@ -41,7 +41,7 @@ class MainMenuScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (flavor == Flavor.lite) ...[
-              Text('‘Lite’ version (for the web)'),
+              const Text('‘Lite’ version (for the web)'),
             ],
             gap,
             RoughButton(
@@ -89,7 +89,7 @@ class MainMenuScreen extends StatelessWidget {
               ),
             ),
             gap,
-            Text('Music by Mr Smith'),
+            const Text('Music by Mr Smith'),
             gap,
           ],
         ),

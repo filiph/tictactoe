@@ -85,7 +85,7 @@ class _InkRevealState extends State<_InkReveal> {
       fit: StackFit.expand,
       children: [
         AnimatedSprite(
-          image: AssetImage('assets/images/scribble_sprites.png'),
+          image: const AssetImage('assets/images/scribble_sprites.png'),
           frameWidth: 250,
           frameHeight: 541,
           frameCount: 12,

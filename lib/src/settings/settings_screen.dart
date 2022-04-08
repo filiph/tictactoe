@@ -36,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             _gap,
-            _NameChangeLine(
+            const _NameChangeLine(
               'Name',
             ),
             _SettingsLine(
@@ -55,11 +55,11 @@ class SettingsScreen extends StatelessWidget {
                 Widget icon;
                 VoidCallback? callback;
                 if (inAppPurchase.adRemoval.active) {
-                  icon = Icon(Icons.check);
+                  icon = const Icon(Icons.check);
                 } else if (inAppPurchase.adRemoval.pending) {
-                  icon = CircularProgressIndicator();
+                  icon = const CircularProgressIndicator();
                 } else {
-                  icon = Icon(Icons.ad_units);
+                  icon = const Icon(Icons.ad_units);
                   callback = () {
                     inAppPurchase.buy();
                   };
@@ -72,14 +72,15 @@ class SettingsScreen extends StatelessWidget {
               }),
             _SettingsLine(
               'Reset progress',
-              Icon(Icons.delete),
+              const Icon(Icons.delete),
               onSelected: () {
                 context.read<PlayerProgress>().reset();
 
                 final messenger = ScaffoldMessenger.of(context);
                 messenger.clearSnackBars();
                 messenger.showSnackBar(
-                  SnackBar(content: Text('Player progress has been reset.')),
+                  const SnackBar(
+                      content: Text('Player progress has been reset.')),
                 );
               },
             ),
@@ -116,14 +117,14 @@ class _NameChangeLine extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Permanent Marker',
                   fontSize: 30,
                 )),
-            Spacer(),
+            const Spacer(),
             Text(
               '‘$name’',
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Permanent Marker',
                 fontSize: 30,
               ),
@@ -156,11 +157,11 @@ class _SettingsLine extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Permanent Marker',
                   fontSize: 30,
                 )),
-            Spacer(),
+            const Spacer(),
             icon,
           ],
         ),

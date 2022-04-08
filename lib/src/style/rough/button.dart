@@ -90,9 +90,9 @@ class RoughButton extends StatelessWidget {
 }
 
 class _RoughBox extends StatefulWidget {
-  final ImageProvider image = AssetImage('assets/images/box.png');
+  final ImageProvider image = const AssetImage('assets/images/box.png');
 
-  _RoughBox({Key? key}) : super(key: key);
+  const _RoughBox({Key? key}) : super(key: key);
 
   @override
   State<_RoughBox> createState() => _RoughBoxState();
@@ -174,7 +174,7 @@ class _RoughBoxPainter extends CustomPainter {
       canvas: canvas,
       rect: Rect.fromLTWH(0, 0, size.width, size.height),
       image: image,
-      centerSlice: Rect.fromLTRB(5, 5, 5, 5),
+      centerSlice: const Rect.fromLTRB(5, 5, 5, 5),
       fit: BoxFit.fitWidth,
     );
     // canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint());

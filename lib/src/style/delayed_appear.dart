@@ -43,7 +43,7 @@ class _DelayedAppearState extends State<DelayedAppear>
   @override
   Widget build(BuildContext context) {
     if (!_delayFinished && widget.delayStateCreation) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return FadeTransition(
       opacity: _fadeController,
