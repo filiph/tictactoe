@@ -39,15 +39,21 @@ class SettingsScreen extends StatelessWidget {
             const _NameChangeLine(
               'Name',
             ),
-            _SettingsLine(
-              'Sound FX',
-              Icon(settings.soundsOn ? Icons.graphic_eq : Icons.volume_off),
-              onSelected: () => settings.toggleSoundsOn(),
+            ValueListenableBuilder<bool>(
+              valueListenable: settings.soundsOn,
+              builder: (context, soundsOn, child) => _SettingsLine(
+                'Sound FX',
+                Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
+                onSelected: () => settings.toggleSoundsOn(),
+              ),
             ),
-            _SettingsLine(
-              'Music',
-              Icon(settings.musicOn ? Icons.music_note : Icons.music_off),
-              onSelected: () => settings.toggleMusicOn(),
+            ValueListenableBuilder<bool>(
+              valueListenable: settings.musicOn,
+              builder: (context, musicOn, child) => _SettingsLine(
+                'Music',
+                Icon(musicOn ? Icons.music_note : Icons.music_off),
+                onSelected: () => settings.toggleMusicOn(),
+              ),
             ),
             if (platformSupportsInAppPurchases)
               Consumer<InAppPurchaseController>(
@@ -105,8 +111,7 @@ class _NameChangeLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name =
-        context.select((SettingsController settings) => settings.playerName);
+    final settings = context.watch<SettingsController>();
 
     return InkResponse(
       highlightShape: BoxShape.rectangle,
@@ -122,11 +127,14 @@ class _NameChangeLine extends StatelessWidget {
                   fontSize: 30,
                 )),
             const Spacer(),
-            Text(
-              '‘$name’',
-              style: const TextStyle(
-                fontFamily: 'Permanent Marker',
-                fontSize: 30,
+            ValueListenableBuilder(
+              valueListenable: settings.playerName,
+              builder: (context, name, child) => Text(
+                '‘$name’',
+                style: const TextStyle(
+                  fontFamily: 'Permanent Marker',
+                  fontSize: 30,
+                ),
               ),
             ),
           ],

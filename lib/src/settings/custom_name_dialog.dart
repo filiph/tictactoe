@@ -63,7 +63,7 @@ class _CustomNameDialogState extends State<CustomNameDialog> {
 
   @override
   void didChangeDependencies() {
-    _controller.text = context.read<SettingsController>().playerName;
+    _controller.text = context.read<SettingsController>().playerName.value;
     super.didChangeDependencies();
   }
 

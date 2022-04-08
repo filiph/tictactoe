@@ -1,44 +1,21 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
-import 'package:tictactoe/src/audio/audio_controller.dart';
 import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
 
-class SettingsController extends ChangeNotifier {
-  bool _muted = false;
-
+class SettingsController {
   final SettingsPersistence _persistence;
-
-  AudioController? _audioController;
-
-  bool _soundsOn = false;
-
-  bool _musicOn = false;
-
-  SettingsController({required SettingsPersistence persistence})
-      : _persistence = persistence;
-
-  bool get musicOn => _musicOn;
-
-  String get playerName => _playerName;
-
-  String _playerName = 'Player';
 
   /// Whether or not the sound is on at all. This overrides both music
   /// and sound.
-  bool get muted => _muted;
+  ValueNotifier<bool> muted = ValueNotifier(false);
 
-  bool get soundsOn => _soundsOn;
+  ValueNotifier<String> playerName = ValueNotifier('Player');
 
-  void attachAudioController(AudioController audioController) {
-    if (audioController == _audioController) {
-      return;
-    }
-    _audioController = audioController;
-    if (!_muted && _musicOn) {
-      _audioController!.startMusic();
-    }
-  }
+  ValueNotifier<bool> soundsOn = ValueNotifier(false);
+
+  ValueNotifier<bool> musicOn = ValueNotifier(false);
+
+  SettingsController({required SettingsPersistence persistence})
+      : _persistence = persistence;
 
   Future<void> loadStateFromPersistence() async {
     await Future.wait([
@@ -46,90 +23,30 @@ class SettingsController extends ChangeNotifier {
       /// On the web, sound can only start after user interaction.
       _persistence
           .getMuted(defaultValue: kIsWeb)
-          .then((value) => _muted = value),
-      _persistence.getSoundsOn().then((value) => _soundsOn = value),
-      _persistence.getMusicOn().then((value) => _musicOn = value),
-      _persistence.getPlayerName().then((value) => _playerName = value),
+          .then((value) => muted.value = value),
+      _persistence.getSoundsOn().then((value) => soundsOn.value = value),
+      _persistence.getMusicOn().then((value) => musicOn.value = value),
+      _persistence.getPlayerName().then((value) => playerName.value = value),
     ]);
-    if (_muted) {
-      _audioController?.stopAllSound();
-    } else {
-      if (_musicOn) {
-        _audioController?.resumeMusic();
-      }
-    }
-    notifyListeners();
-  }
-
-  void toggleMusicOn() {
-    _musicOn = !_musicOn;
-    if (_musicOn) {
-      if (!_muted) {
-        _audioController?.resumeMusic();
-      }
-    } else {
-      _audioController?.stopMusic();
-    }
-    notifyListeners();
-    _persistence.saveMusicOn(_musicOn);
   }
 
   void setPlayerName(String name) {
-    _playerName = name;
-    notifyListeners();
-    _persistence.savePlayerName(_playerName);
+    playerName.value = name;
+    _persistence.savePlayerName(playerName.value);
+  }
+
+  void toggleMusicOn() {
+    musicOn.value = !musicOn.value;
+    _persistence.saveMusicOn(musicOn.value);
   }
 
   void toggleMuted() {
-    _muted = !_muted;
-    if (_muted) {
-      _audioController?.stopAllSound();
-    } else {
-      if (_musicOn) {
-        _audioController?.resumeMusic();
-      }
-    }
-    notifyListeners();
-    _persistence.saveMute(_muted);
+    muted.value = !muted.value;
+    _persistence.saveMute(muted.value);
   }
 
   void toggleSoundsOn() {
-    _soundsOn = !_soundsOn;
-    notifyListeners();
-    _persistence.saveSoundsOn(_soundsOn);
-  }
-
-  ValueNotifier<AppLifecycleState>? _lifecycleNotifier;
-
-  void attachLifecycleNotifier(
-      ValueNotifier<AppLifecycleState> lifecycleNotifier) {
-    if (_lifecycleNotifier != null) {
-      _lifecycleNotifier!.removeListener(_handleAppLifecycle);
-    }
-    _lifecycleNotifier = lifecycleNotifier;
-    _lifecycleNotifier?.addListener(_handleAppLifecycle);
-  }
-
-  @override
-  void dispose() {
-    _lifecycleNotifier?.removeListener(_handleAppLifecycle);
-    super.dispose();
-  }
-
-  void _handleAppLifecycle() {
-    switch (_lifecycleNotifier!.value) {
-      case AppLifecycleState.paused:
-      case AppLifecycleState.detached:
-        _audioController?.stopAllSound();
-        break;
-      case AppLifecycleState.resumed:
-        if (!_muted && _musicOn) {
-          _audioController?.resumeMusic();
-        }
-        break;
-      case AppLifecycleState.inactive:
-        // No need to react to this state change.
-        break;
-    }
+    soundsOn.value = !soundsOn.value;
+    _persistence.saveSoundsOn(soundsOn.value);
   }
 }

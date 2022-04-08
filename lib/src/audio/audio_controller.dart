@@ -6,9 +6,10 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:tictactoe/src/audio/songs.dart';
 import 'package:tictactoe/src/audio/sounds.dart';
+import 'package:tictactoe/src/settings/settings.dart';
 
-class AudioController extends ChangeNotifier {
-  static final _log = Logger('AudioSystem');
+class AudioController {
+  static final _log = Logger('AudioController');
 
   late AudioCache _musicCache;
 
@@ -27,6 +28,12 @@ class AudioController extends ChangeNotifier {
   int _currentSfxPlayer = 0;
 
   final Queue<Song> _playlist;
+
+  final Random _random = Random();
+
+  SettingsController? _settings;
+
+  ValueNotifier<AppLifecycleState>? _lifecycleNotifier;
 
   /// Creates an instance that plays music and sound.
   ///
@@ -58,22 +65,126 @@ class AudioController extends ChangeNotifier {
     _musicPlayer.onPlayerCompletion.listen(_changeSong);
   }
 
-  @override
+  void attachLifecycleNotifier(
+      ValueNotifier<AppLifecycleState> lifecycleNotifier) {
+    if (_lifecycleNotifier != null) {
+      _lifecycleNotifier!.removeListener(_handleAppLifecycle);
+    }
+    _lifecycleNotifier = lifecycleNotifier;
+    _lifecycleNotifier?.addListener(_handleAppLifecycle);
+  }
+
+  void attachSettings(SettingsController settingsController) {
+    if (_settings == settingsController) {
+      // Already attached to this instance. Nothing to do.
+      return;
+    }
+
+    if (_settings != null) {
+      _settings!.muted.removeListener(_mutedHandler);
+      _settings!.musicOn.removeListener(_musicOnHandler);
+      _settings!.soundsOn.removeListener(_soundsOnHandler);
+    }
+
+    _settings = settingsController;
+
+    _settings!.muted.addListener(_mutedHandler);
+    _settings!.musicOn.addListener(_musicOnHandler);
+    _settings!.soundsOn.addListener(_soundsOnHandler);
+
+    if (!_settings!.muted.value && _settings!.musicOn.value) {
+      _startMusic();
+    }
+  }
+
   void dispose() {
-    stopAllSound();
+    _lifecycleNotifier?.removeListener(_handleAppLifecycle);
+    _stopAllSound();
     _musicPlayer.dispose();
     for (final player in _sfxPlayers) {
       player.dispose();
     }
-    super.dispose();
   }
 
-  void startMusic() {
-    _log.info('starting music');
+  void initialize() async {
+    _log.info('Preloading sound effects');
+    await _sfxCache
+        .loadAll(SfxType.values.expand(soundTypeToFilename).toList());
+  }
+
+  void playSfx(SfxType type) {
+    final muted = _settings?.muted.value ?? true;
+    if (muted) {
+      _log.info(() => 'Ignoring playing sound ($type) because audio is muted.');
+      return;
+    }
+    final soundsOn = _settings?.soundsOn.value ?? false;
+    if (!soundsOn) {
+      _log.info(() =>
+          'Ignoring playing sound ($type) because sounds are turned off.');
+      return;
+    }
+
+    _log.info(() => 'Playing sound: $type');
+    final options = soundTypeToFilename(type);
+    final filename = options[_random.nextInt(options.length)];
+    _log.info(() => '- Chosen filename: $filename');
+    _sfxCache.play(filename, volume: soundTypeToVolume(type));
+    _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
+    _sfxCache.fixedPlayer = _sfxPlayers[_currentSfxPlayer];
+  }
+
+  void _changeSong(void _) {
+    _log.info('Last song finished playing.');
+    // Put the song that just finished playing to the end of the playlist.
+    _playlist.addLast(_playlist.removeFirst());
+    // Play the next song.
+    _log.info(() => 'Playing ${_playlist.first} now.');
     _musicCache.play(_playlist.first.filename);
   }
 
-  void resumeMusic() async {
+  void _handleAppLifecycle() {
+    switch (_lifecycleNotifier!.value) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        _stopAllSound();
+        break;
+      case AppLifecycleState.resumed:
+        if (!_settings!.muted.value && _settings!.musicOn.value) {
+          _resumeMusic();
+        }
+        break;
+      case AppLifecycleState.inactive:
+        // No need to react to this state change.
+        break;
+    }
+  }
+
+  void _musicOnHandler() {
+    if (_settings!.musicOn.value) {
+      // Music got turned on.
+      if (!_settings!.muted.value) {
+        _resumeMusic();
+      }
+    } else {
+      // Music got turned off.
+      _stopMusic();
+    }
+  }
+
+  void _mutedHandler() {
+    if (_settings!.muted.value) {
+      // All sound just got muted.
+      _stopAllSound();
+    } else {
+      // All sound just got un-muted.
+      if (_settings!.musicOn.value) {
+        _resumeMusic();
+      }
+    }
+  }
+
+  void _resumeMusic() async {
     _log.info('Resuming music');
     switch (_musicPlayer.state) {
       case PlayerState.PAUSED:
@@ -105,7 +216,20 @@ class AudioController extends ChangeNotifier {
     }
   }
 
-  void stopAllSound() {
+  void _soundsOnHandler() {
+    for (final player in _sfxPlayers) {
+      if (player.state == PlayerState.PLAYING) {
+        player.stop();
+      }
+    }
+  }
+
+  void _startMusic() {
+    _log.info('starting music');
+    _musicCache.play(_playlist.first.filename);
+  }
+
+  void _stopAllSound() {
     if (_musicPlayer.state == PlayerState.PLAYING) {
       _musicPlayer.pause();
     }
@@ -114,34 +238,7 @@ class AudioController extends ChangeNotifier {
     }
   }
 
-  final Random _random = Random();
-
-  void playSfx(SfxType type) {
-    _log.info(() => 'Playing sound: $type');
-    final options = soundTypeToFilename(type);
-    final filename = options[_random.nextInt(options.length)];
-    _log.info(() => '- Chosen filename: $filename');
-    _sfxCache.play(filename, volume: soundTypeToVolume(type));
-    _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
-    _sfxCache.fixedPlayer = _sfxPlayers[_currentSfxPlayer];
-  }
-
-  void initialize() async {
-    _log.info('Preloading sound effects');
-    await _sfxCache
-        .loadAll(SfxType.values.expand(soundTypeToFilename).toList());
-  }
-
-  void _changeSong(void _) {
-    _log.info('Last song finished playing.');
-    // Put the song that just finished playing to the end of the playlist.
-    _playlist.addLast(_playlist.removeFirst());
-    // Play the next song.
-    _log.info(() => 'Playing ${_playlist.first} now.');
-    _musicCache.play(_playlist.first.filename);
-  }
-
-  void stopMusic() {
+  void _stopMusic() {
     _log.info('Stopping music');
     if (_musicPlayer.state == PlayerState.PLAYING) {
       _musicPlayer.pause();

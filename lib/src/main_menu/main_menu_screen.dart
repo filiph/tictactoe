@@ -18,6 +18,7 @@ class MainMenuScreen extends StatelessWidget {
 
     final palette = context.watch<Palette>();
     final gamesServicesController = context.watch<GamesServicesController?>();
+    final settingsController = context.watch<SettingsController>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -76,13 +77,11 @@ class MainMenuScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 32),
-              child: Selector<SettingsController, bool>(
-                selector: (context, settings) => settings.muted,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: settingsController.muted,
                 builder: (context, muted, child) {
                   return IconButton(
-                    onPressed: () {
-                      context.read<SettingsController>().toggleMuted();
-                    },
+                    onPressed: () => settingsController.toggleMuted(),
                     icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
                   );
                 },

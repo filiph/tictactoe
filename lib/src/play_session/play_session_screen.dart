@@ -47,6 +47,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsController>();
     final palette = context.watch<Palette>();
 
     return MultiProvider(
@@ -76,111 +77,100 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           backgroundColor: palette.backgroundPlaySession,
           body: Stack(
             children: [
-              Builder(builder: (context) {
-                final textStyle = DefaultTextStyle.of(context).style.copyWith(
-                      fontFamily: 'Permanent Marker',
-                      fontSize: 24,
-                      color: palette.redPen,
-                    );
-                final playerName = context.select(
-                    (SettingsController settings) => settings.playerName);
+              ValueListenableBuilder<String>(
+                valueListenable: settings.playerName,
+                builder: (context, playerName, child) {
+                  final textStyle = DefaultTextStyle.of(context).style.copyWith(
+                        fontFamily: 'Permanent Marker',
+                        fontSize: 24,
+                        color: palette.redPen,
+                      );
 
-                return _ResponsivePlaySessionScreen(
-                  playerName: TextSpan(
-                    text: playerName,
-                    style: textStyle,
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => showCustomNameDialog(context),
-                  ),
-                  opponentName: TextSpan(
-                    text: opponent.name,
-                    style: textStyle,
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
-                  ),
-                  mainBoardArea: Center(
-                    child: DelayedAppear(
-                      ms: ScreenDelays.fourth,
-                      delayStateCreation: true,
-                      onDelayFinished: () {
-                        final settings = context.read<SettingsController>();
-                        if (!settings.muted && settings.soundsOn) {
+                  return _ResponsivePlaySessionScreen(
+                    playerName: TextSpan(
+                      text: playerName,
+                      style: textStyle,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => showCustomNameDialog(context),
+                    ),
+                    opponentName: TextSpan(
+                      text: opponent.name,
+                      style: textStyle,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
+                    ),
+                    mainBoardArea: Center(
+                      child: DelayedAppear(
+                        ms: ScreenDelays.fourth,
+                        delayStateCreation: true,
+                        onDelayFinished: () {
                           final audioController =
                               context.read<AudioController>();
                           audioController.playSfx(SfxType.drawGrid);
-                        }
-                      },
-                      child: Board(
-                        key: const Key('main board'),
-                        setting: widget.level.setting,
+                        },
+                        child: Board(
+                          key: const Key('main board'),
+                          setting: widget.level.setting,
+                        ),
                       ),
                     ),
-                  ),
-                  restartButtonArea: _RestartButton(
-                    _resetHint.stream,
-                    onTap: () {
-                      final settings = context.read<SettingsController>();
-                      if (!settings.muted && settings.soundsOn) {
+                    restartButtonArea: _RestartButton(
+                      _resetHint.stream,
+                      onTap: () {
                         final audioController = context.read<AudioController>();
                         audioController.playSfx(SfxType.buttonTap);
-                      }
 
-                      context.read<BoardState>().clearBoard();
-                      _startOfPlay = DateTime.now();
+                        context.read<BoardState>().clearBoard();
+                        _startOfPlay = DateTime.now();
 
-                      Future.delayed(const Duration(milliseconds: 200))
-                          .then((_) {
-                        if (!mounted) return;
-                        context.read<BoardState>().initialize();
-                      });
+                        Future.delayed(const Duration(milliseconds: 200))
+                            .then((_) {
+                          if (!mounted) return;
+                          context.read<BoardState>().initialize();
+                        });
 
-                      Future.delayed(const Duration(milliseconds: 1000))
-                          .then((_) {
-                        if (!mounted) return;
-                        showHintSnackbar(context);
-                      });
-                    },
-                  ),
-                  backButtonArea: DelayedAppear(
-                    ms: ScreenDelays.first,
-                    child: InkResponse(
-                      onTap: () {
-                        final settings = context.read<SettingsController>();
-                        if (!settings.muted && settings.soundsOn) {
+                        Future.delayed(const Duration(milliseconds: 1000))
+                            .then((_) {
+                          if (!mounted) return;
+                          showHintSnackbar(context);
+                        });
+                      },
+                    ),
+                    backButtonArea: DelayedAppear(
+                      ms: ScreenDelays.first,
+                      child: InkResponse(
+                        onTap: () {
                           final audioController =
                               context.read<AudioController>();
                           audioController.playSfx(SfxType.buttonTap);
-                        }
 
-                        GoRouter.of(context).pop();
-                      },
-                      child: Tooltip(
-                        message: 'Back',
-                        child: Image.asset('assets/images/back.png'),
+                          GoRouter.of(context).pop();
+                        },
+                        child: Tooltip(
+                          message: 'Back',
+                          child: Image.asset('assets/images/back.png'),
+                        ),
                       ),
                     ),
-                  ),
-                  settingsButtonArea: DelayedAppear(
-                    ms: ScreenDelays.third,
-                    child: InkResponse(
-                      onTap: () {
-                        final settings = context.read<SettingsController>();
-                        if (!settings.muted && settings.soundsOn) {
+                    settingsButtonArea: DelayedAppear(
+                      ms: ScreenDelays.third,
+                      child: InkResponse(
+                        onTap: () {
                           final audioController =
                               context.read<AudioController>();
                           audioController.playSfx(SfxType.buttonTap);
-                        }
 
-                        GoRouter.of(context).push('/settings');
-                      },
-                      child: Tooltip(
-                        message: 'Settings',
-                        child: Image.asset('assets/images/settings.png'),
+                          GoRouter.of(context).push('/settings');
+                        },
+                        child: Tooltip(
+                          message: 'Settings',
+                          child: Image.asset('assets/images/settings.png'),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
               SizedBox.expand(
                 child: Visibility(
                   visible: _duringCelebration,
@@ -236,13 +226,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       _duringCelebration = true;
     });
 
-    final settings = context.read<SettingsController>();
-    if (!settings.muted && settings.soundsOn) {
-      final audioController = context.read<AudioController>();
-      audioController.playSfx(SfxType.congrats);
-    }
+    final audioController = context.read<AudioController>();
+    audioController.playSfx(SfxType.congrats);
 
-    final gamesServicesController = context.watch<GamesServicesController?>();
+    final gamesServicesController = context.read<GamesServicesController?>();
     if (gamesServicesController != null) {
       // Award achievement.
       if (widget.level.awardsAchievement) {

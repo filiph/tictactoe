@@ -191,21 +191,22 @@ class MyApp extends StatelessWidget {
           Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController),
-          ChangeNotifierProvider<AudioController>(
-            create: (context) => AudioController()..initialize(),
-          ),
-          ChangeNotifierProxyProvider2<AudioController,
-              ValueNotifier<AppLifecycleState>, SettingsController>(
+          Provider<SettingsController>(
             lazy: false,
             create: (context) => SettingsController(
               persistence: settingsPersistence,
             )..loadStateFromPersistence(),
-            update: (context, audioController, lifecycleNotifier, settings) {
-              if (settings == null) throw ArgumentError.notNull();
-              settings.attachAudioController(audioController);
-              settings.attachLifecycleNotifier(lifecycleNotifier);
-              return settings;
+          ),
+          ProxyProvider2<SettingsController, ValueNotifier<AppLifecycleState>,
+              AudioController>(
+            create: (context) => AudioController()..initialize(),
+            update: (context, settings, lifecycleNotifier, audio) {
+              if (audio == null) throw ArgumentError.notNull();
+              audio.attachSettings(settings);
+              audio.attachLifecycleNotifier(lifecycleNotifier);
+              return audio;
             },
+            dispose: (context, audio) => audio.dispose(),
           ),
           Provider(
             create: (context) => Palette(),
