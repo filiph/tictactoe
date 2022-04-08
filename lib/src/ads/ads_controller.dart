@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 
 class AdsController {
@@ -8,7 +7,7 @@ class AdsController {
 
   PreloadedBannerAd? _preloadedAd;
 
-  AdsController(this._instance) : assert(platformSupportsAds);
+  AdsController(this._instance);
 
   void dispose() {
     _preloadedAd?.dispose();

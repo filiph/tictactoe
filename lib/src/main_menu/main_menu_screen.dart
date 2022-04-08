@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/settings/settings.dart';
@@ -41,10 +40,6 @@ class MainMenuScreen extends StatelessWidget {
         rectangularMenuArea: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (flavor == Flavor.lite) ...[
-              const Text('‘Lite’ version (for the web)'),
-            ],
-            gap,
             RoughButton(
               onTap: () {
                 GoRouter.of(context).go('/play');

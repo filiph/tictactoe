@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +8,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
 import 'package:tictactoe/src/audio/audio_controller.dart';
@@ -40,16 +41,6 @@ void main() {
         '${record.message}');
   });
 
-  final flavorIsDefined = checkFlavorDefined();
-
-  if (!flavorIsDefined) {
-    // Show a red screen so it's easier to know what went wrong.
-    runApp(MaterialApp(
-      home: ErrorWidget(StateError('Game was built with undefined flavor')),
-    ));
-    return;
-  }
-
   WidgetsFlutterBinding.ensureInitialized();
 
   _log.info('Going full screen');
@@ -58,7 +49,7 @@ void main() {
   );
 
   AdsController? adsController;
-  if (!kIsWeb && platformSupportsAds) {
+  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
     /// Prepare the google_mobile_ads plugin so that the first ad loads
     /// faster. This can be done later or with a delay if startup
     /// experience suffers.
@@ -67,14 +58,14 @@ void main() {
   }
 
   GamesServicesController? gamesServicesController;
-  if (platformSupportsGamesServices) {
+  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
     gamesServicesController = GamesServicesController()
       // Attempt to log the player in.
       ..initialize();
   }
 
   InAppPurchaseController? inAppPurchaseController;
-  if (platformSupportsInAppPurchases) {
+  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
     inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance)
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
       // as possible in order not to miss any updates.
@@ -83,7 +74,6 @@ void main() {
     inAppPurchaseController.restorePurchases();
   }
 
-  _log.info('Starting game in $flavor');
   runApp(
     MyApp(
       settingsPersistence: LocalStorageSettingsPersistence(),

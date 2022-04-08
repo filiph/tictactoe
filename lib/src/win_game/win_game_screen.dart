@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/flavors.dart';
+import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/ads/banner_ad_widget.dart';
 import 'package:tictactoe/src/games_services/score.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
@@ -20,6 +19,7 @@ class WinGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adsControllerAvailable = context.watch<AdsController?>() != null;
     final adsRemoved =
         context.watch<InAppPurchaseController?>()?.adRemoval.active ?? false;
     final palette = context.watch<Palette>();
@@ -32,11 +32,7 @@ class WinGameScreen extends StatelessWidget {
         squarishMainArea: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (!adsRemoved &&
-                // Since this is a compile-time constant, the web version
-                // won't even import the code for ad serving. Tree shaking ftw.
-                !kIsWeb &&
-                platformSupportsAds) ...[
+            if (adsControllerAvailable && !adsRemoved) ...[
               const Expanded(
                 child: Center(
                   child: BannerAdWidget(),

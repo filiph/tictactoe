@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
 import 'package:tictactoe/src/player_progress/player_progress.dart';
 import 'package:tictactoe/src/settings/custom_name_dialog.dart';
@@ -55,27 +54,31 @@ class SettingsScreen extends StatelessWidget {
                 onSelected: () => settings.toggleMusicOn(),
               ),
             ),
-            if (platformSupportsInAppPurchases)
-              Consumer<InAppPurchaseController>(
-                  builder: (context, inAppPurchase, child) {
-                Widget icon;
-                VoidCallback? callback;
-                if (inAppPurchase.adRemoval.active) {
-                  icon = const Icon(Icons.check);
-                } else if (inAppPurchase.adRemoval.pending) {
-                  icon = const CircularProgressIndicator();
-                } else {
-                  icon = const Icon(Icons.ad_units);
-                  callback = () {
-                    inAppPurchase.buy();
-                  };
-                }
-                return _SettingsLine(
-                  'Remove ads',
-                  icon,
-                  onSelected: callback,
-                );
-              }),
+            Consumer<InAppPurchaseController?>(
+                builder: (context, inAppPurchase, child) {
+              if (inAppPurchase == null) {
+                // In-app purchases are not supported.
+                return const SizedBox.shrink();
+              }
+
+              Widget icon;
+              VoidCallback? callback;
+              if (inAppPurchase.adRemoval.active) {
+                icon = const Icon(Icons.check);
+              } else if (inAppPurchase.adRemoval.pending) {
+                icon = const CircularProgressIndicator();
+              } else {
+                icon = const Icon(Icons.ad_units);
+                callback = () {
+                  inAppPurchase.buy();
+                };
+              }
+              return _SettingsLine(
+                'Remove ads',
+                icon,
+                onSelected: callback,
+              );
+            }),
             _SettingsLine(
               'Reset progress',
               const Icon(Icons.delete),

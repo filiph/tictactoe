@@ -42,12 +42,12 @@ To make it easier for everyone to play with the sample, it's currently
 
 To run the app in debug mode:
 
-    flutter run --dart-define=flavor=full
+    flutter run
 
 In same cases, for example in my Android Studio, you have to explicitly ask
 for multidex support, so the above becomes:
 
-    flutter run --dart-define=flavor=full -Pmultidex-enabled=true
+    flutter run -Pmultidex-enabled=true
 
 But this shouldn't generally be needed.
 
@@ -64,24 +64,6 @@ of course, encouraged to use whatever paradigm, helper package or code generatio
 scheme to build on top of this project.
 
 
-### Flavors
-
-We don't need [Android- or iOS-level flavors][] (yet?) but we do need at least two
-Flutter-level flavors. This means that while the code in `/android` and `/ios`
-stays the same, the compiled Dart code will differ.
-
-[Android- or iOS-level flavors]: https://docs.flutter.dev/deployment/flavors
-
-In particular, we need a 'lite' version of the game and a 'full' version.
-The lite version is primarily used for the web demo, and doesn't include ads
-and some of the content. But nothing stops us from creating another flavor
-for, say, premium versions of the game (no ads by default).
-
-Flavor is defined using environment variables. This approach is
-[described here](https://itnext.io/flutter-1-17-no-more-flavors-no-more-ios-schemas-command-argument-that-solves-everything-8b145ed4285d),
-for example.
-
-
 ### Building for production
 
 The following assumes using [FVM][]. Just remove `fvm` from the commands if you
@@ -93,16 +75,16 @@ To build and publish to github.io:
 
     fvm flutter pub global run peanut \
     --web-renderer canvaskit \
-    --extra-args "--dart-define flavor=lite --base-href=/flutter_game_sample/" \
+    --extra-args "--base-href=/flutter_game_sample/" \
     && git push origin --set-upstream gh-pages
 
 To build the app for iOS (and open Xcode when finished):
 
-    fvm flutter build ipa --dart-define flavor=full && open build/ios/archive/Runner.xcarchive
+    fvm flutter build ipa && open build/ios/archive/Runner.xcarchive
 
 To build the app for Android (and open the folder with the bundle when finished):
 
-    fvm flutter build appbundle --dart-define flavor=full && open build/app/outputs/bundle/release
+    fvm flutter build appbundle && open build/app/outputs/bundle/release
 
 
 ### Icon
