@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tictactoe/flavors.dart';
 import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
