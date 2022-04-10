@@ -44,13 +44,6 @@ To run the app in debug mode:
 
     flutter run
 
-In same cases, for example in my Android Studio, you have to explicitly ask
-for multidex support, so the above becomes:
-
-    flutter run -Pmultidex-enabled=true
-
-But this shouldn't generally be needed.
-
 ### Code organization
 
 Code is organized in a loose and shallow feature-first fashion.

@@ -49,7 +49,7 @@ android {
 
     defaultConfig {
         applicationId "dev.flutter.tictactoe"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
