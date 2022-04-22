@@ -29,6 +29,13 @@
             {
               "client_id": "896194001523-7m4lack07fbg9g38spqhpvuph5hcg7bd.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "896194001523-147dv4s44ieqlavbbso6p00fqk0p952f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.flutter.tictactoe"
+              }
             }
           ]
         }

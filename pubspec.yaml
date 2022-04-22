@@ -22,6 +22,8 @@ dependencies:
   logging: ^1.0.2
   provider: ^6.0.2
   shared_preferences: ^2.0.13
+  firebase_core: ^1.15.0
+  firebase_crashlytics: ^2.6.3
 
 dev_dependencies:
   flutter_test:
