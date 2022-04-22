@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "896194001523",
+    "project_id": "tic-tac-toe-flutter-game",
+    "storage_bucket": "tic-tac-toe-flutter-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896194001523:android:76b4ed240c98ad30df8806",
+        "android_client_info": {
+          "package_name": "dev.flutter.tictactoe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896194001523-7m4lack07fbg9g38spqhpvuph5hcg7bd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQIkqXSs-UgR50LJzjkfs8IDQc_Go8j4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896194001523-7m4lack07fbg9g38spqhpvuph5hcg7bd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
