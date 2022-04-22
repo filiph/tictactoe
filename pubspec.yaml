@@ -4,7 +4,7 @@ description: A sample mobile game built in Flutter.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.7.2+29
+version: 1.7.3+30
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -15,6 +15,8 @@ dependencies:
 
   audioplayers: ^0.20.1
   cupertino_icons: ^1.0.2
+  firebase_core: ^1.15.0
+  firebase_crashlytics: ^2.6.3
   games_services: ^2.0.7
   google_mobile_ads: ^1.1.0
   go_router: ^3.0.1
@@ -22,8 +24,6 @@ dependencies:
   logging: ^1.0.2
   provider: ^6.0.2
   shared_preferences: ^2.0.13
-  firebase_core: ^1.15.0
-  firebase_crashlytics: ^2.6.3
 
 dev_dependencies:
   flutter_test:
