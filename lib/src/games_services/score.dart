@@ -11,6 +11,7 @@ class Score {
 
   factory Score(
       int level, BoardSetting setting, int aiDifficulty, Duration duration) {
+    // TODO: make the scoring a bit more balanced?
     var score = setting.m * setting.n * setting.k;
     score *= aiDifficulty;
     score *= 10000 ~/ (duration.inSeconds.abs() + 1);

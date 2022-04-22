@@ -19,6 +19,7 @@ class MainMenuScreen extends StatelessWidget {
     final gamesServicesController = context.watch<GamesServicesController?>();
     final settingsController = context.watch<SettingsController>();
 
+    // TODO: make this a lot nicer
     return Scaffold(
       backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
@@ -53,12 +54,14 @@ class MainMenuScreen extends StatelessWidget {
             if (gamesServicesController != null) ...[
               _hideUntilReady(
                 ready: gamesServicesController.signedIn,
+                // TODO: show an "active" animation on the button
                 child: RoughButton(
                   onTap: () => gamesServicesController.showAchievements(),
                   child: const Text('Achievements'),
                 ),
               ),
               _hideUntilReady(
+                // TODO: show an "active" animation on the button
                 ready: gamesServicesController.signedIn,
                 child: RoughButton(
                   onTap: () => gamesServicesController.showLeaderboard(),

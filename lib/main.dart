@@ -85,6 +85,10 @@ void guardedMain() {
 
   InAppPurchaseController? inAppPurchaseController;
   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+    // TODO: don't automatically create instance. Instead, provide a callback
+    //       `() => InAppPurchase.instance` and then let the controller
+    //       only try accessing the instance if a) player taps "remove ads" or
+    //       b) Settings show that player has done so in the past.
     inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance)
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
       // as possible in order not to miss any updates.

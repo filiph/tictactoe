@@ -176,6 +176,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 child: Visibility(
                   visible: _duringCelebration,
                   child: IgnorePointer(
+                    // TODO: replace with something more performant
                     child: Image.asset(
                       'assets/images/confetti.gif',
                       fit: BoxFit.cover,

@@ -19,15 +19,7 @@ class InAppPurchaseController extends ChangeNotifier {
 
   InAppPurchaseController(this.inAppPurchaseInstance);
 
-  /// Subscribes to the provided [purchaseStream].
-  ///
-  /// In production, you'll want to call this with:
-  ///
-  /// ```
-  /// inAppPurchaseNotifier.subscribe(InAppPurchase.instance.purchaseStream);
-  /// ```
-  ///
-  /// In testing, you can of course provide a mock stream.
+  /// Subscribes to the [inAppPurchaseInstance.purchaseStream].
   void subscribe() {
     _subscription =
         inAppPurchaseInstance.purchaseStream.listen((purchaseDetailsList) {
