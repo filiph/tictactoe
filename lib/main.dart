@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/src/ads/ads_controller.dart';
 import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
 import 'package:tictactoe/src/audio/audio_controller.dart';
+import 'package:tictactoe/src/crashlytics/crashlytics.dart';
 import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/games_services/score.dart';
 import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
@@ -30,17 +33,33 @@ import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/snack_bar.dart';
 import 'package:tictactoe/src/win_game/win_game_screen.dart';
 
-void main() {
-  if (kReleaseMode) {
-    // Don't log anything below warnings in production.
-    Logger.root.level = Level.WARNING;
-  }
-  Logger.root.onRecord.listen((record) {
-    debugPrint('${record.level.name}: ${record.time}: '
-        '${record.loggerName}: '
-        '${record.message}');
-  });
+import 'firebase_options.dart';
 
+Future<void> main() async {
+  FirebaseCrashlytics? crashlytics;
+  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      crashlytics = FirebaseCrashlytics.instance;
+    } catch (e) {
+      debugPrint("Firebase couldn't be initialized: $e");
+    }
+  }
+
+  await guardWithCrashlytics(
+    guardedMain,
+    crashlytics: crashlytics,
+  );
+}
+
+/// Without logging and crash reporting, this would be `void main()`.
+void guardedMain() {
+  // We ensure Flutter binding is initialized here. Otherwise, calls to
+  // SystemChrome will not work, for example. This is a no-op if the binding
+  // is already initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
   _log.info('Going full screen');
