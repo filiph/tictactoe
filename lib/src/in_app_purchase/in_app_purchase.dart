@@ -156,10 +156,16 @@ class InAppPurchaseController extends ChangeNotifier {
 
     _log.info('Making the purchase');
     final purchaseParam = PurchaseParam(productDetails: productDetails);
-    final success = await inAppPurchaseInstance.buyNonConsumable(
-        purchaseParam: purchaseParam);
-    _log.info('buyNonConsumable() request was sent with success: $success');
-    // The result of the purchase will be reported in the purchaseStream,
-    // which is handled in [_listenToPurchaseUpdated].
+    try {
+      final success = await inAppPurchaseInstance.buyNonConsumable(
+          purchaseParam: purchaseParam);
+      _log.info('buyNonConsumable() request was sent with success: $success');
+      // The result of the purchase will be reported in the purchaseStream,
+      // which is handled in [_listenToPurchaseUpdated].
+    } catch (e) {
+      _log.severe(
+          'Problem with calling inAppPurchaseInstance.buyNonConsumable(): '
+          '$e');
+    }
   }
 }
