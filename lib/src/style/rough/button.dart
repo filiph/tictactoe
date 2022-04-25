@@ -51,7 +51,6 @@ class RoughButton extends StatelessWidget {
             Image.asset(
               'assets/images/bar.png',
             ),
-          // SizedBox.expand(child: _RoughBox()),
           DefaultTextStyle(
             style: TextStyle(
               fontFamily: 'Permanent Marker',
