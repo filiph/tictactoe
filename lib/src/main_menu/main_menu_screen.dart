@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/games_services/games_services.dart';
 import 'package:tictactoe/src/settings/settings.dart';
+import 'package:tictactoe/src/style/delayed_appear.dart';
 import 'package:tictactoe/src/style/palette.dart';
 import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
@@ -23,52 +24,67 @@ class MainMenuScreen extends StatelessWidget {
       backgroundColor: palette.redPen,
       body: ResponsiveScreen(
         mainAreaProminence: 0.45,
-        squarishMainArea: Center(
-          child: Transform.scale(
-            scale: 1.2,
-            child: Image.asset(
-              'assets/images/main-menu.png',
-              fit: BoxFit.cover,
+        squarishMainArea: DelayedAppear(
+          ms: 1000,
+          child: Center(
+            child: Transform.scale(
+              scale: 1.2,
+              child: Image.asset(
+                'assets/images/main-menu.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
         rectangularMenuArea: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RoughButton(
-              onTap: () {
-                GoRouter.of(context).go('/play');
-              },
-              child: const Text('Play'),
-              drawRectangle: true,
-              textColor: palette.redPen,
-              fontSize: 42,
-              soundEffect: SfxType.erase,
+            DelayedAppear(
+              ms: 800,
+              child: RoughButton(
+                onTap: () {
+                  GoRouter.of(context).go('/play');
+                },
+                child: const Text('Play'),
+                drawRectangle: true,
+                textColor: palette.redPen,
+                fontSize: 42,
+                soundEffect: SfxType.erase,
+              ),
             ),
             if (gamesServicesController != null) ...[
               _hideUntilReady(
                 ready: gamesServicesController.signedIn,
                 // TODO: show an "active" animation on the button
-                child: RoughButton(
-                  onTap: () => gamesServicesController.showAchievements(),
-                  child: const Text('Achievements'),
+                child: DelayedAppear(
+                  ms: 600,
+                  child: RoughButton(
+                    onTap: () => gamesServicesController.showAchievements(),
+                    child: const Text('Achievements'),
+                  ),
                 ),
               ),
               _hideUntilReady(
                 // TODO: show an "active" animation on the button
                 ready: gamesServicesController.signedIn,
-                child: RoughButton(
-                  onTap: () => gamesServicesController.showLeaderboard(),
-                  child: const Text('Leaderboard'),
+                child: DelayedAppear(
+                  ms: 400,
+                  child: RoughButton(
+                    onTap: () => gamesServicesController.showLeaderboard(),
+                    child: const Text('Leaderboard'),
+                  ),
                 ),
               ),
             ],
-            RoughButton(
-              onTap: () => GoRouter.of(context).go('/settings'),
-              child: const Text('Settings'),
+            DelayedAppear(
+              ms: 200,
+              child: RoughButton(
+                onTap: () => GoRouter.of(context).go('/settings'),
+                child: const Text('Settings'),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 32),
+              padding: const EdgeInsets.only(top: 10),
               child: ValueListenableBuilder<bool>(
                 valueListenable: settingsController.muted,
                 builder: (context, muted, child) {
@@ -98,13 +114,9 @@ class MainMenuScreen extends StatelessWidget {
     return FutureBuilder<bool>(
       future: ready,
       builder: (context, snapshot) {
-        // Use Visibility here so that we have the space for the buttons
-        // ready.
-        return Visibility(
-          visible: snapshot.data ?? false,
-          maintainState: true,
-          maintainSize: true,
-          maintainAnimation: true,
+        return AnimatedOpacity(
+          duration: const Duration(milliseconds: 700),
+          opacity: snapshot.hasData ? 1 : 0,
           child: child,
         );
       },
