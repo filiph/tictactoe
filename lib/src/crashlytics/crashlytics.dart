@@ -27,6 +27,10 @@ Future<void> guardWithCrashlytics(
       debugPrint(message);
       // Add the message to the rotating Crashlytics log.
       crashlytics?.log(message);
+
+      if (record.level >= Level.SEVERE) {
+        crashlytics?.recordError(message, StackTrace.current);
+      }
     });
 
     // Pass all uncaught errors from the framework to Crashlytics.
