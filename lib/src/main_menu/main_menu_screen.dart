@@ -19,22 +19,16 @@ class MainMenuScreen extends StatelessWidget {
     final gamesServicesController = context.watch<GamesServicesController?>();
     final settingsController = context.watch<SettingsController>();
 
-    // TODO: make this a lot nicer
     return Scaffold(
-      backgroundColor: palette.backgroundMain,
+      backgroundColor: palette.redPen,
       body: ResponsiveScreen(
         mainAreaProminence: 0.45,
         squarishMainArea: Center(
-          child: Transform.rotate(
-            angle: -0.1,
-            child: const Text(
-              'Tic Tac Toe Puzzle Game!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Permanent Marker',
-                fontSize: 55,
-                height: 1,
-              ),
+          child: Transform.scale(
+            scale: 1.2,
+            child: Image.asset(
+              'assets/images/main-menu.png',
+              fit: BoxFit.cover,
             ),
           ),
         ),
@@ -47,7 +41,7 @@ class MainMenuScreen extends StatelessWidget {
               },
               child: const Text('Play'),
               drawRectangle: true,
-              color: palette.redPen,
+              textColor: palette.redPen,
               fontSize: 42,
               soundEffect: SfxType.erase,
             ),
@@ -80,14 +74,14 @@ class MainMenuScreen extends StatelessWidget {
                 builder: (context, muted, child) {
                   return IconButton(
                     onPressed: () => settingsController.toggleMuted(),
-                    icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
+                    icon: Icon(
+                      muted ? Icons.volume_off : Icons.volume_up,
+                      color: palette.trueWhite,
+                    ),
                   );
                 },
               ),
             ),
-            gap,
-            const Text('Music by Mr Smith'),
-            gap,
           ],
         ),
       ),

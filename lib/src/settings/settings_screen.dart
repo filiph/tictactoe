@@ -110,6 +110,10 @@ class SettingsScreen extends StatelessWidget {
                 throw StateError('Oh no! A test error.');
               },
             ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+              child: Text('Music by Mr Smith, used with permission.'),
+            ),
             _gap,
           ],
         ),
@@ -118,6 +122,7 @@ class SettingsScreen extends StatelessWidget {
             GoRouter.of(context).pop();
           },
           child: const Text('Back'),
+          textColor: palette.ink,
         ),
       ),
     );

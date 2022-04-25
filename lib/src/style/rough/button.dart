@@ -11,7 +11,7 @@ class RoughButton extends StatelessWidget {
 
   final VoidCallback? onTap;
 
-  final Color? color;
+  final Color? textColor;
 
   final bool drawRectangle;
 
@@ -23,7 +23,7 @@ class RoughButton extends StatelessWidget {
     Key? key,
     required this.child,
     required this.onTap,
-    this.color,
+    this.textColor,
     this.fontSize = 32,
     this.drawRectangle = false,
     this.soundEffect = SfxType.buttonTap,
@@ -42,24 +42,6 @@ class RoughButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
 
-    Color rectangleColor;
-    Color textColor;
-    if (color != null) {
-      rectangleColor = color!;
-      if (!drawRectangle) {
-        textColor = color!;
-      } else {
-        textColor = palette.trueWhite;
-      }
-    } else {
-      rectangleColor = palette.ink;
-      if (!drawRectangle) {
-        textColor = palette.ink;
-      } else {
-        textColor = palette.trueWhite;
-      }
-    }
-
     return InkResponse(
       onTap: onTap == null ? null : () => _handleTap(context),
       child: Stack(
@@ -67,8 +49,7 @@ class RoughButton extends StatelessWidget {
         children: [
           if (drawRectangle)
             Image.asset(
-              'assets/images/bar1.png',
-              color: rectangleColor,
+              'assets/images/bar.png',
             ),
           // SizedBox.expand(child: _RoughBox()),
           DefaultTextStyle(
