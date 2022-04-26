@@ -83,6 +83,7 @@ class WinGameScreen extends StatelessWidget {
             GoRouter.of(context).pop();
           },
           child: const Text('Continue'),
+          textColor: palette.ink,
         ),
       ),
     );
