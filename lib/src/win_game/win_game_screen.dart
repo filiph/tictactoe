@@ -55,27 +55,6 @@ class WinGameScreen extends StatelessWidget {
                     fontFamily: 'Permanent Marker', fontSize: 20),
               ),
             ),
-            gap,
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  // TODO: implement or remove the share button
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('NOT IMPLEMENTED YET, but this could use '
-                        'Firebase / Google Cloud to save the finished game '
-                        'board as a picture, so that the share is interesting'),
-                  ));
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.share),
-                    SizedBox(width: 10),
-                    Text('Share'),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
         rectangularMenuArea: RoughButton(
