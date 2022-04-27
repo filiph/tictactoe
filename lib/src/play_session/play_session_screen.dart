@@ -98,7 +98,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       text: opponent.name,
                       style: textStyle,
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => _log.warning('NOT IMPLEMENTED YET'),
+                        // TODO: implement
+                        //       (except maybe not, because in user testing,
+                        //        nobody has ever touched this)
+                        ..onTap = () => _log
+                            .severe('Tapping opponent name NOT IMPLEMENTED'),
                     ),
                     mainBoardArea: Center(
                       child: DelayedAppear(
