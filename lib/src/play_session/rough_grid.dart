@@ -173,7 +173,10 @@ class _RoughGridPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RoughGridPainter oldDelegate) {
-    return false; // TODO: check
+    return oldDelegate.width != width ||
+        oldDelegate.height != height ||
+        oldDelegate.paintOnly != paintOnly ||
+        oldDelegate.lineColor != lineColor;
   }
 
   static void _roughLine({
