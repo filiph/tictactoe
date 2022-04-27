@@ -48,8 +48,7 @@ const List<String> hints = [
   'Put Xs close to each other.',
   'Try to put Xs in places where they could be part of '
       'two different winning lines.',
-  "If the opponent is in trouble, press the advantage. "
-      "Don’t slow down for them.",
+  "If the opponent is in trouble, press the advantage.",
   'Always be making new opportunities.',
   "Don’t pursue lines that are already doomed "
       "(when there’s no place for a winning line there anymore)."
