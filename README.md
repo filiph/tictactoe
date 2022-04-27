@@ -77,7 +77,7 @@ To build the app for iOS (and open Xcode when finished):
 
 To build the app for Android (and open the folder with the bundle when finished):
 
-    fvm flutter build appbundle --bundle-sksl-path warmup_2022-04-27_android.sksl.json && open build/app/outputs/bundle/release
+    fvm flutter build appbundle --bundle-sksl-path warmup_2022-04-27_android_pixel5.sksl.json && open build/app/outputs/bundle/release
 
 #### SkSL shaders
 
