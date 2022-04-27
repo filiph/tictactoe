@@ -11,14 +11,9 @@ class Score {
 
   factory Score(
       int level, BoardSetting setting, int aiDifficulty, Duration duration) {
-    // TODO: make the scoring a bit more balanced?
-    var score = setting.m * setting.n * setting.k;
-    score *= aiDifficulty;
-    score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    // Decrease score numbers significantly while testing. It's hard to get rid
-    // of high scores later.
-    // TODO(filiph): remove line below before going public
-    score = score ~/ 1000;
+    var score = aiDifficulty * aiDifficulty;
+    score *= setting.k * setting.k;
+    score *= 1000 ~/ (duration.inSeconds.abs() + 1);
     return Score._(score, duration, level);
   }
 

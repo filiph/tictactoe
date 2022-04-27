@@ -8,7 +8,7 @@ final gameLevels = [
   GameLevel(
     number: 1,
     setting: const BoardSetting(3, 3, 3),
-    aiDifficulty: 1,
+    difficulty: 1,
     aiOpponentBuilder: (setting) => RandomOpponent(
       setting,
       name: 'Blobfish',
@@ -19,7 +19,7 @@ final gameLevels = [
   GameLevel(
     number: 2,
     setting: const BoardSetting(5, 5, 4),
-    aiDifficulty: 1,
+    difficulty: 2,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Chicken',
@@ -33,7 +33,7 @@ final gameLevels = [
   GameLevel(
     number: 3,
     setting: const BoardSetting(6, 6, 4),
-    aiDifficulty: 1,
+    difficulty: 3,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Sparklemuffin',
@@ -44,7 +44,7 @@ final gameLevels = [
   GameLevel(
     number: 4,
     setting: const BoardSetting(8, 8, 5),
-    aiDifficulty: 1,
+    difficulty: 4,
     aiOpponentBuilder: (setting) => AttackOnlyScoringOpponent(
       setting,
       name: 'Puffbird',
@@ -53,7 +53,7 @@ final gameLevels = [
   GameLevel(
     number: 5,
     setting: const BoardSetting(9, 9, 5, aiStarts: true),
-    aiDifficulty: 1,
+    difficulty: 5,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Gecko',
@@ -67,7 +67,7 @@ final gameLevels = [
   GameLevel(
     number: 6,
     setting: const BoardSetting(9, 9, 5),
-    aiDifficulty: 3,
+    difficulty: 6,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Wobbegong',
@@ -79,7 +79,7 @@ final gameLevels = [
   GameLevel(
     number: 7,
     setting: const BoardSetting(10, 10, 5),
-    aiDifficulty: 2,
+    difficulty: 7,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Boops',
@@ -90,7 +90,7 @@ final gameLevels = [
   GameLevel(
     number: 8,
     setting: const BoardSetting(10, 10, 5),
-    aiDifficulty: 2,
+    difficulty: 8,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Fossa',
@@ -101,7 +101,7 @@ final gameLevels = [
   GameLevel(
     number: 9,
     setting: const BoardSetting(11, 11, 5),
-    aiDifficulty: 2,
+    difficulty: 20,
     aiOpponentBuilder: (setting) => HumanlikeOpponent(
       setting,
       name: 'Tiger',
@@ -118,7 +118,7 @@ class GameLevel {
 
   final BoardSetting setting;
 
-  final int aiDifficulty;
+  final int difficulty;
 
   final AiOpponent Function(BoardSetting) aiOpponentBuilder;
 
@@ -132,7 +132,7 @@ class GameLevel {
   const GameLevel({
     required this.number,
     required this.setting,
-    required this.aiDifficulty,
+    required this.difficulty,
     required this.aiOpponentBuilder,
     this.achievementIdIOS,
     this.achievementIdAndroid,

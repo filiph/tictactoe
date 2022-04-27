@@ -217,7 +217,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     final score = Score(
       widget.level.number,
       widget.level.setting,
-      widget.level.aiDifficulty,
+      widget.level.difficulty,
       DateTime.now().difference(_startOfPlay),
     );
 
