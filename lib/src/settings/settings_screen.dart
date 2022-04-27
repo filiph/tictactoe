@@ -93,23 +93,6 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
             ),
-            // TODO: remove this before production
-            _SettingsLine(
-              'Cause Error',
-              const Icon(Icons.error),
-              onSelected: () {
-                final messenger = ScaffoldMessenger.of(context);
-                messenger.clearSnackBars();
-                messenger.showSnackBar(
-                  const SnackBar(
-                      content:
-                          Text('Throwing an error which is going to be sent '
-                              'to Crashlytics')),
-                );
-
-                throw StateError('Oh no! A test error.');
-              },
-            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
               child: Text('Music by Mr Smith, used with permission.'),
