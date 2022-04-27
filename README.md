@@ -73,11 +73,28 @@ To build and publish to github.io:
 
 To build the app for iOS (and open Xcode when finished):
 
-    fvm flutter build ipa && open build/ios/archive/Runner.xcarchive
+    fvm flutter build ipa --bundle-sksl-path warmup_2022-04-27_ios.sksl.json && open build/ios/archive/Runner.xcarchive
 
 To build the app for Android (and open the folder with the bundle when finished):
 
-    fvm flutter build appbundle && open build/app/outputs/bundle/release
+    fvm flutter build appbundle --bundle-sksl-path warmup_2022-04-27_android.sksl.json && open build/app/outputs/bundle/release
+
+#### SkSL shaders
+
+To update the `warmup_2022-04-27_xxx.sksl.json` files used in the commands above,
+use the official [SkSL shader warmup guide][].
+
+[SkSL shader warmup guide]: https://docs.flutter.dev/perf/shader#how-to-use-sksl-warmup
+
+The game, despite being simple, uses shaders all over the place for the "drawing ink"
+effect. In my testing, the performance is fine on most reasonable devices,
+but why not make it even better?
+
+Note: You can remove the `--bundle-sksl-path warmup_xxx.json` part
+of the commands above if you're in a place where you care more about
+development speed than performance. For example, when you need a quick
+turnaround for some testing and can't be bothered to manually 
+re-capture the shaders.
 
 
 ### Icon
