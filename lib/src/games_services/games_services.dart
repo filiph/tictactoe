@@ -56,7 +56,7 @@ class GamesServicesController {
 
   void awardAchievement({required String iOS, required String android}) async {
     if (!await signedIn) {
-      _log.severe('Trying to award achievement when not logged in.');
+      _log.warning('Trying to award achievement when not logged in.');
       return;
     }
 
@@ -74,7 +74,7 @@ class GamesServicesController {
 
   void submitLeaderboardScore(internal.Score score) async {
     if (!await signedIn) {
-      _log.severe('Trying to award achievement when not logged in.');
+      _log.warning('Trying to submit leaderboard when not logged in.');
       return;
     }
 
