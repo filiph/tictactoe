@@ -6,6 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
+/// Runs [mainFunction] in a guarded [Zone].
+///
+/// If a non-null [FirebaseCrashlytics] instance is provided through
+/// [crashlytics], then all errors will be reported through it.
+///
+/// These errors will also include latest logs from anywhere in the app
+/// that use `package:logging`.
 Future<void> guardWithCrashlytics(
   void Function() mainFunction, {
   required FirebaseCrashlytics? crashlytics,
@@ -29,8 +36,7 @@ Future<void> guardWithCrashlytics(
       crashlytics?.log(message);
 
       if (record.level >= Level.SEVERE) {
-        crashlytics?.recordError(
-            message, _filterStackTrace(StackTrace.current));
+        crashlytics?.recordError(message, filterStackTrace(StackTrace.current));
       }
     });
 
@@ -42,11 +48,11 @@ Future<void> guardWithCrashlytics(
 
     // To catch errors outside of the Flutter context, we attach an error
     // listener to the current isolate.
-    Isolate.current.addErrorListener(RawReceivePort((pair) async {
-      final List<dynamic> errorAndStacktrace = pair;
+    Isolate.current.addErrorListener(RawReceivePort((dynamic pair) async {
+      final errorAndStacktrace = pair as List<dynamic>;
       await crashlytics?.recordError(
         errorAndStacktrace.first,
-        errorAndStacktrace.last,
+        errorAndStacktrace.last as StackTrace?,
       );
     }).sendPort);
 
@@ -67,10 +73,11 @@ Future<void> guardWithCrashlytics(
 ///
 /// See this:
 /// https://stackoverflow.com/questions/47654410/how-to-effectively-group-non-fatal-exceptions-in-crashlytics-fabrics.
-StackTrace _filterStackTrace(StackTrace stackTrace) {
+@visibleForTesting
+StackTrace filterStackTrace(StackTrace stackTrace) {
   StackTrace? filtered;
   try {
-    final lines = filtered.toString().split('\n');
+    final lines = stackTrace.toString().split('\n');
     final buf = StringBuffer();
     for (final line in lines) {
       if (line.contains('crashlytics.dart') ||
