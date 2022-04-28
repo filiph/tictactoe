@@ -15,20 +15,52 @@ class InAppPurchaseController extends ChangeNotifier {
 
   AdRemovalPurchase _adRemoval = const AdRemovalPurchase.notStarted();
 
-  AdRemovalPurchase get adRemoval => _adRemoval;
-
   InAppPurchaseController(this.inAppPurchaseInstance);
 
-  /// Subscribes to the [inAppPurchaseInstance.purchaseStream].
-  void subscribe() {
-    _subscription =
-        inAppPurchaseInstance.purchaseStream.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription?.cancel();
-    }, onError: (error) {
-      _log.severe('Error occurred on the purchaseStream: $error');
-    });
+  AdRemovalPurchase get adRemoval => _adRemoval;
+
+  Future<void> buy() async {
+    if (!await inAppPurchaseInstance.isAvailable()) {
+      _reportError('InAppPurchase.instance not available');
+      return;
+    }
+
+    _adRemoval = const AdRemovalPurchase.pending();
+    notifyListeners();
+
+    _log.info('Querying the store with queryProductDetails()');
+    final response = await inAppPurchaseInstance
+        .queryProductDetails({AdRemovalPurchase.productId});
+
+    if (response.error != null) {
+      _reportError('There was an error when making the purchase: '
+          '${response.error}');
+      return;
+    }
+
+    if (response.productDetails.length != 1) {
+      _reportError('There was an error when making the purchase: '
+          'product ${AdRemovalPurchase.productId} does not exist.');
+      response.productDetails
+          .map((e) => '${e.id}: ${e.title}')
+          .forEach(_log.info);
+      return;
+    }
+    final productDetails = response.productDetails.single;
+
+    _log.info('Making the purchase');
+    final purchaseParam = PurchaseParam(productDetails: productDetails);
+    try {
+      final success = await inAppPurchaseInstance.buyNonConsumable(
+          purchaseParam: purchaseParam);
+      _log.info('buyNonConsumable() request was sent with success: $success');
+      // The result of the purchase will be reported in the purchaseStream,
+      // which is handled in [_listenToPurchaseUpdated].
+    } catch (e) {
+      _log.severe(
+          'Problem with calling inAppPurchaseInstance.buyNonConsumable(): '
+          '$e');
+    }
   }
 
   @override
@@ -49,6 +81,18 @@ class InAppPurchaseController extends ChangeNotifier {
       _log.severe('Could not restore in-app purchases: $e');
     }
     _log.info('In-app purchases restored');
+  }
+
+  /// Subscribes to the [inAppPurchaseInstance.purchaseStream].
+  void subscribe() {
+    _subscription =
+        inAppPurchaseInstance.purchaseStream.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription?.cancel();
+    }, onError: (error) {
+      _log.severe('Error occurred on the purchaseStream: $error');
+    });
   }
 
   Future<void> _listenToPurchaseUpdated(
@@ -108,6 +152,13 @@ class InAppPurchaseController extends ChangeNotifier {
     }
   }
 
+  void _reportError(String message) {
+    _log.severe(message);
+    showSnackBar(message);
+    _adRemoval = AdRemovalPurchase.error(message);
+    notifyListeners();
+  }
+
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     _log.info('Verifying purchase: ${purchaseDetails.verificationData}');
     // TODO: verify the purchase.
@@ -116,56 +167,5 @@ class InAppPurchaseController extends ChangeNotifier {
     // on the backend:
     // https://codelabs.developers.google.com/codelabs/flutter-in-app-purchases#9
     return true;
-  }
-
-  void _reportError(String message) {
-    _log.severe(message);
-    showSnackBar(message);
-    _adRemoval = AdRemovalPurchase.error(message);
-    notifyListeners();
-  }
-
-  Future<void> buy() async {
-    if (!await inAppPurchaseInstance.isAvailable()) {
-      _reportError('InAppPurchase.instance not available');
-      return;
-    }
-
-    _adRemoval = const AdRemovalPurchase.pending();
-    notifyListeners();
-
-    _log.info('Querying the store with queryProductDetails()');
-    final response = await inAppPurchaseInstance
-        .queryProductDetails({AdRemovalPurchase.productId});
-
-    if (response.error != null) {
-      _reportError('There was an error when making the purchase: '
-          '${response.error}');
-      return;
-    }
-
-    if (response.productDetails.length != 1) {
-      _reportError('There was an error when making the purchase: '
-          'product ${AdRemovalPurchase.productId} does not exist.');
-      response.productDetails
-          .map((e) => '${e.id}: ${e.title}')
-          .forEach(_log.info);
-      return;
-    }
-    final productDetails = response.productDetails.single;
-
-    _log.info('Making the purchase');
-    final purchaseParam = PurchaseParam(productDetails: productDetails);
-    try {
-      final success = await inAppPurchaseInstance.buyNonConsumable(
-          purchaseParam: purchaseParam);
-      _log.info('buyNonConsumable() request was sent with success: $success');
-      // The result of the purchase will be reported in the purchaseStream,
-      // which is handled in [_listenToPurchaseUpdated].
-    } catch (e) {
-      _log.severe(
-          'Problem with calling inAppPurchaseInstance.buyNonConsumable(): '
-          '$e');
-    }
   }
 }
