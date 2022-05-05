@@ -68,7 +68,7 @@ To build and publish to github.io:
 
     fvm flutter pub global run peanut \
     --web-renderer canvaskit \
-    --extra-args "--base-href=/flutter_game_sample/" \
+    --extra-args "--base-href=/tictactoe/" \
     && git push origin --set-upstream gh-pages
 
 To build the app for iOS (and open Xcode when finished):
