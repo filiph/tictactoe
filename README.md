@@ -1,31 +1,12 @@
 # tictactoe
 
-A sample mobile game built in Flutter.
+A mobile game built in Flutter. You can find it published on stores:
 
-This sample focuses on what I call "app-like games". It's a very popular genre of (often mobile)
-games that do not have a normal game loop (where the screen changes almost every frame).
-Instead, these "app-like games" spend most of their time waiting for the player's input, just like
-regular apps. The games may be real-time, but they seldom redraw the whole screen.
+- [App Store (iOS)](https://apps.apple.com/us/app/tic-tac-toe-puzzle-game/id1611729977)
+- [Play Store (Android)](https://play.google.com/store/apps/details?id=dev.flutter.tictactoe)
 
-Examples of such "app-like games":
-
-- [Puzzle games](https://en.wikipedia.org/wiki/Puzzle_video_game)
-- [Hidden object games](https://en.wikipedia.org/wiki/Hidden_object_game)
-- [Visual novels](https://en.wikipedia.org/wiki/Visual_novel)
-- [Interactive fiction](https://en.wikipedia.org/wiki/Interactive_fiction)
-- [Incremental games](https://en.wikipedia.org/wiki/Incremental_game)
-- Digitized board games (like chess)
-- Card games (digitized, like poker, or digital-only, like Hearthstone or Slay The Spire)
-- Manager games (like old Football Manager games, where most of the "action" is in spreadsheets)
-
-These types of games are a great fit for Flutter, since they can use Flutter's widget layer for
-building UIs and still have powerful pixel-perfect control of visuals on all platforms.
-
-Just to be clear, Flutter also supports more traditional videogames (with a 60 FPS game loop).
-A great example of this is [Flame][], a 2D game engine made on top of Flutter.
-It's just that *this* sample game is focused on "app-like games".
-
-[Flame]: https://flame-engine.org/
+This game was built using the [`game_template`](https://github.com/flutter/samples/tree/master/game_template)
+that you'll find in [github.com/flutter/samples](https://github.com/flutter/samples/tree/master/game_template).
 
 Note: The name of the game in app stores is "Tic Tac Toe Puzzle Game". Because that's what it is,
 and because every other variation of "Tic Tac Toe" is already taken.
@@ -33,9 +14,13 @@ and because every other variation of "Tic Tac Toe" is already taken.
 ## Demo
 
 To make it easier for everyone to play with the sample, it's currently
-[published here][].
+published as a web demo, too, in two versions:
 
-[published here]: https://filiph.github.io/flutter_game_sample/mobile.html
+- a version [mimicking a phone][] in portrait mode even when you open the link on a desktop
+- a version that [uses the whole browser window][]
+
+[mimicking a phone]: https://filiph.github.io/tictactoe/mobile.html
+[uses the whole browser window]: https://filiph.github.io/tictactoe/
 
 
 ## Development
