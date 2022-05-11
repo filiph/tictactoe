@@ -6,7 +6,7 @@ A mobile game built in Flutter. You can find it published on stores:
 - [Play Store (Android)](https://play.google.com/store/apps/details?id=dev.flutter.tictactoe)
 
 This game was built using the [`game_template`](https://github.com/flutter/samples/tree/master/game_template)
-that you'll find in [github.com/flutter/samples](https://github.com/flutter/samples/tree/master/game_template).
+that you'll find in [github.com/flutter/samples](https://github.com/flutter/samples).
 
 Note: The name of the game in app stores is "Tic Tac Toe Puzzle Game". Because that's what it is,
 and because every other variation of "Tic Tac Toe" is already taken.
