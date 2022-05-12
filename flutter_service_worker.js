@@ -3,11 +3,12 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "version.json": "c120595a5d2275282f889fc4c4d22885",
-"index.html": "b2ae3ec9e33352facd43f1e7820de03c",
-"/": "b2ae3ec9e33352facd43f1e7820de03c",
+  "version.json": "35032a96e5086a9869e6ab0f1b130cdc",
+"index.html": "792bf66be014d72f1a2870fe4ed6a753",
+"/": "792bf66be014d72f1a2870fe4ed6a753",
 "homepage.html": "ccebff774aeb92d1708aaf15d613ce3b",
-"main.dart.js": "64d1dfb3ee404e755e409cafe45c9edf",
+"main.dart.js": "c48fffae63fe7227c6624db32a14c792",
+"flutter.js": "0816e65a103ba8ba51b174eeeeb2cb67",
 "mobile.html": "89b69d0973357869111bf2fba56172d9",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
@@ -16,10 +17,10 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "manifest.json": "c8c45dc2d25e4ad129e26bf51c5315b8",
 "assets/AssetManifest.json": "eb6ebd8f8e8f2cb06365d41261c968dd",
-"assets/NOTICES": "0e8ee5289514d8c503b2f539ff72c27e",
+"assets/NOTICES": "90f7e0716a2db966d4f625e114fe8787",
 "assets/FontManifest.json": "202bfb5144bfc3359dc068bcf44cba82",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
-"assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
+"assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "assets/assets/music/Mr_Smith-Pequenas_Guitarras.mp3": "50de570341eaaefeb48867fd997df756",
 "assets/assets/music/Mr_Smith-Sunday_Solitude.mp3": "5fb1f2fbf4314eb5df35b62706942698",
 "assets/assets/music/Mr_Smith-This_Could_Get_Dark.mp3": "308dacb8d3333ae113b1d56416c12fa8",
@@ -200,14 +201,17 @@ const RESOURCES = {
 "assets/assets/sfx/ws1.mp3": "5cfa8fda1ee940e65a19391ddef4d477",
 "assets/assets/sfx/wehee1.mp3": "5a986231104c9f084104e5ee1c564bc4",
 "assets/assets/sfx/swishswish1.mp3": "219b0f5c2deec2eda0a9e0e941894cb6",
-"privacy.html": "dd73b55298dd5858d831d95fa429ba4e"
+"privacy.html": "dd73b55298dd5858d831d95fa429ba4e",
+"canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
+"canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
+"canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
+"canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba"
 };
 
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = [
-  "/",
-"main.dart.js",
+  "main.dart.js",
 "index.html",
 "assets/NOTICES",
 "assets/AssetManifest.json",
