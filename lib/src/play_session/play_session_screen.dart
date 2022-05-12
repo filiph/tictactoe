@@ -22,6 +22,8 @@ import 'package:tictactoe/src/settings/settings.dart';
 import 'package:tictactoe/src/style/delayed_appear.dart';
 import 'package:tictactoe/src/style/palette.dart';
 
+import '../style/confetti.dart';
+
 class PlaySessionScreen extends StatefulWidget {
   final GameLevel level;
 
@@ -180,10 +182,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 child: Visibility(
                   visible: _duringCelebration,
                   child: IgnorePointer(
-                    // TODO: replace with something more performant
-                    child: Image.asset(
-                      'assets/images/confetti.gif',
-                      fit: BoxFit.cover,
+                    child: Confetti(
+                      isStopped: !_duringCelebration,
                     ),
                   ),
                 ),
