@@ -20,14 +20,14 @@ class RoughButton extends StatelessWidget {
   final SfxType soundEffect;
 
   const RoughButton({
-    Key? key,
+    super.key,
     required this.child,
     required this.onTap,
     this.textColor,
     this.fontSize = 32,
     this.drawRectangle = false,
     this.soundEffect = SfxType.buttonTap,
-  }) : super(key: key);
+  });
 
   void _handleTap(BuildContext context) {
     assert(onTap != null, "Don't call _handleTap when onTap is null");

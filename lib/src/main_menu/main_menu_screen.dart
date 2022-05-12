@@ -10,7 +10,7 @@ import 'package:tictactoe/src/style/responsive_screen.dart';
 import 'package:tictactoe/src/style/rough/button.dart';
 
 class MainMenuScreen extends StatelessWidget {
-  const MainMenuScreen({Key? key}) : super(key: key);
+  const MainMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

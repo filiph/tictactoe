@@ -1,15 +1,14 @@
 import 'dart:math';
 
 import 'package:tictactoe/src/ai/ai_opponent.dart';
-import 'package:tictactoe/src/game_internals/board_setting.dart';
 import 'package:tictactoe/src/game_internals/board_state.dart';
 import 'package:tictactoe/src/game_internals/tile.dart';
 
 class RandomOpponent extends AiOpponent {
   const RandomOpponent(
-    BoardSetting setting, {
+    super.setting, {
     required this.name,
-  }) : super(setting);
+  });
 
   static final Random _random = Random();
 

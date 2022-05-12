@@ -10,7 +10,7 @@ import 'package:tictactoe/src/game_internals/tile.dart';
 import 'package:tictactoe/src/style/palette.dart';
 
 class BoardTile extends StatefulWidget {
-  const BoardTile(this.tile, {Key? key}) : super(key: key);
+  const BoardTile(this.tile, {super.key});
 
   /// The tile's position on the board.
   final Tile tile;

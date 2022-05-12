@@ -27,7 +27,7 @@ import '../style/confetti.dart';
 class PlaySessionScreen extends StatefulWidget {
   final GameLevel level;
 
-  const PlaySessionScreen(this.level, {Key? key}) : super(key: key);
+  const PlaySessionScreen(this.level, {super.key});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();

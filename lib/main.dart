@@ -180,8 +180,8 @@ class MyApp extends StatelessWidget {
     required this.inAppPurchaseController,
     required this.adsController,
     required this.gamesServicesController,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
