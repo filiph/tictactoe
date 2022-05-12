@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart';
 import 'package:logging/logging.dart';
 import 'package:tictactoe/src/games_services/score.dart' as internal;
+import 'package:tictactoe/src/style/error_snackbar.dart';
 
 class GamesServicesController {
   static final Logger _log = Logger('GamesServicesController');
@@ -27,6 +29,13 @@ class GamesServicesController {
 
   void showAchievements() async {
     if (!await signedIn) {
+      showErrorSnackbar(
+        'sign in to view achivements',
+        action: SnackBarAction(
+          label: 'Sign in',
+          onPressed: initialize,
+        ),
+      );
       _log.severe('Trying to show achievements when not logged in.');
       return;
     }
@@ -40,6 +49,13 @@ class GamesServicesController {
 
   void showLeaderboard() async {
     if (!await signedIn) {
+      showErrorSnackbar(
+        'sign in to view leaderboard',
+        action: SnackBarAction(
+          label: 'Sign in',
+          onPressed: initialize,
+        ),
+      );
       _log.severe('Trying to show leaderboard when not logged in.');
       return;
     }
