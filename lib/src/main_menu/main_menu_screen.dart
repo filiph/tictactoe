@@ -43,11 +43,11 @@ class MainMenuScreen extends StatelessWidget {
                 onTap: () {
                   GoRouter.of(context).go('/play');
                 },
-                child: const Text('Play'),
                 drawRectangle: true,
                 textColor: palette.redPen,
                 fontSize: 42,
                 soundEffect: SfxType.erase,
+                child: const Text('Play'),
               ),
             ),
             if (gamesServicesController != null) ...[

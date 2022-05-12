@@ -77,7 +77,7 @@ class Sprite extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SpriteState createState() => _SpriteState();
+  State<Sprite> createState() => _SpriteState();
 }
 
 class _SpritePainter extends CustomPainter {

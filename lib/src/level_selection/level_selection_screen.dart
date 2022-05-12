@@ -65,8 +65,8 @@ class LevelSelectionScreen extends StatelessWidget {
             onTap: () {
               GoRouter.of(context).pop();
             },
-            child: const Text('Back'),
             textColor: palette.ink,
+            child: const Text('Back'),
           ),
         ),
       ),

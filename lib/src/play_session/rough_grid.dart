@@ -202,16 +202,16 @@ class _RoughGridPainter extends CustomPainter {
       end = start + Offset(0, length);
     }
 
-    final _random = random ?? Random();
-    var angle = _random.nextDouble() * 2 * pi;
-    final angleChange = 0.3 + 0.4 * _random.nextDouble();
+    final rng = random ?? Random();
+    var angle = rng.nextDouble() * 2 * pi;
+    final angleChange = 0.3 + 0.4 * rng.nextDouble();
 
     // Generate a displacement of "strands" that constitute the whole brush.
     // Each strand will make its own line.
     final strandOffsets = List.generate(brushCount, (index) {
-      var angle = _random.nextDouble() * 2 * pi;
+      var angle = rng.nextDouble() * 2 * pi;
       return Offset.fromDirection(
-          angle, _random.nextDouble() * maxLineThickness / 3);
+          angle, rng.nextDouble() * maxLineThickness / 3);
     });
 
     var straightPoint = start;
@@ -237,10 +237,8 @@ class _RoughGridPainter extends CustomPainter {
 
       // Drawing individual "strands" makes the line more natural.
       for (final strandOffset in strandOffsets) {
-        paint.strokeWidth = (0.8 + 0.4 * _random.nextDouble()) *
-            maxLineThickness /
-            brushCount *
-            2;
+        paint.strokeWidth =
+            (0.8 + 0.4 * rng.nextDouble()) * maxLineThickness / brushCount * 2;
         canvas.drawLine(
             fuzzyPoint + strandOffset, nextFuzzyPoint + strandOffset, paint);
       }

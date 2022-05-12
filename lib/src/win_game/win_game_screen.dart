@@ -61,8 +61,8 @@ class WinGameScreen extends StatelessWidget {
           onTap: () {
             GoRouter.of(context).pop();
           },
-          child: const Text('Continue'),
           textColor: palette.ink,
+          child: const Text('Continue'),
         ),
       ),
     );

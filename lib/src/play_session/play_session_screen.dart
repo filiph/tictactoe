@@ -373,6 +373,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
     required this.restartButtonArea,
     required this.playerName,
     required this.opponentName,
+    // ignore: unused_element
     this.mainAreaProminence = 0.8,
     Key? key,
   }) : super(key: key);

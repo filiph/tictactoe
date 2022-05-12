@@ -19,8 +19,8 @@ CustomTransitionPage<T> buildTransition<T>({
       return _InkReveal(
         animation: animation,
         color: color,
-        child: child,
         flipHorizontally: flipHorizontally,
+        child: child,
       );
     },
     key: key,

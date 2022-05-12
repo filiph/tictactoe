@@ -13,7 +13,7 @@ class Board extends StatefulWidget {
   final BoardSetting setting;
 
   @override
-  _BoardState createState() => _BoardState();
+  State<Board> createState() => _BoardState();
 }
 
 class _BoardState extends State<Board> {

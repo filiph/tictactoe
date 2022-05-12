@@ -28,7 +28,7 @@ class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({Key? key}) : super(key: key);
 
   @override
-  _BannerAdWidgetState createState() => _BannerAdWidgetState();
+  State<BannerAdWidget> createState() => _BannerAdWidgetState();
 }
 
 class _BannerAdWidgetState extends State<BannerAdWidget> {
@@ -123,6 +123,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     _adLoadingState = _LoadingState.disposing;
     await _bannerAd?.dispose();
     _log.fine('_bannerAd disposed');
+    if (!mounted) return;
     setState(() {
       _bannerAd = null;
       _adLoadingState = _LoadingState.loading;
@@ -144,6 +145,8 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     } else {
       size = AdSize.mediumRectangle;
     }
+
+    if (!mounted) return;
 
     assert(Platform.isAndroid || Platform.isIOS,
         'AdMob currently does not support ${Platform.operatingSystem}');

@@ -8,7 +8,7 @@ class AppLifecycleObserver extends StatefulWidget {
   const AppLifecycleObserver({required this.child, Key? key}) : super(key: key);
 
   @override
-  _AppLifecycleObserverState createState() => _AppLifecycleObserverState();
+  State<AppLifecycleObserver> createState() => _AppLifecycleObserverState();
 }
 
 class _AppLifecycleObserverState extends State<AppLifecycleObserver>
@@ -46,14 +46,14 @@ class _AppLifecycleObserverState extends State<AppLifecycleObserver>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _log.info('Subscribed to app lifecycle updates');
   }
 }
