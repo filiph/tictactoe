@@ -58,11 +58,11 @@ To build and publish to github.io:
 
 To build the app for iOS (and open Xcode when finished):
 
-    fvm flutter build ipa --bundle-sksl-path warmup_2022-04-27_ios.sksl.json && open build/ios/archive/Runner.xcarchive
+    fvm flutter build ipa --bundle-sksl-path warmup_2022-05-12_ios.sksl.json && open build/ios/archive/Runner.xcarchive
 
 To build the app for Android (and open the folder with the bundle when finished):
 
-    fvm flutter build appbundle --bundle-sksl-path warmup_2022-04-27_android_pixel5.sksl.json && open build/app/outputs/bundle/release
+    fvm flutter build appbundle --bundle-sksl-path warmup_2022-05-12_android_pixel5.sksl.json && open build/app/outputs/bundle/release
 
 #### SkSL shaders
 
