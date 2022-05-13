@@ -83,8 +83,7 @@ class ScoringOpponent extends AiOpponent {
 
 /// A scoring opponent that just cares about attacking.
 class AttackOnlyScoringOpponent extends ScoringOpponent {
-  AttackOnlyScoringOpponent(BoardSetting setting, {required String name})
-      : super(setting, name: name);
+  AttackOnlyScoringOpponent(super.setting, {required super.name});
 
   @override
   List<int> get _playerScoring => const [1, 1, 20, 90, 8000, 0];
