@@ -1,26 +1,11 @@
-# tictactoe
-
-A mobile game built in Flutter. You can find it published on stores:
-
-- [App Store (iOS)](https://apps.apple.com/us/app/tic-tac-toe-puzzle-game/id1611729977)
-- [Play Store (Android)](https://play.google.com/store/apps/details?id=dev.flutter.tictactoe)
-
-This game was built using the [`game_template`](https://github.com/flutter/samples/tree/master/game_template)
-that you'll find in [github.com/flutter/samples](https://github.com/flutter/samples).
-
-Note: The name of the game in app stores is "Tic Tac Toe Puzzle Game". Because that's what it is,
-and because every other variation of "Tic Tac Toe" is already taken.
+# TripleT Game
+# Contain 9 level
 
 ## Demo
 
 To make it easier for everyone to play with the sample, it's currently
-published as a web demo, too, in two versions:
+published as a web demo.
 
-- a version [mimicking a phone][] in portrait mode even when you open the link on a desktop
-- a version that [uses the whole browser window][]
-
-[mimicking a phone]: https://filiph.github.io/tictactoe/mobile.html
-[uses the whole browser window]: https://filiph.github.io/tictactoe/
 
 
 ## Development
@@ -82,8 +67,5 @@ turnaround for some testing and can't be bothered to manually
 re-capture the shaders.
 
 
-### Icon
-
-Updating the launcher icon:
-
-    fvm flutter pub run flutter_launcher_icons:main
+bcnvnvmjfgjkgkchc
+mbmb,jhkh
