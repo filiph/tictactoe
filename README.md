@@ -67,8 +67,5 @@ turnaround for some testing and can't be bothered to manually
 re-capture the shaders.
 
 
-### Icon
-
-Updating the launcher icon:
-
-    fvm flutter pub run flutter_launcher_icons:main
+bcnvnvmjfgjkgkchc
+mbmb,jhkh
