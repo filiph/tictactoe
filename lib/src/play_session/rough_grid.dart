@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/style/palette.dart';
+import '../style/palette.dart';
 
 class RoughGrid extends StatelessWidget {
   final int width;

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/audio/sounds.dart';
-import 'package:tictactoe/src/player_progress/player_progress.dart';
-import 'package:tictactoe/src/style/delayed_appear.dart';
-import 'package:tictactoe/src/style/palette.dart';
-import 'package:tictactoe/src/style/responsive_screen.dart';
-import 'package:tictactoe/src/style/rough/button.dart';
+
+import '../audio/sounds.dart';
+import '../player_progress/player_progress.dart';
+import '../style/palette.dart';
+import '../style/responsive_screen.dart';
+import '../style/rough/button.dart';
+import '../style/delayed_appear.dart';
 
 class LevelSelectionScreen extends StatelessWidget {
   const LevelSelectionScreen({super.key});

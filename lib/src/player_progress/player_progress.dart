@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:tictactoe/src/player_progress/persistence/player_progress_persistence.dart';
 
+import 'persistence/player_progress_persistence.dart';
+
+/// Encapsulates the player's progress.
 class PlayerProgress extends ChangeNotifier {
   final PlayerProgressPersistence _store;
 
@@ -10,6 +12,7 @@ class PlayerProgress extends ChangeNotifier {
 
   PlayerProgress(this._store);
 
+  /// The highest level that the player has reached so far.
   int get highestLevelReached => _highestLevelReached;
 
   void getLatestFromStore() async {
@@ -22,6 +25,8 @@ class PlayerProgress extends ChangeNotifier {
     }
   }
 
+  /// Resets the player's progress so it's like if they just started
+  /// playing the game for the first time.
   void reset() {
     _highestLevelReached = 0;
     notifyListeners();
@@ -30,6 +35,10 @@ class PlayerProgress extends ChangeNotifier {
 
   static const maxHighestScoresPerPlayer = 10;
 
+  /// Registers [level] as reached.
+  ///
+  /// If this is higher than [highestLevelReached], it will update that
+  /// value and save it to the injected persistence store.
   void setLevelReached(int level) {
     if (level > _highestLevelReached) {
       _highestLevelReached = level;

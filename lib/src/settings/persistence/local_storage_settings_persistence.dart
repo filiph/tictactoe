@@ -1,6 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
 
+import 'settings_persistence.dart';
+
+/// An implementation of [SettingsPersistence] that uses
+/// `package:shared_preferences`.
 class LocalStorageSettingsPersistence extends SettingsPersistence {
   final Future<SharedPreferences> instanceFuture =
       SharedPreferences.getInstance();
