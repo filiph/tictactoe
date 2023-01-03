@@ -39,19 +39,19 @@ class PreloadedBannerAd {
       size: size,
       request: _adRequest,
       listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
+        onAdLoaded: (ad) {
           _log.info(() => 'Ad loaded: ${_bannerAd.hashCode}');
           _adCompleter.complete(_bannerAd);
         },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        onAdFailedToLoad: (ad, error) {
           _log.warning('Banner failedToLoad: $error');
           _adCompleter.completeError(error);
           ad.dispose();
         },
-        onAdImpression: (Ad ad) {
+        onAdImpression: (ad) {
           _log.info('Ad impression registered');
         },
-        onAdClicked: (Ad ad) {
+        onAdClicked: (ad) {
           _log.info('Ad click registered');
         },
       ),

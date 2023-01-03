@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
-import 'package:tictactoe/src/style/sprite.dart';
+
+import 'sprite.dart';
 
 CustomTransitionPage<T> buildTransition<T>({
   required Widget child,
@@ -14,8 +15,7 @@ CustomTransitionPage<T> buildTransition<T>({
 }) {
   return CustomTransitionPage<T>(
     child: child,
-    transitionsBuilder: (BuildContext context, Animation<double> animation,
-        Animation<double> secondaryAnimation, Widget child) {
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return _InkReveal(
         animation: animation,
         color: color,
@@ -45,8 +45,7 @@ class _InkReveal extends StatefulWidget {
     required this.animation,
     required this.color,
     this.flipHorizontally = false,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   State<_InkReveal> createState() => _InkRevealState();
@@ -56,6 +55,8 @@ class _InkRevealState extends State<_InkReveal> {
   static final _log = Logger('_InkRevealState');
 
   bool _finished = false;
+
+  final _tween = Tween(begin: const Offset(0, -1), end: Offset.zero);
 
   @override
   void initState() {

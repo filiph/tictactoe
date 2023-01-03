@@ -1,4 +1,4 @@
-import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
+import 'settings_persistence.dart';
 
 class MemoryOnlySettingsPersistence implements SettingsPersistence {
   bool musicOn = true;

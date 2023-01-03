@@ -1,19 +1,27 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tictactoe/src/ads/preloaded_banner_ad.dart';
 
+import 'preloaded_banner_ad.dart';
+
+/// Allows showing ads. A facade for `package:google_mobile_ads`.
 class AdsController {
   final MobileAds _instance;
 
   PreloadedBannerAd? _preloadedAd;
 
-  AdsController(this._instance);
+  /// Creates an [AdsController] that wraps around a [MobileAds] [instance].
+  ///
+  /// Example usage:
+  ///
+  ///     var controller = AdsController(MobileAds.instance);
+  AdsController(MobileAds instance) : _instance = instance;
 
   void dispose() {
     _preloadedAd?.dispose();
   }
 
-  void initialize() async {
+  /// Initializes the injected [MobileAds.instance].
+  Future<void> initialize() async {
     await _instance.initialize();
   }
 
@@ -24,6 +32,7 @@ class AdsController {
   void preloadAd() {
     final adUnitId = defaultTargetPlatform == TargetPlatform.android
         ? 'ca-app-pub-2243055636922370/9569276797'
+        // iOS
         : 'ca-app-pub-2243055636922370/4080087870';
     _preloadedAd =
         PreloadedBannerAd(size: AdSize.mediumRectangle, adUnitId: adUnitId);

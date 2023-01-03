@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
-import 'package:tictactoe/src/player_progress/player_progress.dart';
-import 'package:tictactoe/src/settings/custom_name_dialog.dart';
-import 'package:tictactoe/src/settings/settings.dart';
-import 'package:tictactoe/src/style/palette.dart';
-import 'package:tictactoe/src/style/responsive_screen.dart';
-import 'package:tictactoe/src/style/rough/button.dart';
+
+import '../in_app_purchase/in_app_purchase.dart';
+import '../player_progress/player_progress.dart';
+import '../style/palette.dart';
+import '../style/responsive_screen.dart';
+import '../style/rough/button.dart';
+import 'custom_name_dialog.dart';
+import 'settings.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -57,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
             Consumer<InAppPurchaseController?>(
                 builder: (context, inAppPurchase, child) {
               if (inAppPurchase == null) {
-                // In-app purchases are not supported.
+                // In-app purchases are not supported yet.
                 return const SizedBox.shrink();
               }
 
@@ -115,7 +116,7 @@ class SettingsScreen extends StatelessWidget {
 class _NameChangeLine extends StatelessWidget {
   final String title;
 
-  const _NameChangeLine(this.title, {Key? key}) : super(key: key);
+  const _NameChangeLine(this.title);
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +160,7 @@ class _SettingsLine extends StatelessWidget {
 
   final VoidCallback? onSelected;
 
-  const _SettingsLine(this.title, this.icon, {this.onSelected, Key? key})
-      : super(key: key);
+  const _SettingsLine(this.title, this.icon, {this.onSelected});
 
   @override
   Widget build(BuildContext context) {

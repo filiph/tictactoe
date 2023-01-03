@@ -6,34 +6,35 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/ads/ads_controller.dart';
-import 'package:tictactoe/src/app_lifecycle/app_lifecycle.dart';
-import 'package:tictactoe/src/audio/audio_controller.dart';
-import 'package:tictactoe/src/crashlytics/crashlytics.dart';
-import 'package:tictactoe/src/games_services/games_services.dart';
-import 'package:tictactoe/src/games_services/score.dart';
-import 'package:tictactoe/src/in_app_purchase/in_app_purchase.dart';
-import 'package:tictactoe/src/level_selection/level_selection_screen.dart';
-import 'package:tictactoe/src/level_selection/levels.dart';
-import 'package:tictactoe/src/main_menu/main_menu_screen.dart';
-import 'package:tictactoe/src/play_session/play_session_screen.dart';
-import 'package:tictactoe/src/player_progress/persistence/local_storage_player_progress_persistence.dart';
-import 'package:tictactoe/src/player_progress/persistence/player_progress_persistence.dart';
-import 'package:tictactoe/src/player_progress/player_progress.dart';
-import 'package:tictactoe/src/settings/persistence/local_storage_settings_persistence.dart';
-import 'package:tictactoe/src/settings/persistence/settings_persistence.dart';
-import 'package:tictactoe/src/settings/settings.dart';
-import 'package:tictactoe/src/settings/settings_screen.dart';
-import 'package:tictactoe/src/style/ink_transition.dart';
-import 'package:tictactoe/src/style/palette.dart';
-import 'package:tictactoe/src/style/snack_bar.dart';
-import 'package:tictactoe/src/win_game/win_game_screen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
+import 'src/ads/ads_controller.dart';
+import 'src/app_lifecycle/app_lifecycle.dart';
+import 'src/audio/audio_controller.dart';
+import 'src/crashlytics/crashlytics.dart';
+import 'src/games_services/games_services.dart';
+import 'src/games_services/score.dart';
+import 'src/in_app_purchase/in_app_purchase.dart';
+import 'src/level_selection/level_selection_screen.dart';
+import 'src/level_selection/levels.dart';
+import 'src/main_menu/main_menu_screen.dart';
+import 'src/play_session/play_session_screen.dart';
+import 'src/player_progress/persistence/local_storage_player_progress_persistence.dart';
+import 'src/player_progress/persistence/player_progress_persistence.dart';
+import 'src/player_progress/player_progress.dart';
+import 'src/settings/persistence/local_storage_settings_persistence.dart';
+import 'src/settings/persistence/settings_persistence.dart';
+import 'src/settings/settings.dart';
+import 'src/settings/settings_screen.dart';
+import 'src/style/ink_transition.dart';
+import 'src/style/palette.dart';
+import 'src/style/snack_bar.dart';
+import 'src/win_game/win_game_screen.dart';
 import 'firebase_options.dart';
+
 
 Future<void> main() async {
   FirebaseCrashlytics? crashlytics;
@@ -116,7 +117,7 @@ class MyApp extends StatelessWidget {
           routes: [
             GoRoute(
                 path: 'play',
-                pageBuilder: (context, state) => buildTransition(
+                pageBuilder: (context, state) => buildTransition<void>(
                       child: const LevelSelectionScreen(
                           key: Key('level selection')),
                       color: context.watch<Palette>().backgroundLevelSelection,
@@ -128,7 +129,7 @@ class MyApp extends StatelessWidget {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
-                      return buildTransition(
+                      return buildTransition<void>(
                         child: PlaySessionScreen(
                           level,
                           key: const Key('play session'),
@@ -144,7 +145,7 @@ class MyApp extends StatelessWidget {
                       final map = state.extra! as Map<String, dynamic>;
                       final score = map['score'] as Score;
 
-                      return buildTransition(
+                      return buildTransition<void>(
                         child: WinGameScreen(
                           score: score,
                           key: const Key('win game'),
@@ -241,6 +242,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
+            routeInformationProvider: _router.routeInformationProvider,
             routeInformationParser: _router.routeInformationParser,
             routerDelegate: _router.routerDelegate,
             scaffoldMessengerKey: scaffoldMessengerKey,

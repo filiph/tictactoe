@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tictactoe/src/style/palette.dart';
-import 'package:tictactoe/src/style/snack_bar.dart';
+
+import 'palette.dart';
+import 'snack_bar.dart';
 
 void showErrorSnackbar(String errorMessage, {SnackBarAction? action}) {
   final messenger = scaffoldMessengerKey.currentState;

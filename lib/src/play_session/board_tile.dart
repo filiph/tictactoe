@@ -3,11 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/audio/audio_controller.dart';
-import 'package:tictactoe/src/audio/sounds.dart';
-import 'package:tictactoe/src/game_internals/board_state.dart';
-import 'package:tictactoe/src/game_internals/tile.dart';
-import 'package:tictactoe/src/style/palette.dart';
+import '../audio/audio_controller.dart';
+import '../audio/sounds.dart';
+import '../game_internals/board_state.dart';
+import '../game_internals/tile.dart';
+import '../style/palette.dart';
 
 class BoardTile extends StatefulWidget {
   const BoardTile(this.tile, {super.key});
@@ -61,7 +61,7 @@ class _BoardTileState extends State<BoardTile>
       // Also, play sound.
       final audioController = context.read<AudioController>();
       audioController.playSfx(
-        owner == Side.x ? SfxType.drawX : SfxType.drawO,
+        owner == Side.x ? SfxType.huhsh : SfxType.wssh,
       );
     }
 

@@ -1,8 +1,8 @@
-import 'package:tictactoe/src/ai/ai_opponent.dart';
-import 'package:tictactoe/src/ai/humanlike_opponent.dart';
-import 'package:tictactoe/src/ai/random_opponent.dart';
-import 'package:tictactoe/src/ai/scoring_opponent.dart';
-import 'package:tictactoe/src/game_internals/board_setting.dart';
+import '../ai/ai_opponent.dart';
+import '../ai/humanlike_opponent.dart';
+import '../ai/random_opponent.dart';
+import '../ai/scoring_opponent.dart';
+import '../game_internals/board_setting.dart';
 
 final gameLevels = [
   GameLevel(
