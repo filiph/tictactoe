@@ -108,7 +108,7 @@ class InAppPurchaseController extends ChangeNotifier {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
       _subscription?.cancel();
-    }, onError: (dynamic error) {
+    }, onError: (error) {
       _log.severe('Error occurred on the purchaseStream: $error');
     });
   }
