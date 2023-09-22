@@ -13,9 +13,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  audioplayers: ^1.1.0
+  audioplayers: ^5.1.0
   cupertino_icons: ^1.0.2
-  go_router: ^5.2.1
+  go_router: ^11.0.0
   logging: ^1.1.0
   provider: ^6.0.2
   shared_preferences: ^2.0.13
@@ -23,14 +23,14 @@ dependencies:
   firebase_core: ^2.1.1  # Needed for Crashlytics below
   firebase_crashlytics: ^3.0.3  # Error reporting
   games_services: ^3.0.0  # Achievements and leaderboards
-  google_mobile_ads: ^2.0.1  # Ads
+  google_mobile_ads: ^3.0.0  # Ads
   in_app_purchase: ^3.0.1  # In-app purchases
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.1
   test: ^1.19.0
 
@@ -47,7 +47,7 @@ flutter:
       fonts:
         - asset: assets/Permanent_Marker/PermanentMarker-Regular.ttf
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icon.png"

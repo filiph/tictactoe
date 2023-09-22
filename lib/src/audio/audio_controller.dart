@@ -151,6 +151,7 @@ class AudioController {
     switch (_lifecycleNotifier!.value) {
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
         _stopAllSound();
         break;
       case AppLifecycleState.resumed:
@@ -221,6 +222,10 @@ class AudioController {
             "Music should never be 'completed' as it's either not playing "
             "or looping forever.");
         await _playFirstSongInPlaylist();
+        break;
+      case PlayerState.disposed:
+        _log.severe('resumeMusic() called after player had been disposed. '
+            'We cannot use the player anymore. Ignoring.');
         break;
     }
   }

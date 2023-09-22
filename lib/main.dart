@@ -6,11 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
+import 'firebase_options.dart';
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
@@ -33,8 +34,6 @@ import 'src/style/ink_transition.dart';
 import 'src/style/palette.dart';
 import 'src/style/snack_bar.dart';
 import 'src/win_game/win_game_screen.dart';
-import 'firebase_options.dart';
-
 
 Future<void> main() async {
   FirebaseCrashlytics? crashlytics;
@@ -126,7 +125,8 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level',
                     pageBuilder: (context, state) {
-                      final levelNumber = int.parse(state.params['level']!);
+                      final levelNumber =
+                          int.parse(state.pathParameters['level']!);
                       final level = gameLevels
                           .singleWhere((e) => e.number == levelNumber);
                       return buildTransition<void>(
@@ -237,7 +237,7 @@ class MyApp extends StatelessWidget {
                 background: palette.backgroundMain,
               ),
               textTheme: TextTheme(
-                bodyText2: TextStyle(
+                bodyMedium: TextStyle(
                   color: palette.ink,
                 ),
               ),

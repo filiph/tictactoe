@@ -86,4 +86,4 @@ re-capture the shaders.
 
 Updating the launcher icon:
 
-    fvm flutter pub run flutter_launcher_icons:main
+    fvm flutter pub run flutter_launcher_icons
