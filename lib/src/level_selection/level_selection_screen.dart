@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../audio/sounds.dart';
 import '../player_progress/player_progress.dart';
+import '../style/delayed_appear.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 import '../style/rough/button.dart';
-import '../style/delayed_appear.dart';
 
 class LevelSelectionScreen extends StatelessWidget {
   const LevelSelectionScreen({super.key});
@@ -78,7 +78,7 @@ class LevelSelectionScreen extends StatelessWidget {
 class _LevelButton extends StatelessWidget {
   final int number;
 
-  const _LevelButton(this.number, {Key? key}) : super(key: key);
+  const _LevelButton(this.number);
 
   @override
   Widget build(BuildContext context) {

@@ -18,8 +18,8 @@ import '../level_selection/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../settings/custom_name_dialog.dart';
 import '../settings/settings.dart';
-import '../style/delayed_appear.dart';
 import '../style/confetti.dart';
+import '../style/delayed_appear.dart';
 import '../style/palette.dart';
 import 'game_board.dart';
 import 'hint_snackbar.dart';
@@ -267,8 +267,7 @@ class _RestartButton extends StatefulWidget {
 
   final VoidCallback onTap;
 
-  const _RestartButton(this.resetHint, {required this.onTap, Key? key})
-      : super(key: key);
+  const _RestartButton(this.resetHint, {required this.onTap});
 
   @override
   State<_RestartButton> createState() => _RestartButtonState();
@@ -376,8 +375,7 @@ class _ResponsivePlaySessionScreen extends StatelessWidget {
     required this.opponentName,
     // ignore: unused_element
     this.mainAreaProminence = 0.8,
-    Key? key,
-  }) : super(key: key);
+  });
 
   Widget _buildVersusText(BuildContext context, TextAlign textAlign) {
     String versusText;

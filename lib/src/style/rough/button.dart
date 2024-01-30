@@ -68,7 +68,7 @@ class RoughButton extends StatelessWidget {
 class _RoughBox extends StatefulWidget {
   final ImageProvider image = const AssetImage('assets/images/box.png');
 
-  const _RoughBox({Key? key}) : super(key: key);
+  const _RoughBox();
 
   @override
   State<_RoughBox> createState() => _RoughBoxState();

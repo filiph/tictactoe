@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../game_internals/board_state.dart';
@@ -141,11 +142,10 @@ class _SketchedX extends StatelessWidget {
   final int variantSeed;
 
   const _SketchedX({
-    Key? key,
     required this.color,
     required this.progress,
     required this.variantSeed,
-  }) : super(key: key);
+  });
 
   static const _startImageAssets = [
     'assets/images/cross-start-1.png',
@@ -255,11 +255,10 @@ class _SketchedO extends StatelessWidget {
   final int variantSeed;
 
   const _SketchedO({
-    Key? key,
     required this.color,
     required this.progress,
     required this.variantSeed,
-  }) : super(key: key);
+  });
 
   static const _imageAssets = [
     'assets/images/circle1.png',

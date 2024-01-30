@@ -44,23 +44,37 @@ Future<void> main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       crashlytics = FirebaseCrashlytics.instance;
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
     } catch (e) {
       debugPrint("Firebase couldn't be initialized: $e");
     }
   }
 
-  await guardWithCrashlytics(
-    guardedMain,
-    crashlytics: crashlytics,
-  );
-}
+  if (kDebugMode) {
+    // Log more when in debug mode.
+    Logger.root.level = Level.FINE;
+  }
+  // Subscribe to log messages.
+  Logger.root.onRecord.listen((record) {
+    final message = '${record.level.name}: ${record.time}: '
+        '${record.loggerName}: '
+        '${record.message}';
 
-/// Without logging and crash reporting, this would be `void main()`.
-void guardedMain() {
-  // We ensure Flutter binding is initialized here. Otherwise, calls to
-  // SystemChrome will not work, for example. This is a no-op if the binding
-  // is already initialized.
-  WidgetsFlutterBinding.ensureInitialized();
+    debugPrint(message);
+    // Add the message to the rotating Crashlytics log.
+    crashlytics?.log(message);
+
+    if (record.level >= Level.SEVERE) {
+      crashlytics?.recordError(message, filterStackTrace(StackTrace.current),
+          fatal: true);
+    }
+  });
 
   _log.info('Going full screen');
   SystemChrome.setEnabledSystemUIMode(

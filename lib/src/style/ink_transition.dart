@@ -56,8 +56,6 @@ class _InkRevealState extends State<_InkReveal> {
 
   bool _finished = false;
 
-  final _tween = Tween(begin: const Offset(0, -1), end: Offset.zero);
-
   @override
   void initState() {
     super.initState();
