@@ -94,6 +94,21 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
             ),
+            Consumer<InAppPurchaseController?>(
+                builder: (context, inAppPurchase, child) {
+              if (inAppPurchase == null) {
+                // In-app purchases are not supported yet.
+                return const SizedBox.shrink();
+              }
+
+              return _SettingsLine(
+                'Test billing',
+                const Icon(Icons.accessibility_new),
+                onSelected: () {
+                  inAppPurchase.testNewFunctionality();
+                },
+              );
+            }),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
               child: Text('Music by Mr Smith, used with permission.'),

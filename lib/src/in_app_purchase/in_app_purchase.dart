@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:logging/logging.dart';
 
 import '../style/snack_bar.dart';
@@ -27,6 +29,45 @@ class InAppPurchaseController extends ChangeNotifier {
 
   /// The current state of the ad removal purchase.
   AdRemovalPurchase get adRemoval => _adRemoval;
+
+  void testNewFunctionality() async {
+    if (!await inAppPurchaseInstance.isAvailable()) {
+      _reportError('InAppPurchase.instance not available');
+      return;
+    }
+
+    final androidAddition = inAppPurchaseInstance
+        .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>();
+    final country = await androidAddition.getCountryCode();
+    _log.info('Country code: $country');
+
+    final isAvailable =
+        await androidAddition.isAlternativeBillingOnlyAvailable();
+
+    _log.info(
+        'Is alternative billing only available? ${isAvailable.responseCode} '
+        '(${isAvailable.debugMessage})');
+
+    if (isAvailable.responseCode == BillingResponse.ok) {
+      final result =
+          await androidAddition.showAlternativeBillingOnlyInformationDialog();
+      _log.info(
+          'Result of showing alternative billing only information dialog: '
+          '${result.responseCode}');
+
+      if (result.responseCode == BillingResponse.ok) {
+        await androidAddition
+            .setBillingChoice(BillingChoiceMode.alternativeBillingOnly);
+        _log.info('Billing choise set to alternative billing only');
+
+        final details = await androidAddition
+            .createAlternativeBillingOnlyReportingDetails();
+        _log.info(
+            'Reporting details: ${details.responseCode}, ${details.debugMessage}');
+        _log.info('Token: ${details.externalTransactionToken}');
+      }
+    }
+  }
 
   /// Launches the platform UI for buying an in-app purchase.
   ///
